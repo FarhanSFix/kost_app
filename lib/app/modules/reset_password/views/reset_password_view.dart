@@ -11,6 +11,13 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () => Get.offNamed(Routes.LOGIN),
+            icon: Icon(
+              Icons.arrow_back_rounded,
+            )),
+      ),
       body: Padding(
         padding: EdgeInsets.all(30),
         child: Column(
@@ -29,7 +36,10 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
             SizedBox(
               height: 30,
             ),
-            Text("Email"),
+            Text(
+              "Email",
+              style: TextStyle(fontFamily: 'Lato', fontSize: 16),
+            ),
             TextField(
               controller: controller.emailController,
               decoration: InputDecoration(
@@ -52,7 +62,12 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
               onPressed: () {
                 controller.resetPassword(controller.emailController.text);
               },
-              child: Text("Reset Password"),
+              child: Text("Reset Password",
+                  style: TextStyle(
+                    fontFamily: 'Lato',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  )),
             ),
           ],
         ),
