@@ -11,7 +11,17 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('HomeView'),
-        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.logout_outlined,
+              size: 35,
+            ),
+            onPressed: () {
+              controller.logout();
+            },
+          ),
+        ],
       ),
       body: const Center(
         child: Text(
