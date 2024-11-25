@@ -4,6 +4,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/penghuni/bindings/penghuni_binding.dart';
+import '../modules/penghuni/views/penghuni_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
@@ -43,6 +45,11 @@ class AppPages {
       name: _Paths.RESET_PASSWORD,
       page: () => const ResetPasswordView(),
       binding: ResetPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.PENGHUNI,
+      page: () => const PenghuniView(),
+      binding: PenghuniBinding(),
     ),
   ];
 }
