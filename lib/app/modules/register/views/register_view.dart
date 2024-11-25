@@ -14,7 +14,7 @@ class RegisterView extends GetView<RegisterController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(30),
+        padding: EdgeInsets.all(16),
         child: Stack(
           children: [
             Column(

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:kost_app/app/modules/history/views/history_view.dart';
+import 'package:kost_app/app/modules/home/controllers/home_controller.dart';
 import 'package:kost_app/app/modules/home/views/home_view.dart';
 import 'package:kost_app/app/modules/profile/views/profile_view.dart';
 import 'package:kost_app/app/utils/colors.dart';
@@ -10,7 +11,7 @@ import 'package:kost_app/app/utils/colors.dart';
 import '../controllers/main_controller.dart';
 
 class MainView extends GetView<MainController> {
-  const MainView({super.key});
+  MainView({super.key});
   @override
   Widget build(BuildContext context) {
     Widget body() {
