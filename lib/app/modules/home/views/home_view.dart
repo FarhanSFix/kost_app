@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/home_controller.dart';
@@ -47,7 +48,9 @@ class HomeView extends GetView<HomeController> {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.logout();
+                    },
                     highlightColor: Colors.transparent,
                     icon:
                         const Icon(Icons.notifications_none_rounded, size: 25),
@@ -89,7 +92,7 @@ class HomeView extends GetView<HomeController> {
                       'Properti',
                       'assets/images/img_properti.png',
                       onTap: () {
-                        // Get.toNamed(Routes.PROPERTY);
+                        Get.toNamed(Routes.PROPERTY);
                       },
                     ),
                     DashboardMenu(
