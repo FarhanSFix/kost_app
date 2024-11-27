@@ -37,6 +37,7 @@ class MainView extends GetView<MainController> {
             highlightColor: Colors.transparent,
           ),
           child: BottomNavigationBar(
+            backgroundColor: Colors.white,
             selectedItemColor: appColor.buttonColorPrimary,
             selectedFontSize: 12,
             currentIndex: controller.currentIndex.value,
