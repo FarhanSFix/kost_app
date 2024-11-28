@@ -145,7 +145,18 @@ class AddPropertyView extends GetView<AddPropertyController> {
                       minimumSize: Size(double.infinity, 52),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  onPressed: () {},
+                  onPressed: () {
+                    controller.addProperty(
+                        namaProperti: controller.namePropertyController.text,
+                        namaPengelola: controller.nameManagerController.text,
+                        detailAlamat:
+                            controller.detailAddressPropertyController.text,
+                        kabupaten: controller.cityController.text,
+                        kecamatan: controller.districtPropertyController.text,
+                        provinsi: controller.provinceController.text,
+                        teleponPengelola:
+                            controller.telpManagerController.text);
+                  },
                   child: Text("Simpan",
                       style: TextStyle(
                         fontFamily: 'Lato',

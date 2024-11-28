@@ -17,39 +17,57 @@ class PropertyView extends GetView<PropertyController> {
         centerTitle: true,
       ),
       body: Obx(() {
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: controller.properties.length,
-          itemBuilder: (context, index) {
-            final property = controller.properties[index];
+        final stream = controller.propertyStream.value;
+        if (stream == Stream.empty()) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: stream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-            return Card(
-              elevation: 2,
-              margin: const EdgeInsets.only(bottom: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: appColor.backgroundColor1,
-                  child: Icon(
-                    Icons.home,
-                    color: appColor.logoColor,
-                  ),
-                ),
-                title: Text("${property['nameProperty']}"),
-                subtitle: Text("${property['City']}, ${property['province']}"),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {
-                  Get.toNamed(
-                    Routes.DETAIL_PROPERTY,
-                    arguments: property,
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(child: Text('Tidak ada data properti.'));
+              }
+              final documents = snapshot.data!.docs;
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: documents.length,
+                itemBuilder: (context, index) {
+                  final property = documents[index];
+
+                  return Card(
+                    elevation: 2,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: appColor.backgroundColor1,
+                        child: Icon(
+                          Icons.home,
+                          color: appColor.logoColor,
+                        ),
+                      ),
+                      title: Text("${property['nama_properti']}"),
+                      subtitle: Text(
+                          "${property['kabupaten']}, ${property['provinsi']}"),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () {
+                        Get.toNamed(Routes.DETAIL_PROPERTY,
+                            arguments: property.id);
+                      },
+                    ),
                   );
                 },
-              ),
-            );
-          },
-        );
+              );
+            });
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

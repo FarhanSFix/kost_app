@@ -10,6 +10,8 @@ import '../modules/detail_room/bindings/detail_room_binding.dart';
 import '../modules/detail_room/views/detail_room_view.dart';
 import '../modules/edit_property/bindings/edit_property_binding.dart';
 import '../modules/edit_property/views/edit_property_view.dart';
+import '../modules/edit_room/bindings/edit_room_binding.dart';
+import '../modules/edit_room/views/edit_room_view.dart';
 import '../modules/history/bindings/history_binding.dart';
 import '../modules/history/views/history_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -26,6 +28,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
 import '../modules/reset_password/views/reset_password_view.dart';
+import '../modules/room/bindings/room_binding.dart';
+import '../modules/room/views/room_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 
@@ -106,6 +110,16 @@ class AppPages {
       name: _Paths.EDIT_PROPERTY,
       page: () => const EditPropertyView(),
       binding: EditPropertyBinding(),
+    ),
+    GetPage(
+      name: _Paths.ROOM,
+      page: () => const RoomView(),
+      binding: RoomBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_ROOM,
+      page: () => EditRoomView(),
+      binding: EditRoomBinding(),
     ),
   ];
 }

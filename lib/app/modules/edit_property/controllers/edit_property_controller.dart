@@ -13,13 +13,13 @@ class EditPropertyController extends GetxController {
 
   @override
   void onInit() {
-    namePropertyController.text = '${property['nameProperty']}';
-    nameManagerController.text = '${property['managerProperty']}';
-    telpManagerController.text = '${property['telpManagerProperty']}';
-    provinceController.text = '${property['province']}';
-    cityController.text = '${property['City']}';
-    districtPropertyController.text = '${property['district']}';
-    detailAddressPropertyController.text = '${property['addressDetail']}';
+    namePropertyController.text = '${property['nama_properti']}';
+    nameManagerController.text = '${property['nama_pengelola']}';
+    telpManagerController.text = '${property['telepon_pengelola']}';
+    provinceController.text = '${property['provinsi']}';
+    cityController.text = '${property['kabupaten']}';
+    districtPropertyController.text = '${property['kecamatan']}';
+    detailAddressPropertyController.text = '${property['detail_alamat']}';
     super.onInit();
   }
 

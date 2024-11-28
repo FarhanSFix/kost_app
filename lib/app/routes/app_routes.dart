@@ -17,6 +17,8 @@ abstract class Routes {
   static const ADD_ROOM = _Paths.ADD_ROOM;
   static const DETAIL_ROOM = _Paths.DETAIL_ROOM;
   static const EDIT_PROPERTY = _Paths.EDIT_PROPERTY;
+  static const ROOM = _Paths.ROOM;
+  static const EDIT_ROOM = _Paths.EDIT_ROOM;
 }
 
 abstract class _Paths {
@@ -35,4 +37,6 @@ abstract class _Paths {
   static const ADD_ROOM = '/add-room';
   static const DETAIL_ROOM = '/detail-room';
   static const EDIT_PROPERTY = '/edit-property';
+  static const ROOM = '/room';
+  static const EDIT_ROOM = '/edit-room';
 }

@@ -11,6 +11,7 @@ import 'package:kost_app/app/utils/colors.dart';
 import '../controllers/main_controller.dart';
 
 class MainView extends GetView<MainController> {
+  final HomeC = Get.put(HomeController());
   MainView({super.key});
   @override
   Widget build(BuildContext context) {
