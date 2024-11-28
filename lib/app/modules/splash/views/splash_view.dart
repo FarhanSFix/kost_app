@@ -21,9 +21,8 @@ class SplashView extends GetView<SplashController> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Text(
-                "Design by KitKat Team",
-              ),
+              child: Text("Design by KitKat Team",
+                  style: TextStyle(fontFamily: 'Roboto', fontSize: 14)),
             )
           ],
         ),
