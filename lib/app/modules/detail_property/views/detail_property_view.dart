@@ -13,6 +13,11 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
         appBar: AppBar(
           title: const Text('DetailPropertyView'),
           centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () => Get.offAllNamed(Routes.PROPERTY),
+                icon: Icon(Icons.close_rounded))
+          ],
         ),
         body: Obx(() {
           if (controller.isLoading.value) {
@@ -56,7 +61,8 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
                       maxLines: 3,
                     ),
                     _buildDetailField(
-                        "Detail Alamat", property['detail_alamat']),
+                        "Detail Alamat", property['detail_alamat'],
+                        maxLines: 2),
                     const SizedBox(height: 8),
                     FutureBuilder<int>(
                       future: controller.countRooms(controller.propertyId),
@@ -170,7 +176,7 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
                         ElevatedButton(
                           onPressed: () {
                             Get.toNamed(Routes.EDIT_PROPERTY,
-                                arguments: property);
+                                arguments: controller.propertyId);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange,
@@ -186,7 +192,7 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            print("Hapus button pressed");
+                            controller.deleteProperti(controller.propertyId);
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(94, 42),
@@ -220,10 +226,11 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
           maxLines: maxLines,
           controller: TextEditingController(text: value ?? ''),
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 17, vertical: 5)),
         ),
         const SizedBox(height: 8),
       ],

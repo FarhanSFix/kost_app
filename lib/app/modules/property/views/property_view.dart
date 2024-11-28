@@ -15,6 +15,11 @@ class PropertyView extends GetView<PropertyController> {
       appBar: AppBar(
         title: const Text('Properti'),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () => Get.offAllNamed(Routes.MAIN),
+              icon: Icon(Icons.close_rounded))
+        ],
       ),
       body: Obx(() {
         final stream = controller.propertyStream.value;

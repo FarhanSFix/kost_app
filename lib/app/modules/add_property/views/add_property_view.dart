@@ -78,6 +78,7 @@ class AddPropertyView extends GetView<AddPropertyController> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
+                  keyboardType: TextInputType.number,
                 ),
                 SizedBox(
                   height: 8,

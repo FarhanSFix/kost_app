@@ -15,6 +15,12 @@ class RoomView extends GetView<RoomController> {
       appBar: AppBar(
         title: Text("Daftar Kamar"),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () => Get.offAllNamed(Routes.DETAIL_PROPERTY,
+                  arguments: controller.propertyId),
+              icon: Icon(Icons.close_rounded))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

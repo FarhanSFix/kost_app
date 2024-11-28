@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 
 class DetailRoomController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -18,6 +19,25 @@ class DetailRoomController extends GetxController {
     } catch (e) {
       print("Error fetching room data: $e");
       return null;
+    }
+  }
+
+  void deleteRoom(String docID) {
+    try {
+      Get.defaultDialog(
+          title: "Hapus kamar",
+          middleText: "Apakah anda yakin akan menghapus kamar ini?",
+          onConfirm: () async {
+            await firestore.collection('kamar').doc(docID).delete();
+            Get.back();
+            Get.snackbar('Berhasil', 'Kamar berhasil dihapus');
+            Get.offAllNamed(Routes.PROPERTY);
+          },
+          textConfirm: "Ya, saya yakin",
+          textCancel: "Tidak");
+    } catch (e) {
+      print(e);
+      Get.snackbar('Error', 'Tidak dapat menghapus kamar');
     }
   }
 }

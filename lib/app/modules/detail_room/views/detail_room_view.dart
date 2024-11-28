@@ -17,6 +17,11 @@ class DetailRoomView extends GetView<DetailRoomController> {
         appBar: AppBar(
           title: Text("Detail Kamar "),
           centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () => Get.offAllNamed(Routes.PROPERTY),
+                icon: Icon(Icons.close_rounded))
+          ],
         ),
         body: FutureBuilder<Map<String, dynamic>?>(
           future: controller.getRoom(controller.idRoom),
@@ -172,7 +177,8 @@ class DetailRoomView extends GetView<DetailRoomController> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          Get.toNamed(Routes.EDIT_ROOM, arguments: dataRoom);
+                          Get.toNamed(Routes.EDIT_ROOM,
+                              arguments: controller.idRoom);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
@@ -188,7 +194,7 @@ class DetailRoomView extends GetView<DetailRoomController> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          print("Hapus button pressed");
+                          controller.deleteRoom(controller.idRoom);
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(94, 42),

@@ -44,6 +44,7 @@ class AddRoomView extends GetView<AddRoomController> {
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
+              keyboardType: TextInputType.number,
             ),
             SizedBox(
               height: 8,
@@ -121,6 +122,7 @@ class AddRoomView extends GetView<AddRoomController> {
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
+              keyboardType: TextInputType.number,
             ),
             SizedBox(
               height: 8,
