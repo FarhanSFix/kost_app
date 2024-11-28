@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: "Application",
               // initialRoute: AppPages.INITIAL,
-              initialRoute: Routes.MAIN,
+              initialRoute: AppPages.INITIAL,
               getPages: AppPages.routes,
               theme: ThemeData(
                 primarySwatch: Colors.indigo,

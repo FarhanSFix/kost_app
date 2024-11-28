@@ -359,7 +359,7 @@ class HomeView extends GetView<HomeController> {
                               children: [
                                 Text(
                                     'Dibuat ${controller.formatTanggal(item['created_at'].toDate())}',
-                                    style: TextStyle(fontSize: 10)),
+                                    style: const TextStyle(fontSize: 10)),
                                 const SizedBox(height: 10),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -388,7 +388,7 @@ class HomeView extends GetView<HomeController> {
                                             item['judul'],
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -399,44 +399,44 @@ class HomeView extends GetView<HomeController> {
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 10,
                                                   ),
                                                 )
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                           item['kamar'] != null
                                               ? Text(
                                                   'Kamar ${item['kamar']}',
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 10,
                                                   ),
                                                 )
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                           item['kategori'] != null
                                               ? Text(
                                                   item['kategori'],
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 10,
                                                   ),
                                                 )
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                           item['catatan'] != null
                                               ? Text(
                                                   item['catatan'],
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 10,
                                                   ),
                                                 )
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                         ],
                                       ),
                                     ),
@@ -465,32 +465,32 @@ class HomeView extends GetView<HomeController> {
                                                     item['tanggal'].toDate()),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 10,
                                                 ),
                                               )
-                                            : SizedBox(),
+                                            : const SizedBox(),
                                         item['tgl_mulai'] != null
                                             ? Text(
                                                 controller.formatTanggal(
                                                     item['tgl_mulai'].toDate()),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 10,
                                                 ),
                                               )
-                                            : SizedBox(),
+                                            : const SizedBox(),
                                         item['tgl_sampai'] != null
                                             ? Text(
                                                 '- ${controller.formatTanggal(item['tgl_sampai'].toDate())}',
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 10,
                                                 ),
                                               )
-                                            : SizedBox(),
+                                            : const SizedBox(),
                                       ],
                                     ),
                                   ],
@@ -522,7 +522,7 @@ class HomeView extends GetView<HomeController> {
                                 onPressed: () {
                                   Get.defaultDialog(
                                     title: 'Hapus Data',
-                                    titleStyle: TextStyle(
+                                    titleStyle: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors
@@ -530,7 +530,7 @@ class HomeView extends GetView<HomeController> {
                                     ),
                                     middleText:
                                         'Apakah Anda yakin ingin menghapus data ini?',
-                                    middleTextStyle: TextStyle(
+                                    middleTextStyle: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black54, // Warna teks
                                     ),
@@ -545,7 +545,7 @@ class HomeView extends GetView<HomeController> {
                                         onPressed: () {
                                           Get.back(); // Menutup dialog
                                         },
-                                        child: Text(
+                                        child: const Text(
                                           'Batal',
                                           style: TextStyle(
                                               color: appColor.buttonTextColor),
@@ -564,9 +564,10 @@ class HomeView extends GetView<HomeController> {
                                                 const Color.fromARGB(
                                                     185, 76, 175, 79),
                                             colorText: Colors.white,
-                                            margin: EdgeInsets.all(10),
+                                            margin: const EdgeInsets.all(10),
                                             borderRadius: 10,
-                                            duration: Duration(seconds: 2),
+                                            duration:
+                                                const Duration(seconds: 2),
                                           );
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -576,7 +577,7 @@ class HomeView extends GetView<HomeController> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 20, vertical: 12),
                                         ),
                                         child: const Row(
@@ -599,9 +600,9 @@ class HomeView extends GetView<HomeController> {
                                         ),
                                       ),
                                     ],
-                                    titlePadding:
-                                        EdgeInsets.all(20), // Padding judul
-                                    contentPadding: EdgeInsets.symmetric(
+                                    titlePadding: const EdgeInsets.all(
+                                        20), // Padding judul
+                                    contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 20,
                                         vertical: 10), // Padding konten
                                   );
