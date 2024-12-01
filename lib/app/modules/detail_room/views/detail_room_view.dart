@@ -155,7 +155,8 @@ class DetailRoomView extends GetView<DetailRoomController> {
                             TextField(
                               readOnly: true,
                               controller: TextEditingController(
-                                  text: "Rp ${price.toString()}"),
+                                  text:
+                                      "Rp ${controller.formatNominal(price).toString()}"),
                               decoration: InputDecoration(
                                 hintStyle: TextStyle(color: Color(0xFF888888)),
                                 border: OutlineInputBorder(

@@ -76,7 +76,7 @@ class RoomView extends GetView<RoomController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Harga: Rp ${data['harga']['1 orang']}/1 orang",
+                                    "Harga: Rp ${controller.formatNominal(data['harga']['1 orang'])}/1 orang",
                                   ),
                                 ],
                               ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kost_app/app/routes/app_pages.dart';
 
 class DetailRoomController extends GetxController {
@@ -20,6 +21,11 @@ class DetailRoomController extends GetxController {
       print("Error fetching room data: $e");
       return null;
     }
+  }
+
+  String formatNominal(int nominal) {
+    final formatter = NumberFormat('#,###', 'id_ID');
+    return formatter.format(nominal).replaceAll(',', '.');
   }
 
   void deleteRoom(String docID) {

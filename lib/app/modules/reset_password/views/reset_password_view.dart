@@ -21,7 +21,7 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(

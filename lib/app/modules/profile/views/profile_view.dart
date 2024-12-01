@@ -148,7 +148,9 @@ class ProfileView extends GetView<ProfileController> {
                     const Spacer(),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.logout();
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: appColor.buttonColorDelete,
                           shape: RoundedRectangleBorder(
