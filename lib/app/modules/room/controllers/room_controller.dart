@@ -10,9 +10,11 @@ class RoomController extends GetxController {
     var query = firestore
         .collection('kamar')
         .where('id_properti', isEqualTo: idProperti);
+
     if (status.isNotEmpty) {
       query = query.where('status', isEqualTo: status);
     }
+    query = query.orderBy("nomor");
     return query.snapshots();
   }
 

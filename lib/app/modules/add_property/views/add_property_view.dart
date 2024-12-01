@@ -14,7 +14,7 @@ class AddPropertyView extends GetView<AddPropertyController> {
         appBar: AppBar(
           actions: [
             IconButton(
-              onPressed: () => Get.offNamed(Routes.PROPERTY),
+              onPressed: () => Get.offAllNamed(Routes.PROPERTY),
               icon: Icon(Icons.close),
             )
           ],

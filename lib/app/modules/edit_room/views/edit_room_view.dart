@@ -187,7 +187,7 @@ class EditRoomView extends GetView<EditRoomController> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(entry.key), // Key (e.g., "Orang 1")
+                                    Text(entry.key),
                                     TextField(
                                       controller: controller
                                           .roomPriceControllers[index],
