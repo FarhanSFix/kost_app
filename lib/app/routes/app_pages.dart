@@ -1,5 +1,11 @@
 import 'package:get/get.dart';
 
+import '../modules/add_penghuni/bindings/add_penghuni_binding.dart';
+import '../modules/add_penghuni/views/add_penghuni_view.dart';
+import '../modules/detail_penghuni/bindings/detail_penghuni_binding.dart';
+import '../modules/detail_penghuni/views/detail_penghuni_view.dart';
+import '../modules/edit_penghuni/bindings/edit_penghuni_binding.dart';
+import '../modules/edit_penghuni/views/edit_penghuni_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -48,8 +54,23 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PENGHUNI,
-      page: () => const PenghuniView(),
+      page: () => PenghuniView(),
       binding: PenghuniBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_PENGHUNI,
+      page: () => AddPenghuniView(),
+      binding: AddPenghuniBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_PENGHUNI,
+      page: () => DetailPenghuniView(),
+      binding: DetailPenghuniBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PENGHUNI,
+      page: () => EditPenghuniView(),
+      binding: EditPenghuniBinding(),
     ),
   ];
 }

@@ -1,23 +1,20 @@
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
-class PenghuniController extends GetxController {
-  //TODO: Implement PenghuniController
+class PenghuniController extends ChangeNotifier {
+  // Data pilihan
+  final List<String> options = ['Semua', 'Kos Iqbal', 'Kos Farhan'];
+  String selectedValue = 'Semua'; // Nilai default
+  TextEditingController searchController = TextEditingController();
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  // Update nilai yang dipilih
+  void updateSelectedValue(String value) {
+    selectedValue = value;
+    notifyListeners(); // Memberitahu UI untuk melakukan rebuild
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  // Fungsi pencarian
+  void search(String query) {
+    // Implementasi logika pencarian penghuni (misalnya filter list)
+    notifyListeners(); // Memberitahu UI untuk melakukan rebuild
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }
