@@ -7,7 +7,7 @@ class DetailPenghuniController extends ChangeNotifier {
     nama: "Farhan",
     noTelepon: "62876543219",
     properti: "Kos Iqbal",
-    noKamar: "1",
+    noKamar: "Kamar 1",
   );
 
   void perpanjangSewa() {

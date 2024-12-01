@@ -125,7 +125,7 @@ class DropdownTextField extends StatelessWidget {
                     },
                     // Card untuk menampilkan informasi penghuni
                     child: _buildCard(
-                        'Farhan', 'Kost Iqbal', 'Kamar 1', 'Bulanan'),
+                        'Farhan', 'Kost Iqbal', 'Kamar 1', '1 Bulan'),
                   ),
                 ],
               ),
