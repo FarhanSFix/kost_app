@@ -249,7 +249,7 @@ class ProfileView extends GetView<ProfileController> {
                                         controller.userPhone.value;
                                     Get.back();
                                   },
-                                  child: Text("Cancel",
+                                  child: Text("Batal",
                                       style: TextStyle(color: Colors.black54)),
                                 ),
                                 ElevatedButton(
@@ -286,7 +286,7 @@ class ProfileView extends GetView<ProfileController> {
                                     );
                                     Get.back();
                                   },
-                                  child: Text("Save",
+                                  child: Text("Simpan",
                                       style: TextStyle(color: Colors.white)),
                                 ),
                               ],
@@ -324,6 +324,7 @@ class ProfileView extends GetView<ProfileController> {
                         onPressed: () {
                           Get.dialog(
                             AlertDialog(
+                              backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),

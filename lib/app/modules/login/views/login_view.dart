@@ -13,14 +13,18 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.all(30),
-        child: Stack(
-          children: [
-            Column(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                ),
                 Text(
                   "Login",
                   style: TextStyle(fontFamily: 'Jaro', fontSize: 64),
@@ -45,7 +49,8 @@ class LoginView extends GetView<LoginController> {
                   controller: controller.emailController,
                   decoration: InputDecoration(
                     hintText: 'Masukkan email',
-                    hintStyle: TextStyle(color: Color(0xFF888888)),
+                    hintStyle:
+                        TextStyle(color: Color(0xFF03071E).withOpacity(0.25)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -55,41 +60,46 @@ class LoginView extends GetView<LoginController> {
                 ),
                 Text("Password",
                     style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
-                Obx(() {
-                  return TextField(
-                    controller: controller.passwordController,
-                    obscureText: controller.isPasswordHidden.value,
-                    decoration: InputDecoration(
-                      hintText: 'Masukkan password',
-                      hintStyle: TextStyle(color: Color(0xFF888888)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          controller.isPasswordHidden.value
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                Obx(
+                  () {
+                    return TextField(
+                      controller: controller.passwordController,
+                      obscureText: controller.isPasswordHidden.value,
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan password',
+                        hintStyle: TextStyle(
+                            color: Color(0xFF03071E).withOpacity(0.25)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            controller.isPasswordHidden.value
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                          onPressed: () {
+                            controller.isPasswordHidden.value =
+                                !controller.isPasswordHidden.value;
+                          },
                         ),
-                        onPressed: () {
-                          controller.isPasswordHidden.value =
-                              !controller.isPasswordHidden.value;
-                        },
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                ),
                 SizedBox(
                   height: 16,
                 ),
                 Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () => Get.toNamed(Routes.RESET_PASSWORD),
-                      child: Text(
-                        "Lupa Password?",
-                        style: TextStyle(color: appColor.buttonTextColor),
-                      ),
-                    )),
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    onTap: () => Get.toNamed(Routes.RESET_PASSWORD),
+                    child: Text(
+                      "Lupa Password?",
+                      style: TextStyle(color: appColor.buttonTextColor),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: 16,
                 ),
@@ -111,29 +121,30 @@ class LoginView extends GetView<LoginController> {
                         fontWeight: FontWeight.bold,
                       )),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.25),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Belum punya akun? ",
+                      ),
+                      InkWell(
+                        onTap: () => Get.toNamed(Routes.REGISTER),
+                        child: Text(
+                          "Daftar Sekarang",
+                          style: TextStyle(
+                            color: appColor.buttonTextColor,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Belum punya akun?",
-                  ),
-                  TextButton(
-                      onPressed: () => Get.offNamed(Routes.REGISTER),
-                      child: Text(
-                        "Daftar Sekarang",
-                        style: TextStyle(
-                          color: appColor.buttonTextColor,
-                        ),
-                      ))
-                ],
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
