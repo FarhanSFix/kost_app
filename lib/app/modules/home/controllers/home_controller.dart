@@ -1,14 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   var indexStatistik = 0.obs;
 
   final pemasukanBulanIni = 0.obs;
   final pengeluaranBulanIni = 0.obs;
   final pemasukanBulanLalu = 0.obs;
   final pengeluaranBulanLalu = 0.obs;
+  final userName = ''.obs;
 
   var keuanganList = <Map<String, dynamic>>[].obs;
 
@@ -23,10 +28,38 @@ class HomeController extends GetxController {
     super.onInit();
     hitungStatistik();
     fetchKeuangan();
+    listenToUserData();
+  }
+
+  void listenToUserData() {
+    String? userId = auth.currentUser?.uid;
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
+    firestore.collection('users').doc(userId).snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        var data = snapshot.data();
+        var fullName = data?['username'] ?? 'Nama Tidak Ditemukan';
+
+        // Ambil hanya 2 kata pertama dari username
+        var words = fullName.split(' ');
+        userName.value =
+            words.take(2).join(' '); // Gabungkan kembali 2 kata pertama
+      }
+    }, onError: (e) {
+      Get.snackbar('Error', 'Gagal mengambil data user: $e');
+    });
   }
 
   String formatNominal(int nominal) {
-    final formatter = NumberFormat('#,###', 'id_ID');
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
     return formatter.format(nominal).replaceAll(',', '.');
   }
 
@@ -42,66 +75,86 @@ class HomeController extends GetxController {
     DateTime awalBulanLalu = DateTime(now.year, now.month - 1, 1);
     DateTime akhirBulanLalu = DateTime(now.year, now.month, 0);
 
+    String? userId = auth.currentUser?.uid; // Ambil userId dari pengguna login
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
     // Hitung pemasukan dan pengeluaran untuk bulan ini
-    pemasukanBulanIni.value = await _hitungTotal(
+    _hitungTotal(
       collection: 'pemasukan',
       awalBulan: awalBulanIni,
       akhirBulan: now,
+      userId: userId,
+      update: (total) => pemasukanBulanIni.value = total,
     );
 
-    pengeluaranBulanIni.value = await _hitungTotal(
+    _hitungTotal(
       collection: 'pengeluaran',
       awalBulan: awalBulanIni,
       akhirBulan: now,
+      userId: userId,
+      update: (total) => pengeluaranBulanIni.value = total,
     );
 
     // Hitung pemasukan dan pengeluaran untuk bulan lalu
-    pemasukanBulanLalu.value = await _hitungTotal(
+    _hitungTotal(
       collection: 'pemasukan',
       awalBulan: awalBulanLalu,
       akhirBulan: akhirBulanLalu,
+      userId: userId,
+      update: (total) => pemasukanBulanLalu.value = total,
     );
 
-    pengeluaranBulanLalu.value = await _hitungTotal(
+    _hitungTotal(
       collection: 'pengeluaran',
       awalBulan: awalBulanLalu,
       akhirBulan: akhirBulanLalu,
+      userId: userId,
+      update: (total) => pengeluaranBulanLalu.value = total,
     );
   }
 
-  Future<int> _hitungTotal({
+  void _hitungTotal({
     required String collection,
     required DateTime awalBulan,
     required DateTime akhirBulan,
-  }) async {
-    print("Mengambil data dari koleksi: $collection");
-    print(
-        "Rentang waktu: ${awalBulan.toIso8601String()} - ${akhirBulan.toIso8601String()}");
-
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
+    required String userId,
+    required Function(int) update,
+  }) {
+    FirebaseFirestore.instance
         .collection(collection)
+        .where('userId', isEqualTo: userId)
         .where('created_at', isGreaterThanOrEqualTo: awalBulan)
         .where('created_at', isLessThanOrEqualTo: akhirBulan)
-        .get();
-
-    print("Jumlah dokumen ditemukan: ${snapshot.docs.length}");
-
-    int total = snapshot.docs.fold(0, (sum, doc) {
-      print("Data dokumen: ${doc.data()}");
-      return sum + (doc['total_bayar'] as int);
+        .snapshots()
+        .listen((snapshot) {
+      int total = snapshot.docs.fold(0, (sum, doc) {
+        return sum + (doc['total_bayar'] as int);
+      });
+      update(total); // Mengupdate nilai secara otomatis
     });
-
-    print("Total untuk koleksi $collection: $total");
-    return total;
   }
 
+  // List keuangan
   void fetchKeuangan() {
-    FirebaseFirestore.instance
+    String? userId = auth.currentUser?.uid; // Ambil userId dari pengguna login
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
+    firestore
         .collection('pemasukan')
+        .where('userId', isEqualTo: userId)
         .snapshots()
         .listen((pemasukanSnapshot) {
-      FirebaseFirestore.instance
+      firestore
           .collection('pengeluaran')
+          .where('userId', isEqualTo: userId)
           .snapshots()
           .listen((pengeluaranSnapshot) async {
         List<Map<String, dynamic>> pemasukan = [];
@@ -110,20 +163,18 @@ class HomeController extends GetxController {
           var data = doc.data() as Map<String, dynamic>;
 
           // Query nama penghuni berdasarkan id_penghuni
-          var penghuniSnapshot = await FirebaseFirestore.instance
+          var penghuniSnapshot = await firestore
               .collection('penghuni')
               .doc(data['id_penghuni'])
               .get();
 
-          var propertiSnapshot = await FirebaseFirestore.instance
+          var propertiSnapshot = await firestore
               .collection('properti')
               .doc(data['id_properti'])
               .get();
 
-          var kamarSnapshot = await FirebaseFirestore.instance
-              .collection('kamar')
-              .doc(data['id_kamar'])
-              .get();
+          var kamarSnapshot =
+              await firestore.collection('kamar').doc(data['id_kamar']).get();
 
           data['jenis'] = 'pemasukan'; // Tandai sebagai pemasukan
           data['judul'] = penghuniSnapshot.exists
@@ -146,7 +197,7 @@ class HomeController extends GetxController {
           var data = doc.data() as Map<String, dynamic>;
 
           // Query nama kategori berdasarkan id_kategori
-          var propertiSnapshot = await FirebaseFirestore.instance
+          var propertiSnapshot = await firestore
               .collection('properti')
               .doc(data['id_properti'])
               .get();

@@ -23,25 +23,29 @@ class HomeView extends GetView<HomeController> {
                     width: 74,
                   ),
                   const SizedBox(width: 10),
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Hallo,',
                         textHeightBehavior: TextHeightBehavior(
                           applyHeightToFirstAscent: false,
                           applyHeightToLastDescent: false,
                         ),
                       ),
-                      Text(
-                        'Guido Augusta',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textHeightBehavior: TextHeightBehavior(
-                          applyHeightToFirstAscent: false,
-                          applyHeightToLastDescent: false,
+                      Obx(
+                        () => Text(
+                          controller.userName.value,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textHeightBehavior: const TextHeightBehavior(
+                            applyHeightToFirstAscent: false,
+                            applyHeightToLastDescent: false,
+                          ),
                         ),
                       ),
                     ],
@@ -215,13 +219,17 @@ class HomeView extends GetView<HomeController> {
                       const SizedBox(height: 15),
                       const Text('Selisih'),
                       const SizedBox(height: 2),
-                      Text(
-                        controller.indexStatistik.value == 0
-                            ? 'Rp ${controller.formatNominal(controller.selisihBulanIni)}'
-                            : 'Rp ${controller.formatNominal(controller.selisihBulanLalu)}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      Obx(
+                        () => Text(
+                          controller.indexStatistik.value == 0
+                              ? controller
+                                  .formatNominal(controller.selisihBulanIni)
+                              : controller
+                                  .formatNominal(controller.selisihBulanLalu),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const Divider(
@@ -246,14 +254,18 @@ class HomeView extends GetView<HomeController> {
                                 ],
                               ),
                               const SizedBox(height: 2),
-                              Text(
-                                controller.indexStatistik.value == 0
-                                    ? 'Rp ${controller.formatNominal(controller.pemasukanBulanIni.value)}'
-                                    : 'Rp ${controller.formatNominal(controller.pemasukanBulanLalu.value)}',
-                                style: const TextStyle(
-                                  color: appColor.income,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                              Obx(
+                                () => Text(
+                                  controller.indexStatistik.value == 0
+                                      ? controller.formatNominal(
+                                          controller.pemasukanBulanIni.value)
+                                      : controller.formatNominal(
+                                          controller.pemasukanBulanLalu.value),
+                                  style: const TextStyle(
+                                    color: appColor.income,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
@@ -280,14 +292,18 @@ class HomeView extends GetView<HomeController> {
                                 ],
                               ),
                               const SizedBox(height: 2),
-                              Text(
-                                controller.indexStatistik.value == 0
-                                    ? 'Rp ${controller.formatNominal(controller.pengeluaranBulanIni.value)}'
-                                    : 'Rp ${controller.formatNominal(controller.pengeluaranBulanLalu.value)}',
-                                style: const TextStyle(
-                                  color: appColor.outcome,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                              Obx(
+                                () => Text(
+                                  controller.indexStatistik.value == 0
+                                      ? controller.formatNominal(
+                                          controller.pengeluaranBulanIni.value)
+                                      : controller.formatNominal(controller
+                                          .pengeluaranBulanLalu.value),
+                                  style: const TextStyle(
+                                    color: appColor.outcome,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
@@ -326,8 +342,24 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
               const SizedBox(height: 12),
-              Obx(
-                () => ListView.separated(
+              Obx(() {
+                if (controller.keuanganList.length == 0) {
+                  return const Center(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20),
+                        Text(
+                          'Tidak ada data',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                  );
+                }
+                return ListView.separated(
                   itemCount: controller.keuanganList.length,
                   padding: EdgeInsets.zero,
                   separatorBuilder: (context, index) =>
@@ -449,8 +481,9 @@ class HomeView extends GetView<HomeController> {
                                       children: [
                                         Text(
                                           item['jenis'] == 'pemasukan'
-                                              ? 'Rp ${controller.formatNominal(item['total_bayar'])}'
-                                              : '-Rp ${controller.formatNominal(item['total_bayar'])}',
+                                              ? controller.formatNominal(
+                                                  item['total_bayar'])
+                                              : '-${controller.formatNominal(item['total_bayar'])}',
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
@@ -548,7 +581,8 @@ class HomeView extends GetView<HomeController> {
                                         child: const Text(
                                           'Batal',
                                           style: TextStyle(
-                                              color: appColor.buttonTextColor),
+                                            color: Colors.black54,
+                                          ),
                                         ),
                                       ),
                                       // Tombol hapus
@@ -627,8 +661,8 @@ class HomeView extends GetView<HomeController> {
                       ),
                     );
                   },
-                ),
-              ),
+                );
+              }),
               const SizedBox(height: 20),
             ],
           ),
