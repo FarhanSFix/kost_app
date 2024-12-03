@@ -1,17 +1,23 @@
 import 'package:get/get.dart';
 
+import '../modules/add_kejadian/bindings/add_kejadian_binding.dart';
+import '../modules/add_kejadian/views/add_kejadian_view.dart';
 import '../modules/add_penghuni/bindings/add_penghuni_binding.dart';
 import '../modules/add_penghuni/views/add_penghuni_view.dart';
 import '../modules/add_property/bindings/add_property_binding.dart';
 import '../modules/add_property/views/add_property_view.dart';
 import '../modules/add_room/bindings/add_room_binding.dart';
 import '../modules/add_room/views/add_room_view.dart';
+import '../modules/detail_kejadian/bindings/detail_kejadian_binding.dart';
+import '../modules/detail_kejadian/views/detail_kejadian_view.dart';
 import '../modules/detail_penghuni/bindings/detail_penghuni_binding.dart';
 import '../modules/detail_penghuni/views/detail_penghuni_view.dart';
 import '../modules/detail_property/bindings/detail_property_binding.dart';
 import '../modules/detail_property/views/detail_property_view.dart';
 import '../modules/detail_room/bindings/detail_room_binding.dart';
 import '../modules/detail_room/views/detail_room_view.dart';
+import '../modules/edit_kejadian/bindings/edit_kejadian_binding.dart';
+import '../modules/edit_kejadian/views/edit_kejadian_view.dart';
 import '../modules/edit_penghuni/bindings/edit_penghuni_binding.dart';
 import '../modules/edit_penghuni/views/edit_penghuni_view.dart';
 import '../modules/edit_property/bindings/edit_property_binding.dart';
@@ -22,6 +28,8 @@ import '../modules/history/bindings/history_binding.dart';
 import '../modules/history/views/history_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/kejadian/bindings/kejadian_binding.dart';
+import '../modules/kejadian/views/kejadian_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main/bindings/main_binding.dart';
@@ -148,6 +156,26 @@ class AppPages {
       name: _Paths.EDIT_PENGHUNI,
       page: () => const EditPenghuniView(),
       binding: EditPenghuniBinding(),
+    ),
+    GetPage(
+      name: _Paths.KEJADIAN,
+      page: () => const KejadianView(),
+      binding: KejadianBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_KEJADIAN,
+      page: () => const DetailKejadianView(),
+      binding: DetailKejadianBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_KEJADIAN,
+      page: () => const AddKejadianView(),
+      binding: AddKejadianBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_KEJADIAN,
+      page: () => const EditKejadianView(),
+      binding: EditKejadianBinding(),
     ),
   ];
 }

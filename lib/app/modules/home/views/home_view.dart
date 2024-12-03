@@ -105,7 +105,7 @@ class HomeView extends GetView<HomeController> {
                       'Kejadian',
                       'assets/images/img_kejadian.png',
                       onTap: () {
-                        // Get.toNamed(Routes.EVENT);
+                        Get.toNamed(Routes.KEJADIAN);
                       },
                     ),
                   ],

@@ -92,22 +92,22 @@ class AddPenghuniController extends GetxController {
   Future getImageProfile(bool gallery) async {
     //deklarasikan picker
     ImagePicker picker = ImagePicker();
-    XFile? pickedFile;
+    XFile? pickedFileProfile;
     // Let user select photo from gallery
     if (gallery) {
-      pickedFile = await picker.pickImage(
+      pickedFileProfile = await picker.pickImage(
         source: ImageSource.gallery,
       );
     }
     // Otherwise open camera to get new photo
     else {
-      pickedFile = await picker.pickImage(
+      pickedFileProfile = await picker.pickImage(
         source: ImageSource.camera,
       );
     }
     //jika user memilih sebuah gambar maka pickedfile di assign kedalam image variable
-    if (pickedFile != null) {
-      imageprofile.value = pickedFile;
+    if (pickedFileProfile != null) {
+      imageprofile.value = pickedFileProfile;
     }
   }
 

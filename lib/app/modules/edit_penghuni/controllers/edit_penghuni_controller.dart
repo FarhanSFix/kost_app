@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kost_app/app/data/model.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 
 class EditPenghuniController extends GetxController {
   TextEditingController nameController = TextEditingController();
@@ -103,22 +105,22 @@ class EditPenghuniController extends GetxController {
   Future getImageProfile(bool gallery) async {
     //deklarasikan picker
     ImagePicker picker = ImagePicker();
-    XFile? pickedFile;
+    XFile? pickedFileProfile;
     // Let user select photo from gallery
     if (gallery) {
-      pickedFile = await picker.pickImage(
+      pickedFileProfile = await picker.pickImage(
         source: ImageSource.gallery,
       );
     }
     // Otherwise open camera to get new photo
     else {
-      pickedFile = await picker.pickImage(
+      pickedFileProfile = await picker.pickImage(
         source: ImageSource.camera,
       );
     }
     //jika user memilih sebuah gambar maka pickedfile di assign kedalam image variable
-    if (pickedFile != null) {
-      imageprofile.value = pickedFile;
+    if (pickedFileProfile != null) {
+      imageprofile.value = pickedFileProfile;
     }
   }
 
@@ -174,5 +176,127 @@ class EditPenghuniController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<void> updateData(
+    String id,
+    String namaPenghuni,
+    String noTelp,
+    String idProperti,
+    String idKamar,
+    String images,
+    String imageProfiles,
+  ) async {
+    DocumentReference updateData =
+        FirebaseFirestore.instance.collection("penghuni").doc(id);
+    final user = FirebaseAuth.instance.currentUser;
+    if (namaPenghuni.isEmpty ||
+        noTelp.isEmpty ||
+        idProperti.isEmpty ||
+        idKamar.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Semua kolom wajib diisi!',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    if (user != null) {
+      try {
+        await updateData.update({
+          "foto_KTP": images,
+          "foto_penghuni": imageProfiles,
+          "id_kamar": idKamar,
+          "id_properti": idProperti,
+          "is_active": true,
+          "nama": namaPenghuni,
+          "telepon": noTelp,
+          "userId": user.uid,
+        });
+        Get.snackbar('Success', 'Data penghuni berhasil diperbarui');
+        Get.offAllNamed(Routes.PENGHUNI);
+      } catch (e) {
+        Get.snackbar('Error', 'Gagal memperbarui data penghuni: $e');
+      }
+    } else {
+      Get.snackbar(
+        'Error',
+        'Pengguna tidak terautentikasi!',
+      );
+    }
+  }
+
+  Future<void> updateWithImage(
+    String id,
+    String namaPenghuni,
+    String noTelp,
+    String idProperti,
+    String idKamar,
+    File images,
+    File imageProfiles,
+  ) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (namaPenghuni.isEmpty ||
+        noTelp.isEmpty ||
+        idProperti.isEmpty ||
+        idKamar.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Semua kolom wajib diisi!',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    if (user != null) {
+      if (namaPenghuni.isEmpty ||
+          noTelp.isEmpty ||
+          idProperti.isEmpty ||
+          idKamar.isEmpty) {
+        Get.snackbar(
+          'Error',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      try {
+        await FirebaseFirestore.instance.collection('penghuni').doc(id).update({
+          'created_at': DateTime.now(),
+          'foto_KTP': base64String(await images.readAsBytes()),
+          'foto_penghuni': base64String(await imageProfiles.readAsBytes()),
+          'id_kamar': idKamar,
+          'id_properti': idProperti,
+          'is_active': true,
+          'nama': namaPenghuni,
+          'telepon': noTelp,
+          'userId': user.uid
+        });
+        Get.snackbar(
+          'Sukses',
+          'Data penghuni berhasil diperbarui!',
+        );
+        Get.offAllNamed(Routes.PENGHUNI);
+      } catch (e) {
+        Get.snackbar(
+          'Error',
+          'Gagal memperbarui data penghuni: $e',
+        );
+      }
+    } else {
+      Get.snackbar(
+        'Error',
+        'Pengguna tidak terautentikasi!',
+      );
+    }
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    telpController.dispose();
+    super.onClose();
   }
 }

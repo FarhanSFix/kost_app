@@ -23,6 +23,10 @@ abstract class Routes {
   static const ADD_PENGHUNI = _Paths.ADD_PENGHUNI;
   static const DETAIL_PENGHUNI = _Paths.DETAIL_PENGHUNI;
   static const EDIT_PENGHUNI = _Paths.EDIT_PENGHUNI;
+  static const KEJADIAN = _Paths.KEJADIAN;
+  static const DETAIL_KEJADIAN = _Paths.DETAIL_KEJADIAN;
+  static const ADD_KEJADIAN = _Paths.ADD_KEJADIAN;
+  static const EDIT_KEJADIAN = _Paths.EDIT_KEJADIAN;
 }
 
 abstract class _Paths {
@@ -47,4 +51,8 @@ abstract class _Paths {
   static const ADD_PENGHUNI = '/add-penghuni';
   static const DETAIL_PENGHUNI = '/detail-penghuni';
   static const EDIT_PENGHUNI = '/edit-penghuni';
+  static const KEJADIAN = '/kejadian';
+  static const DETAIL_KEJADIAN = '/detail-kejadian';
+  static const ADD_KEJADIAN = '/add-kejadian';
+  static const EDIT_KEJADIAN = '/edit-kejadian';
 }

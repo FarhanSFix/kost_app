@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:kost_app/app/utils/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/detail_penghuni_controller.dart';
 
@@ -141,7 +142,10 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        launchUrl(
+                            Uri.parse('https://wa.me/${penghuni.telepon}'));
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: appColor.income,
                         shape: RoundedRectangleBorder(

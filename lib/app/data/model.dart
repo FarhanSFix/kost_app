@@ -64,3 +64,31 @@ class Kamar {
     );
   }
 }
+
+class Kejadian {
+  String id;
+  String id_penghuni;
+  String kejadian;
+  String foto_bukti;
+  int nominal;
+  String status;
+
+  Kejadian({
+    required this.id,
+    required this.id_penghuni,
+    required this.kejadian,
+    required this.foto_bukti,
+    required this.nominal,
+    required this.status,
+  });
+
+  factory Kejadian.fromFireStore(Map<String, dynamic> data, String id) {
+    return Kejadian(
+        id: id,
+        id_penghuni: data['id_penghuni'],
+        kejadian: data['kejadian'],
+        foto_bukti: data['foto_bukti'],
+        nominal: data['nominal'],
+        status: data['status']);
+  }
+}

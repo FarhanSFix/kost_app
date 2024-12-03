@@ -69,10 +69,11 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
                             right: 0,
                             child: IconButton(
                               onPressed: () async {
-                                final pickedFile =
+                                final pickedFileProfile =
                                     await controller.getImageProfile(true);
-                                if (pickedFile != null) {
-                                  controller.imageprofile.value = pickedFile;
+                                if (pickedFileProfile != null) {
+                                  controller.imageprofile.value =
+                                      pickedFileProfile;
                                 }
                               },
                               icon: Icon(
@@ -262,8 +263,27 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
                         minimumSize: Size(double.infinity, 52),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () {
-                      print(kamarvalue.nomor);
+                    onPressed: () async {
+                      if (controller.image.value.path.isNotEmpty ||
+                          controller.imageprofile.value.path.isNotEmpty) {
+                        await controller.updateWithImage(
+                            penghuni.id,
+                            controller.nameController.text,
+                            controller.telpController.text,
+                            controller.selectedProperti.value,
+                            controller.selectedKamar.value,
+                            File(controller.image.value.path),
+                            File(controller.imageprofile.value.path));
+                      } else {
+                        controller.updateData(
+                            penghuni.id,
+                            controller.nameController.text,
+                            controller.telpController.text,
+                            controller.selectedProperti.value,
+                            controller.selectedKamar.value,
+                            penghuni.foto_KTP,
+                            penghuni.foto_penghuni);
+                      }
                     },
                     child: Text("Perbarui",
                         style: TextStyle(

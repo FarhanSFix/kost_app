@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:kost_app/app/data/model.dart';
@@ -162,8 +163,11 @@ class PenghuniView extends GetView<PenghuniController> {
                                               BorderRadius.circular(20),
                                         ),
                                       ),
-                                      icon:
-                                          Icon(Icons.call, color: Colors.white),
+                                      icon: SvgPicture.asset(
+                                        'assets/icons/whatsapp.svg',
+                                        color: Colors.white,
+                                        width: 21,
+                                      ),
                                       label: Text('Hubungi',
                                           style: TextStyle(
                                               fontSize: 10,
