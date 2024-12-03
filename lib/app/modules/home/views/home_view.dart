@@ -84,7 +84,7 @@ class HomeView extends GetView<HomeController> {
                       'Penghuni',
                       'assets/images/img_penghuni.png',
                       onTap: () {
-                        // Get.toNamed(Routes.RESIDENT);
+                        Get.toNamed(Routes.PENGHUNI);
                       },
                     ),
                     DashboardMenu(
