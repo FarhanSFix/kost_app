@@ -11,6 +11,10 @@ abstract class Routes {
   static const MAIN = _Paths.MAIN;
   static const HISTORY = _Paths.HISTORY;
   static const PROFILE = _Paths.PROFILE;
+  static const KEJADIAN = _Paths.KEJADIAN;
+  static const DETAIL_KEJADIAN = _Paths.DETAIL_KEJADIAN;
+  static const TAMBAH_KEJADIAN = _Paths.TAMBAH_KEJADIAN;
+  static const EDIT_KEJADIAN = _Paths.EDIT_KEJADIAN;
 }
 
 abstract class _Paths {
@@ -23,4 +27,8 @@ abstract class _Paths {
   static const MAIN = '/main';
   static const HISTORY = '/history';
   static const PROFILE = '/profile';
+  static const KEJADIAN = '/kejadian';
+  static const DETAIL_KEJADIAN = '/detail-kejadian';
+  static const TAMBAH_KEJADIAN = '/tambah-kejadian';
+  static const EDIT_KEJADIAN = '/edit-kejadian';
 }
