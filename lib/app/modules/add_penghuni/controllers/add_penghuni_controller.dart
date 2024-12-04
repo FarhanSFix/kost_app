@@ -147,6 +147,10 @@ class AddPenghuniController extends GetxController {
           'telepon': noTelp,
           'userId': user.uid
         });
+        await firestore
+            .collection('kamar')
+            .doc(idKamar)
+            .update({'status': 'Dipesan'});
         Get.snackbar(
           'Sukses',
           'Penghuni berhasil ditambahkan!',

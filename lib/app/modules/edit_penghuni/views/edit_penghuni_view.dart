@@ -264,23 +264,38 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () async {
+                      final selectedpropertiId =
+                          controller.selectedProperti.value.isNotEmpty
+                              ? controller.selectedProperti.value
+                              : propertivalue.id;
+                      final selectedKamarId =
+                          controller.selectedKamar.value.isNotEmpty
+                              ? controller.selectedKamar.value
+                              : kamarvalue.id;
+                      final imagesProfile =
+                          controller.imageprofile.value.path.isNotEmpty
+                              ? File(controller.imageprofile.value.path)
+                              : penghuni.foto_penghuni;
+                      final imagesKTP = controller.image.value.path.isNotEmpty
+                          ? File(controller.image.value.path)
+                          : penghuni.foto_KTP;
                       if (controller.image.value.path.isNotEmpty ||
                           controller.imageprofile.value.path.isNotEmpty) {
                         await controller.updateWithImage(
                             penghuni.id,
                             controller.nameController.text,
                             controller.telpController.text,
-                            controller.selectedProperti.value,
-                            controller.selectedKamar.value,
-                            File(controller.image.value.path),
-                            File(controller.imageprofile.value.path));
+                            selectedpropertiId,
+                            selectedKamarId,
+                            imagesKTP,
+                            imagesProfile);
                       } else {
                         controller.updateData(
                             penghuni.id,
                             controller.nameController.text,
                             controller.telpController.text,
-                            controller.selectedProperti.value,
-                            controller.selectedKamar.value,
+                            selectedpropertiId,
+                            selectedKamarId,
                             penghuni.foto_KTP,
                             penghuni.foto_penghuni);
                       }

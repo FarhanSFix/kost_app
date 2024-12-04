@@ -233,8 +233,8 @@ class EditPenghuniController extends GetxController {
     String noTelp,
     String idProperti,
     String idKamar,
-    File images,
-    File imageProfiles,
+    dynamic images,
+    dynamic imageProfiles,
   ) async {
     final user = FirebaseAuth.instance.currentUser;
     if (namaPenghuni.isEmpty ||
@@ -249,6 +249,12 @@ class EditPenghuniController extends GetxController {
       );
       return;
     }
+    String imageKTPBase64 = images is File
+        ? base64Encode(await images.readAsBytes())
+        : images; // Jika String, gunakan langsung
+    String imageProfileBase64 = imageProfiles is File
+        ? base64Encode(await imageProfiles.readAsBytes())
+        : imageProfiles; // Jika String, gunakan langsung
     if (user != null) {
       if (namaPenghuni.isEmpty ||
           noTelp.isEmpty ||
@@ -265,8 +271,8 @@ class EditPenghuniController extends GetxController {
       try {
         await FirebaseFirestore.instance.collection('penghuni').doc(id).update({
           'created_at': DateTime.now(),
-          'foto_KTP': base64String(await images.readAsBytes()),
-          'foto_penghuni': base64String(await imageProfiles.readAsBytes()),
+          'foto_KTP': imageKTPBase64,
+          'foto_penghuni': imageProfileBase64,
           'id_kamar': idKamar,
           'id_properti': idProperti,
           'is_active': true,

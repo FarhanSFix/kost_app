@@ -15,6 +15,11 @@ class KejadianView extends GetView<KejadianController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Get.offAllNamed(Routes.MAIN);
+            },
+            icon: Icon(Icons.arrow_back_rounded)),
         title: const Text('KejadianView'),
         centerTitle: true,
       ),
@@ -105,7 +110,7 @@ class KejadianView extends GetView<KejadianController> {
                                     ),
                                     const SizedBox(height: 20),
                                     Text(
-                                      'Nominal: Rp ${kejadian.nominal}',
+                                      'Nominal: Rp ${controller.formatNominal(kejadian.nominal)}',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.green,
@@ -128,7 +133,8 @@ class KejadianView extends GetView<KejadianController> {
                                       ),
                                       IconButton(
                                         onPressed: () {
-                                          // Logika untuk menghapus kejadian
+                                          controller
+                                              .deleteKejadian(kejadian.id);
                                         },
                                         icon: const Icon(Icons.delete,
                                             color: Colors.red),

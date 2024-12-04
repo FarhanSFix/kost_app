@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kost_app/app/data/model.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 
 class KejadianController extends GetxController {
   var searchNama = ''.obs;
@@ -48,5 +50,32 @@ class KejadianController extends GetxController {
     fetchPenghuni();
     fetchKejadian();
     super.onInit();
+  }
+
+  String formatNominal(int nominal) {
+    final formatter = NumberFormat('#,###', 'id_ID');
+    return formatter.format(nominal).replaceAll(',', '.');
+  }
+
+  void deleteKejadian(String docID) {
+    try {
+      Get.defaultDialog(
+          title: "Hapus kejadian",
+          middleText: "Apakah anda yakin akan menghapus kejadian ini?",
+          onConfirm: () async {
+            await FirebaseFirestore.instance
+                .collection('kejadian')
+                .doc(docID)
+                .delete();
+            Get.back();
+            Get.snackbar('Berhasil', 'Kejadian berhasil dihapus');
+            Get.offAllNamed(Routes.KEJADIAN);
+          },
+          textConfirm: "Ya, saya yakin",
+          textCancel: "Tidak");
+    } catch (e) {
+      print(e);
+      Get.snackbar('Error', 'Tidak dapat menghapus kejadian');
+    }
   }
 }

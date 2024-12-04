@@ -172,7 +172,7 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        controller.hapusPenghuni();
+                        controller.hapusPenghuni(penghuni.id);
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(100, 42),

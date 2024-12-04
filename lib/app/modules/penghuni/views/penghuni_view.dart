@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -17,6 +19,9 @@ class PenghuniView extends GetView<PenghuniController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () => Get.offAllNamed(Routes.MAIN),
+            icon: Icon(Icons.arrow_back_rounded)),
         title: const Text('PenghuniView'),
         centerTitle: true,
       ),
@@ -93,13 +98,22 @@ class PenghuniView extends GetView<PenghuniController> {
                             padding: EdgeInsets.all(10),
                             child: Row(
                               children: [
-                                CircleAvatar(
-                                  child: Icon(
-                                    Icons.person,
-                                    color: appColor.logoColor,
-                                  ),
-                                  backgroundColor: appColor.backgroundColor1,
-                                ),
+                                penghuni.foto_penghuni.isNotEmpty
+                                    ? CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage: MemoryImage(
+                                          base64Decode(penghuni.foto_penghuni),
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 25,
+                                        backgroundColor:
+                                            appColor.backgroundColor1,
+                                        child: Icon(
+                                          Icons.person,
+                                          color: appColor.logoColor,
+                                        ),
+                                      ),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Column(

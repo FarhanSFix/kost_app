@@ -87,34 +87,25 @@ class DetailPenghuniController extends GetxController {
     }
   }
 
-  void hapusPenghuni() async {
+  void hapusPenghuni(String docID) {
     try {
-      // Konfirmasi penghapusan
-      bool? konfirmasi = await Get.defaultDialog<bool>(
-        title: "Konfirmasi",
-        middleText: "Apakah Anda yakin ingin menghapus penghuni ini?",
-        textConfirm: "Ya",
-        textCancel: "Tidak",
-        onConfirm: () {
-          Get.back(result: true);
-        },
-        onCancel: () {
-          Get.back(result: false);
-        },
-      );
-
-      if (konfirmasi == true) {
-        // Hapus penghuni dari Firestore
-        await FirebaseFirestore.instance
-            .collection('penghuni')
-            .doc(idpenghuni)
-            .delete();
-
-        Get.snackbar("Berhasil", "Penghuni berhasil dihapus.");
-        Get.toNamed(Routes.PENGHUNI);
-      }
+      Get.defaultDialog(
+          title: "Hapus penghuni",
+          middleText: "Apakah anda yakin akan menghapus penghuni ini?",
+          onConfirm: () async {
+            await FirebaseFirestore.instance
+                .collection('penghuni')
+                .doc(docID)
+                .delete();
+            Get.back();
+            Get.snackbar('Berhasil', 'penghuni berhasil dihapus');
+            Get.offAllNamed(Routes.PENGHUNI);
+          },
+          textConfirm: "Ya, saya yakin",
+          textCancel: "Tidak");
     } catch (e) {
-      Get.snackbar("Error", "Gagal menghapus penghuni: $e");
+      print(e);
+      Get.snackbar('Error', 'Tidak dapat menghapus penghuni');
     }
   }
 }
