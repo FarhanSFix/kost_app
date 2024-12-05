@@ -31,8 +31,8 @@ class EditPenghuniController extends GetxController {
           isActive: true,
           idKamar: '')
       .obs;
-  var properti = Properti(id: '', nama: '').obs;
-  var kamar = Kamar(id: '', nomor: '', status: '').obs;
+  var properti = Properti(id: '', nama: '-').obs;
+  var kamar = Kamar(id: '', nomor: '-', status: '').obs;
   @override
   void onInit() {
     fetchPenghuni(idpenghuni);

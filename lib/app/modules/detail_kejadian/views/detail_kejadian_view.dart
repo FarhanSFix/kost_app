@@ -26,8 +26,8 @@ class DetailKejadianView extends GetView<DetailKejadianController> {
                 children: [
                   _buildReadOnlyField("Nama penghuni", penghuni.nama),
                   _buildReadOnlyField("Kejadian", kejadianvalue.kejadian),
-                  _buildReadOnlyField(
-                      "Properti", kejadianvalue.nominal.toString()),
+                  _buildReadOnlyField("Nominal",
+                      "Rp ${controller.formatNominal(kejadianvalue.nominal)}"),
                   const Text(
                     "Bukti",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

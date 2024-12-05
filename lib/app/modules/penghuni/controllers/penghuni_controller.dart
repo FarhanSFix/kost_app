@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:kost_app/app/data/model.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 
 class PenghuniController extends GetxController {
   var propertiList = <Properti>[].obs;
@@ -43,6 +44,7 @@ class PenghuniController extends GetxController {
               isEqualTo: selectedProperti.value == 'Semua'
                   ? null
                   : selectedProperti.value)
+          .where('is_active', isEqualTo: true)
           .where("userId", isEqualTo: user.uid)
           .get();
 
@@ -68,13 +70,47 @@ class PenghuniController extends GetxController {
   }
 
   String getNomorKamar(String idKamar) {
-    return kamarMap[idKamar]?.nomor ?? 'Tidak Ditemukan';
+    return kamarMap[idKamar]?.nomor ?? '-';
   }
 
   String getNamaProperti(String idProperti) {
-    final properti = propertiList.firstWhere(
+    final properti = propertiList.firstWhereOrNull(
       (item) => item.id == idProperti,
     );
-    return properti.nama;
+    return properti?.nama ?? '-';
+  }
+
+  void checkOut(String docID, String? idKamar) {
+    if (idKamar != "") {
+      try {
+        Get.defaultDialog(
+            title: "Checkout",
+            middleText:
+                "Apakah anda yakin akan melakukan checkout pada penghuni ini?",
+            onConfirm: () async {
+              await FirebaseFirestore.instance
+                  .collection('penghuni')
+                  .doc(docID)
+                  .update({
+                'is_active': false,
+              });
+              await FirebaseFirestore.instance
+                  .collection('kamar')
+                  .doc(idKamar)
+                  .update({'status': 'Tersedia'});
+
+              Get.back();
+              Get.snackbar('Berhasil', 'Penghuni telah keluar dari kost');
+              Get.offAllNamed(Routes.PENGHUNI);
+            },
+            textConfirm: "Ya, saya yakin",
+            textCancel: "Tidak");
+      } catch (e) {
+        print(e);
+        Get.snackbar('Error', 'Tidak dapat melakukan checkout');
+      }
+    } else {
+      Get.snackbar("Error", "Penghuni ini belum masuk");
+    }
   }
 }

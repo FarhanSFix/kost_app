@@ -95,70 +95,70 @@ class AddPenghuniView extends GetView<AddPenghuniController> {
               SizedBox(
                 height: 8,
               ),
-              Text("Properti",
-                  style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
-              Obx(() {
-                return DropdownButtonFormField<String>(
-                  value: controller.selectedProperti.value,
-                  items: [
-                    DropdownMenuItem(
-                      value: '',
-                      child: Text('Pilih properti'),
-                    ),
-                    ...controller.propertiList.map((properti) {
-                      return DropdownMenuItem(
-                        value: properti.id,
-                        child: Text(properti.nama),
-                      );
-                    }).toList(),
-                  ],
-                  onChanged: (value) {
-                    controller.selectedProperti.value = value ?? '';
-                    controller.fetchKamar(
-                        controller.selectedProperti.value, 'Tersedia');
-                  },
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                );
-              }),
-              SizedBox(
-                height: 8,
-              ),
-              Text("Kamar", style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
-              Obx(() {
-                return DropdownButtonFormField<String>(
-                  value: controller.selectedKamar.value.isEmpty
-                      ? null // Jika nilai kosong, atur sebagai null
-                      : controller.selectedKamar.value,
-                  items: [
-                    DropdownMenuItem(
-                      value: '', // Tambahkan nilai default
-                      child: Text('Pilih kamar'),
-                    ),
-                    ...controller.kamarList.map((kamar) {
-                      return DropdownMenuItem(
-                        value: kamar.id,
-                        child: Text(kamar.nomor), // Tampilkan nomor kamar
-                      );
-                    }).toList(),
-                  ],
-                  onChanged: (value) {
-                    controller.selectedKamar.value = value ?? '';
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Pilih kamar',
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                );
-              }),
-              SizedBox(
-                height: 8,
-              ),
+              // Text("Properti",
+              //     style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
+              // Obx(() {
+              //   return DropdownButtonFormField<String>(
+              //     value: controller.selectedProperti.value,
+              //     items: [
+              //       DropdownMenuItem(
+              //         value: '',
+              //         child: Text('Pilih properti'),
+              //       ),
+              //       ...controller.propertiList.map((properti) {
+              //         return DropdownMenuItem(
+              //           value: properti.id,
+              //           child: Text(properti.nama),
+              //         );
+              //       }).toList(),
+              //     ],
+              //     onChanged: (value) {
+              //       controller.selectedProperti.value = value ?? '';
+              //       controller.fetchKamar(
+              //           controller.selectedProperti.value, 'Tersedia');
+              //     },
+              //     decoration: InputDecoration(
+              //       contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              //       border: OutlineInputBorder(
+              //           borderRadius: BorderRadius.circular(10)),
+              //     ),
+              //   );
+              // }),
+              // SizedBox(
+              //   height: 8,
+              // ),
+              // Text("Kamar", style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
+              // Obx(() {
+              //   return DropdownButtonFormField<String>(
+              //     value: controller.selectedKamar.value.isEmpty
+              //         ? null // Jika nilai kosong, atur sebagai null
+              //         : controller.selectedKamar.value,
+              //     items: [
+              //       DropdownMenuItem(
+              //         value: '', // Tambahkan nilai default
+              //         child: Text('Pilih kamar'),
+              //       ),
+              //       ...controller.kamarList.map((kamar) {
+              //         return DropdownMenuItem(
+              //           value: kamar.id,
+              //           child: Text(kamar.nomor), // Tampilkan nomor kamar
+              //         );
+              //       }).toList(),
+              //     ],
+              //     onChanged: (value) {
+              //       controller.selectedKamar.value = value ?? '';
+              //     },
+              //     decoration: InputDecoration(
+              //       hintText: 'Pilih kamar',
+              //       contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              //       border: OutlineInputBorder(
+              //           borderRadius: BorderRadius.circular(10)),
+              //     ),
+              //   );
+              // }),
+              // SizedBox(
+              //   height: 8,
+              // ),
               Text("Unggah foto KTP/Kartu Pelajar",
                   style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
               Row(
@@ -216,8 +216,10 @@ class AddPenghuniView extends GetView<AddPenghuniController> {
                   await controller.saveData(
                       controller.nameController.text,
                       controller.telpController.text,
-                      controller.selectedProperti.value,
-                      controller.selectedKamar.value,
+                      // controller.selectedProperti.value,
+                      // controller.selectedKamar.value,
+                      '',
+                      '',
                       File(controller.image.value.path),
                       File(controller.imageprofile.value.path));
                 },

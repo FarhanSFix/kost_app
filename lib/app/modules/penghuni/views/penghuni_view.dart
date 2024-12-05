@@ -128,7 +128,7 @@ class PenghuniView extends GetView<PenghuniController> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        "${namaProperti} \nKamar: ${nomorKamar}",
+                                        "${namaProperti ?? '-'} \nKamar: ${nomorKamar}",
                                         style: TextStyle(
                                             fontSize: 10,
                                             color: Colors.grey[600]),
@@ -144,7 +144,8 @@ class PenghuniView extends GetView<PenghuniController> {
                                       children: [
                                         TextButton.icon(
                                           onPressed: () {
-                                            // Action for Check-out
+                                            controller.checkOut(
+                                                penghuni.id, penghuni.idKamar);
                                           },
                                           icon: Icon(Icons.logout,
                                               color: Colors.red),

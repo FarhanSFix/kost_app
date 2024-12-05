@@ -21,8 +21,8 @@ class DetailPenghuniController extends GetxController {
           isActive: true,
           idKamar: '')
       .obs;
-  var properti = Properti(id: '', nama: '').obs;
-  var kamar = Kamar(id: '', nomor: '', status: '').obs;
+  var properti = Properti(id: '', nama: '-').obs;
+  var kamar = Kamar(id: '', nomor: '-', status: '').obs;
   @override
   void onInit() {
     fetchPenghuni(idpenghuni);
@@ -87,7 +87,7 @@ class DetailPenghuniController extends GetxController {
     }
   }
 
-  void hapusPenghuni(String docID) {
+  void hapusPenghuni(String docID, String idKamar) {
     try {
       Get.defaultDialog(
           title: "Hapus penghuni",
@@ -97,6 +97,14 @@ class DetailPenghuniController extends GetxController {
                 .collection('penghuni')
                 .doc(docID)
                 .delete();
+            await FirebaseFirestore.instance
+                .collection('kamar')
+                .doc(idKamar)
+                .update({'status': 'Tersedia'});
+            Get.snackbar(
+              'Sukses',
+              'Penghuni berhasil ditambahkan!',
+            );
             Get.back();
             Get.snackbar('Berhasil', 'penghuni berhasil dihapus');
             Get.offAllNamed(Routes.PENGHUNI);

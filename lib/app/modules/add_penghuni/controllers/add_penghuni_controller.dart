@@ -17,8 +17,8 @@ class AddPenghuniController extends GetxController {
   final image = XFile("").obs;
   final imageprofile = XFile("").obs;
 
-  var propertiList = <Properti>[].obs;
-  var selectedProperti = ''.obs;
+  // var propertiList = <Properti>[].obs;
+  // var selectedProperti = ''.obs;
   var kamarList = <Kamar>[].obs;
   var selectedKamar = ''.obs;
   String base64String(Uint8List data) {
@@ -31,41 +31,41 @@ class AddPenghuniController extends GetxController {
 
   @override
   void onInit() {
-    fetchProperti();
+    // fetchProperti();
     super.onInit();
   }
 
-  void fetchProperti() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final propertiQuery = await FirebaseFirestore.instance
-          .collection('properti')
-          .where('userId', isEqualTo: user.uid)
-          .get();
+  // void fetchProperti() async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     final propertiQuery = await FirebaseFirestore.instance
+  //         .collection('properti')
+  //         .where('userId', isEqualTo: user.uid)
+  //         .get();
 
-      propertiList.value = propertiQuery.docs
-          .map((doc) => Properti.fromFireStore(doc.data(), doc.id))
-          .toList();
-    }
-  }
+  //     propertiList.value = propertiQuery.docs
+  //         .map((doc) => Properti.fromFireStore(doc.data(), doc.id))
+  //         .toList();
+  //   }
+  // }
 
-  void fetchKamar(String idProperti, String status) async {
-    if (idProperti.isNotEmpty) {
-      final kamarQuery = await FirebaseFirestore.instance
-          .collection('kamar')
-          .where('id_properti', isEqualTo: idProperti)
-          .where('status', isEqualTo: status) // Ambil kamar yang tersedia
-          .get();
+  // void fetchKamar(String idProperti, String status) async {
+  //   if (idProperti.isNotEmpty) {
+  //     final kamarQuery = await FirebaseFirestore.instance
+  //         .collection('kamar')
+  //         .where('id_properti', isEqualTo: idProperti)
+  //         .where('status', isEqualTo: status) // Ambil kamar yang tersedia
+  //         .get();
 
-      kamarList.value = kamarQuery.docs
-          .map((doc) => Kamar.fromFireStore(doc.data(), doc.id))
-          .toList();
-      print(idProperti);
-      print(kamarList);
-    } else {
-      kamarList.clear(); // Jika properti kosong, kosongkan daftar kamar
-    }
-  }
+  //     kamarList.value = kamarQuery.docs
+  //         .map((doc) => Kamar.fromFireStore(doc.data(), doc.id))
+  //         .toList();
+  //     print(idProperti);
+  //     print(kamarList);
+  //   } else {
+  //     kamarList.clear(); // Jika properti kosong, kosongkan daftar kamar
+  //   }
+  // }
 
   Future getImage(bool gallery) async {
     //deklarasikan picker
@@ -122,8 +122,8 @@ class AddPenghuniController extends GetxController {
     final user = FirebaseAuth.instance.currentUser;
     if (namaPenghuni.isEmpty ||
         noTelp.isEmpty ||
-        idProperti.isEmpty ||
-        idKamar.isEmpty ||
+        // idProperti.isEmpty ||
+        // idKamar.isEmpty ||
         images.isNull ||
         imageProfiles.isNull) {
       Get.snackbar(
@@ -140,17 +140,17 @@ class AddPenghuniController extends GetxController {
           'created_at': DateTime.now(),
           'foto_KTP': base64String(await images.readAsBytes()),
           'foto_penghuni': base64String(await imageProfiles.readAsBytes()),
-          'id_kamar': idKamar,
-          'id_properti': idProperti,
+          'id_kamar': '',
+          'id_properti': '',
           'is_active': true,
           'nama': namaPenghuni,
           'telepon': noTelp,
           'userId': user.uid
         });
-        await firestore
-            .collection('kamar')
-            .doc(idKamar)
-            .update({'status': 'Dipesan'});
+        // await firestore
+        //     .collection('kamar')
+        //     .doc(idKamar)
+        //     .update({'status': 'Dipesan'});
         Get.snackbar(
           'Sukses',
           'Penghuni berhasil ditambahkan!',
