@@ -2,19 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-class HistoryController extends GetxController {
+class ResidentHistoryController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  var propertyList = <Map<String, dynamic>>[].obs;
+  var residentList = <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    readProperty();
+    readResident();
   }
 
-  readProperty() {
+  readResident() {
     String? userId = auth.currentUser?.uid; // Ambil userId dari pengguna login
 
     if (userId == null) {
@@ -23,19 +23,15 @@ class HistoryController extends GetxController {
     }
 
     firestore
-        .collection('properti')
+        .collection('penghuni')
         .where('userId', isEqualTo: userId)
+        .where('id_properti', isEqualTo: Get.arguments['propertyId'])
+        .where('is_active', isEqualTo: false)
         .snapshots()
         .listen((snapshot) {
-      propertyList.assignAll(
-        snapshot.docs.map((e) {
-          final data = e.data();
-          data['id_properti'] = e.id; // Tambahkan id properti
-          return data;
-        }).toList(),
-      );
+      residentList.assignAll(snapshot.docs.map((e) => e.data()).toList());
     }, onError: (e) {
-      Get.snackbar('Error', 'Gagal mengambil data properti: $e');
+      Get.snackbar('Error', 'Gagal mengambil data penghuni: $e');
     });
   }
 }

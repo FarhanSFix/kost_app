@@ -9,6 +9,7 @@ class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Stack(
@@ -21,9 +22,8 @@ class SplashView extends GetView<SplashController> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Text(
-                "Design by KitKat Team",
-              ),
+              child: Text("Design by KitKat Team",
+                  style: TextStyle(fontFamily: 'Roboto', fontSize: 14)),
             )
           ],
         ),
