@@ -14,6 +14,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
 import '../modules/reset_password/views/reset_password_view.dart';
+import '../modules/resident_history/bindings/resident_history_binding.dart';
+import '../modules/resident_history/views/resident_history_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 
@@ -64,6 +66,11 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.RESIDENT_HISTORY,
+      page: () => const ResidentHistoryView(),
+      binding: ResidentHistoryBinding(),
     ),
   ];
 }
