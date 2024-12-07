@@ -18,6 +18,8 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final authC = Get.put(LoginController(), permanent: true);
+
+  MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(

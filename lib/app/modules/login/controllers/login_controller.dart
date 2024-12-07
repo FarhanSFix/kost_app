@@ -39,7 +39,7 @@ class LoginController extends GetxController {
           email: email, password: password);
       if (userCredential.user!.emailVerified) {
         Get.snackbar('Success', 'User logged in successfully');
-        Get.offAllNamed(Routes.HOME);
+        Get.offAllNamed(Routes.MAIN);
       } else {
         Get.snackbar('Error', 'Please verify your email');
       }

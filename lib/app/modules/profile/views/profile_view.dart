@@ -1,5 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
@@ -13,8 +14,8 @@ class ProfileView extends GetView<ProfileController> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 22),
-        child: Center(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+        child: SingleChildScrollView(
           child: Obx(
             () => Column(
               children: [
@@ -29,16 +30,32 @@ class ProfileView extends GetView<ProfileController> {
                 CircleAvatar(
                   backgroundColor: appColor.backgroundColor2,
                   radius: 72.5,
-                  child: Icon(
-                    Icons.person,
-                    size: 50,
-                    color: appColor.logoColor,
-                  ),
+                  child: controller.userPhoto.value.isNotEmpty
+                      ? Container(
+                          width: 145,
+                          height: 145,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: MemoryImage(
+                                base64Decode(controller.userPhoto.value),
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : const Icon(
+                          Icons.person,
+                          size: 50,
+                          color: appColor.logoColor,
+                        ),
                 ),
                 const SizedBox(height: 24),
                 Text(
                   controller.userName.value,
-                  style: TextStyle(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -46,14 +63,18 @@ class ProfileView extends GetView<ProfileController> {
                 const SizedBox(height: 4),
                 Text(
                   controller.userEmail.value,
-                  style: TextStyle(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   controller.userPhone.value,
-                  style: TextStyle(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
@@ -73,12 +94,12 @@ class ProfileView extends GetView<ProfileController> {
                         children: [
                           Text(
                             controller.totalProperti.value.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
+                          const Text(
                             'Properti',
                             style: TextStyle(
                               fontSize: 14,
@@ -97,14 +118,14 @@ class ProfileView extends GetView<ProfileController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            controller.totalKamar.value.toString(),
-                            style: TextStyle(
+                            controller.totalPenghuni.value.toString(),
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            'Kamar',
+                          const Text(
+                            'Penghuni',
                             style: TextStyle(
                               fontSize: 14,
                             ),
@@ -119,7 +140,159 @@ class ProfileView extends GetView<ProfileController> {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.dialog(
+                            barrierDismissible: false,
+                            AlertDialog(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              title: Text(
+                                "Edit Profile",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: controller.pickImage,
+                                      child: Stack(
+                                        alignment: Alignment.bottomRight,
+                                        children: [
+                                          Obx(
+                                            () => Stack(
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 50,
+                                                  backgroundColor:
+                                                      appColor.backgroundColor2,
+                                                  backgroundImage: (controller
+                                                          .selectedPhoto
+                                                          .value
+                                                          .path
+                                                          .isNotEmpty)
+                                                      ? FileImage(controller
+                                                          .selectedPhoto.value)
+                                                      : (controller.userPhoto
+                                                              .value.isNotEmpty)
+                                                          ? MemoryImage(
+                                                              base64Decode(
+                                                                  controller
+                                                                      .userPhoto
+                                                                      .value))
+                                                          : null,
+                                                ),
+                                                if (controller.selectedPhoto
+                                                        .value.path.isEmpty &&
+                                                    controller.userPhoto.value
+                                                        .isEmpty)
+                                                  const Positioned.fill(
+                                                    child: Icon(
+                                                      Icons.person,
+                                                      size: 50,
+                                                      color: appColor.logoColor,
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                          const CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: Colors.blue,
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                    TextField(
+                                      controller:
+                                          controller.usernameController.value,
+                                      decoration: InputDecoration(
+                                        labelText: "Username",
+                                        hintText: "Enter your username",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 15),
+                                    TextField(
+                                      controller:
+                                          controller.phoneController.value,
+                                      keyboardType: TextInputType.phone,
+                                      decoration: InputDecoration(
+                                        labelText: "Phone Number",
+                                        hintText: "Enter your phone number",
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    controller.selectedPhoto.value = File('');
+                                    controller.usernameController.value.text =
+                                        controller.userName.value;
+                                    controller.phoneController.value.text =
+                                        controller.userPhone.value;
+                                    Get.back();
+                                  },
+                                  child: Text("Batal",
+                                      style: TextStyle(color: Colors.black54)),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        appColor.buttonColorPrimary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    String updatedUsername = controller
+                                        .usernameController.value.text
+                                        .trim();
+                                    String updatedPhone = controller
+                                        .phoneController.value.text
+                                        .trim();
+
+                                    if (updatedUsername.isEmpty ||
+                                        updatedPhone.isEmpty) {
+                                      Get.snackbar(
+                                        "Error",
+                                        "Both fields must be filled!",
+                                        snackPosition: SnackPosition.BOTTOM,
+                                      );
+                                      return;
+                                    }
+
+                                    controller.updateUserProfile(
+                                      username: updatedUsername,
+                                      phone: updatedPhone,
+                                      profilePhoto:
+                                          controller.selectedPhoto.value,
+                                    );
+                                    Get.back();
+                                  },
+                                  child: Text("Simpan",
+                                      style: TextStyle(color: Colors.white)),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: appColor.buttonColorEdit,
                           shape: RoundedRectangleBorder(
@@ -134,7 +307,7 @@ class ProfileView extends GetView<ProfileController> {
                               color: Colors.white,
                               size: 16,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Text(
                               'Edit',
                               style: TextStyle(
@@ -148,7 +321,47 @@ class ProfileView extends GetView<ProfileController> {
                     const Spacer(),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.dialog(
+                            AlertDialog(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              title: const Text(
+                                "Konfirmasi",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              content: const Text(
+                                "Apakah Anda yakin ingin keluar?",
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Get.back(),
+                                  child: const Text(
+                                    "Batal",
+                                    style: TextStyle(color: Colors.black54),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: appColor.buttonColorDelete,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    controller.logout();
+                                  },
+                                  child: const Text(
+                                    "Keluar",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: appColor.buttonColorDelete,
                           shape: RoundedRectangleBorder(
@@ -163,7 +376,7 @@ class ProfileView extends GetView<ProfileController> {
                               color: Colors.white,
                               size: 16,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Text(
                               'Keluar',
                               style: TextStyle(
