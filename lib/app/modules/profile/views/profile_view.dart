@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/profile_controller.dart';
@@ -147,7 +148,7 @@ class ProfileView extends GetView<ProfileController> {
                               backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15)),
-                              title: Text(
+                              title: const Text(
                                 "Edit Profile",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
@@ -172,8 +173,11 @@ class ProfileView extends GetView<ProfileController> {
                                                           .value
                                                           .path
                                                           .isNotEmpty)
-                                                      ? FileImage(controller
-                                                          .selectedPhoto.value)
+                                                      ? FileImage(File(
+                                                          controller
+                                                              .selectedPhoto
+                                                              .value
+                                                              .path))
                                                       : (controller.userPhoto
                                                               .value.isNotEmpty)
                                                           ? MemoryImage(
@@ -209,7 +213,7 @@ class ProfileView extends GetView<ProfileController> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(height: 20),
+                                    const SizedBox(height: 20),
                                     TextField(
                                       controller:
                                           controller.usernameController.value,
@@ -222,7 +226,7 @@ class ProfileView extends GetView<ProfileController> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 15),
+                                    const SizedBox(height: 15),
                                     TextField(
                                       controller:
                                           controller.phoneController.value,
@@ -242,14 +246,14 @@ class ProfileView extends GetView<ProfileController> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    controller.selectedPhoto.value = File('');
+                                    controller.selectedPhoto.value = XFile('');
                                     controller.usernameController.value.text =
                                         controller.userName.value;
                                     controller.phoneController.value.text =
                                         controller.userPhone.value;
                                     Get.back();
                                   },
-                                  child: Text("Batal",
+                                  child: const Text("Batal",
                                       style: TextStyle(color: Colors.black54)),
                                 ),
                                 ElevatedButton(
@@ -260,7 +264,7 @@ class ProfileView extends GetView<ProfileController> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     String updatedUsername = controller
                                         .usernameController.value.text
                                         .trim();
@@ -278,15 +282,16 @@ class ProfileView extends GetView<ProfileController> {
                                       return;
                                     }
 
-                                    controller.updateUserProfile(
-                                      username: updatedUsername,
-                                      phone: updatedPhone,
-                                      profilePhoto:
-                                          controller.selectedPhoto.value,
-                                    );
+                                    // Periksa apakah ada file yang dipilih
+                                    if (controller
+                                        .selectedPhoto.value.path.isNotEmpty) {
+                                      await controller.updateProfileWithPhoto();
+                                    } else {
+                                      await controller.updateProfile();
+                                    }
                                     Get.back();
                                   },
-                                  child: Text("Simpan",
+                                  child: const Text("Simpan",
                                       style: TextStyle(color: Colors.white)),
                                 ),
                               ],

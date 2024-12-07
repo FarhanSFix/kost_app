@@ -17,7 +17,7 @@ class ProfileController extends GetxController {
   var userPhoto = ''.obs;
   var totalProperti = 0.obs;
   var totalPenghuni = 0.obs;
-  var selectedPhoto = File('').obs; // Tambahkan observable untuk foto
+  var selectedPhoto = XFile('').obs; // Tambahkan observable untuk foto
   var usernameController = TextEditingController().obs;
   var phoneController = TextEditingController().obs;
 
@@ -103,48 +103,55 @@ class ProfileController extends GetxController {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      selectedPhoto.value = File(pickedFile.path);
+      selectedPhoto.value = XFile(pickedFile.path);
     }
   }
 
-  void updateUserProfile({
-    required String username,
-    required String phone,
-    File? profilePhoto, // Tambahkan parameter untuk foto
-  }) async {
-    try {
-      String? userId = auth.currentUser?.uid;
-
-      if (userId == null) {
-        Get.snackbar('Error', 'User tidak ditemukan');
-        return;
-      }
-
-      // Konversi foto ke Base64 jika ada
-      String? photoBase64;
-      if (profilePhoto != null) {
-        List<int> imageBytes = await profilePhoto.readAsBytes();
-        photoBase64 = base64Encode(imageBytes);
-      }
-
-      // Data yang akan diperbarui
-      Map<String, dynamic> updatedData = {
-        'username': username,
-        'telepon': phone,
-      };
-
-      // Tambahkan data foto jika ada
-      if (photoBase64 != null) {
-        updatedData['foto'] = photoBase64;
-      }
-
-      // Update Firestore
-      await firestore.collection('users').doc(userId).update(updatedData);
-
-      Get.snackbar('Sukses', 'Profil berhasil diperbarui');
-    } catch (e) {
-      Get.snackbar('Error', 'Gagal memperbarui profil: $e');
+  Future<void> updateProfileWithPhoto() async {
+    if (selectedPhoto.value.path.isEmpty) {
+      Get.snackbar('Error', 'Foto belum dipilih');
+      return;
     }
+
+    File imageFile = File(selectedPhoto.value.path);
+    List<int> imageBytes = imageFile.readAsBytesSync();
+    String base64Image = base64Encode(imageBytes);
+
+    String? userId = auth.currentUser?.uid;
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
+    firestore.collection('users').doc(userId).update({
+      'foto': base64Image,
+      'username': usernameController.value.text,
+      'telepon': phoneController.value.text,
+    }).then((value) {
+      Get.snackbar('Sukses', 'Profil berhasil diubah');
+      userPhoto.value = base64Image;
+    }).catchError((e) {
+      Get.snackbar('Error', 'Gagal mengubah profil: $e');
+    });
+  }
+
+  Future<void> updateProfile() async {
+    String? userId = auth.currentUser?.uid;
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
+    firestore.collection('users').doc(userId).update({
+      'username': usernameController.value.text,
+      'telepon': phoneController.value.text,
+    }).then((value) {
+      Get.snackbar('Sukses', 'Profil berhasil diubah');
+    }).catchError((e) {
+      Get.snackbar('Error', 'Gagal mengubah profil: $e');
+    });
   }
 
   // Fungsi untuk logout
