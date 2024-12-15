@@ -92,7 +92,7 @@ class AddKejadianController extends GetxController {
           'foto_bukti': base64String(await images.readAsBytes()),
           'kejadian': kejadian,
           'nominal': nominal,
-          'status': 'belum dibayar',
+          'status': 'Belum dibayar',
           'userId': user.uid
         });
         Get.snackbar(

@@ -63,7 +63,7 @@ class EditRoomController extends GetxController {
     if (nomorKamar.isEmpty ||
         status.isEmpty ||
         fasilitas.isEmpty ||
-        luas <= 0 ||
+        luas.isNull ||
         harga.isEmpty) {
       Get.snackbar(
         'Error',
@@ -80,7 +80,7 @@ class EditRoomController extends GetxController {
           'nomor': nomorKamar,
           'status': status,
           'fasilitas': fasilitas,
-          'luas': luas.toInt(),
+          'luas': luas,
           'harga': harga,
           'userId': user.uid,
           'id_properti': idproperti

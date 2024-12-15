@@ -17,7 +17,7 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('EditPenghuniView'),
+          title: const Text('Edit Penghuni'),
           centerTitle: true,
         ),
         body: SingleChildScrollView(

@@ -84,10 +84,10 @@ class HomeController extends GetxController {
         .where('created_at', isLessThanOrEqualTo: akhirBulan)
         .get();
 
-    print("Jumlah dokumen ditemukan: ${snapshot.docs.length}");
+    // print("Jumlah dokumen ditemukan: ${snapshot.docs.length}");
 
     int total = snapshot.docs.fold(0, (sum, doc) {
-      print("Data dokumen: ${doc.data()}");
+      // print("Data dokumen: ${doc.data()}");
       return sum + (doc['total_bayar'] as int);
     });
 

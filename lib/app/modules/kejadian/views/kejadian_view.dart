@@ -20,7 +20,7 @@ class KejadianView extends GetView<KejadianController> {
               Get.offAllNamed(Routes.MAIN);
             },
             icon: Icon(Icons.arrow_back_rounded)),
-        title: const Text('KejadianView'),
+        title: const Text('Daftar Kejadian'),
         centerTitle: true,
       ),
       body: Padding(
@@ -55,8 +55,7 @@ class KejadianView extends GetView<KejadianController> {
                 }).toList();
 
                 if (filteredKejadian.isEmpty) {
-                  return const Center(
-                      child: Text("Tidak ada kejadian ditemukan"));
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 return ListView.builder(
@@ -108,7 +107,15 @@ class KejadianView extends GetView<KejadianController> {
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 20),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      kejadian.status,
+                                      style: TextStyle(
+                                          fontFamily: 'Lato', fontSize: 14),
+                                    ),
+                                    const SizedBox(height: 10),
                                     Text(
                                       'Nominal: Rp ${controller.formatNominal(kejadian.nominal)}',
                                       style: const TextStyle(
@@ -150,8 +157,8 @@ class KejadianView extends GetView<KejadianController> {
                                           "Halo ${penghuni.nama}, terkait kejadian ${kejadian.kejadian}.");
                                       final whatsappUrl =
                                           "https://wa.me/$nomor?text=$pesan";
-                                      Get.toNamed(
-                                          whatsappUrl); // Atau gunakan launchUrl
+                                      print(whatsappUrl);
+                                      // Get.toNamed(whatsappUrl);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.green,

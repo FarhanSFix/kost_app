@@ -11,7 +11,7 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
     controller.fetchProperty(controller.propertyId);
     return Scaffold(
         appBar: AppBar(
-          title: const Text('DetailPropertyView'),
+          title: const Text('Detail Properti'),
           centerTitle: true,
           actions: [
             IconButton(
@@ -141,28 +141,31 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
                                     ),
                                   ],
                                 ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Get.toNamed(Routes.ROOM,
-                                        arguments: controller.propertyId);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.orange,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                  ),
-                                  child: const Text(
-                                    "Lihat Kamar",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
+                                SizedBox(
+                                    height: 35,
+                                    width: MediaQuery.sizeOf(context).width *
+                                        1 /
+                                        4,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Get.toNamed(Routes.ROOM,
+                                            arguments: controller.propertyId);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.orange,
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                        ),
+                                        child: Text(
+                                          'Lihat Kamar',
+                                          style: TextStyle(color: Colors.white),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    )),
                               ],
                             ),
                           ),

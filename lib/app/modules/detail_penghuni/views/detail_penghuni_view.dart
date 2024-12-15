@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,7 +17,7 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DetailPenghuniView'),
+        title: const Text('Detail Penghuni'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -27,6 +28,7 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
             final penghuni = controller.penghuni.value;
             final properti = controller.properti.value;
             final kamar = controller.kamar.value;
+            final pemasukan = controller.pemasukan.value;
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +111,7 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               "Riwayat Pemasukan",
                               style: TextStyle(
@@ -117,19 +119,70 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text("Rp 600.000"),
-                            Text("18/11/2024 - 18/12/2024"),
+                            Text(
+                              pemasukan.status == 'Lunas'
+                                  ? 'Rp ${controller.formatNominal(pemasukan.totalBayar)}'
+                                  : 'Rp ${controller.formatNominal(pemasukan.uangMuka)}',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: appColor.income),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  pemasukan.periode['mulai'] != null
+                                      ? controller.formatTanggal(
+                                          (pemasukan.periode['mulai']
+                                                  as Timestamp)
+                                              .toDate(),
+                                        )
+                                      : '-',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                Text(' - '),
+                                Text(
+                                  pemasukan.periode['sampai'] != null
+                                      ? controller.formatTanggal(
+                                          (pemasukan.periode['sampai']
+                                                  as Timestamp)
+                                              .toDate(),
+                                        )
+                                      : '-',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Logika perpanjangan
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appColor.buttonColorPrimary,
-                          ),
-                          child: const Text("Perpanjang"),
-                        ),
+                        SizedBox(
+                            height: 35,
+                            width: MediaQuery.sizeOf(context).width * 1 / 4.2,
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.toNamed(Routes.ADD_FINANCE);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: appColor.buttonColorPrimary,
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: Text(
+                                  'Perpanjang',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            )),
                       ],
                     ),
                   ),
@@ -220,6 +273,7 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
           controller: TextEditingController(text: value),
           readOnly: true,
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),

@@ -27,6 +27,12 @@ abstract class Routes {
   static const DETAIL_KEJADIAN = _Paths.DETAIL_KEJADIAN;
   static const ADD_KEJADIAN = _Paths.ADD_KEJADIAN;
   static const EDIT_KEJADIAN = _Paths.EDIT_KEJADIAN;
+  static const FINANCE = _Paths.FINANCE;
+  static const ADD_FINANCE = _Paths.ADD_FINANCE;
+  static const DETAIL_PENGELUARAN = _Paths.DETAIL_PENGELUARAN;
+  static const EDIT_PENGELUARAN = _Paths.EDIT_PENGELUARAN;
+  static const DETAIL_PEMASUKAN = _Paths.DETAIL_PEMASUKAN;
+  static const EDIT_PEMASUKAN = _Paths.EDIT_PEMASUKAN;
 }
 
 abstract class _Paths {
@@ -55,4 +61,10 @@ abstract class _Paths {
   static const DETAIL_KEJADIAN = '/detail-kejadian';
   static const ADD_KEJADIAN = '/add-kejadian';
   static const EDIT_KEJADIAN = '/edit-kejadian';
+  static const FINANCE = '/finance';
+  static const ADD_FINANCE = '/add-finance';
+  static const DETAIL_PENGELUARAN = '/detail-pengeluaran';
+  static const EDIT_PENGELUARAN = '/edit-pengeluaran';
+  static const DETAIL_PEMASUKAN = '/detail-pemasukan';
+  static const EDIT_PEMASUKAN = '/edit-pemasukan';
 }

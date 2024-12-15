@@ -22,7 +22,7 @@ class PenghuniView extends GetView<PenghuniController> {
         leading: IconButton(
             onPressed: () => Get.offAllNamed(Routes.MAIN),
             icon: Icon(Icons.arrow_back_rounded)),
-        title: const Text('PenghuniView'),
+        title: const Text('Daftar Penghuni'),
         centerTitle: true,
       ),
       body: Padding(
@@ -78,6 +78,11 @@ class PenghuniView extends GetView<PenghuniController> {
                       .toLowerCase()
                       .contains(controller.searchNama.value);
                 }).toList();
+                if (controller.penghuniList.isEmpty) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
                 return ListView.builder(
                   itemCount: filteredList.length,

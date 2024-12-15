@@ -98,7 +98,7 @@ class HomeView extends GetView<HomeController> {
                       'Keuangan',
                       'assets/images/img_keuangan.png',
                       onTap: () {
-                        // Get.toNamed(Routes.ADDFINANCE);
+                        Get.toNamed(Routes.FINANCE);
                       },
                     ),
                     DashboardMenu(

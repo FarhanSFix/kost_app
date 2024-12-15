@@ -38,6 +38,7 @@ class EditKejadianController extends GetxController {
       .obs;
   TextEditingController kejadianController = TextEditingController();
   TextEditingController nominalController = TextEditingController();
+  TextEditingController statusController = TextEditingController();
 
   void fetchPenghuni() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -67,6 +68,7 @@ class EditKejadianController extends GetxController {
         fetchPenghuniValue(kejadianvalue.value.id_penghuni);
         kejadianController.text = kejadianvalue.value.kejadian;
         nominalController.text = formatNominal(kejadianvalue.value.nominal);
+        statusController.text = kejadianvalue.value.status;
       } else {
         Get.snackbar("Error", "kejadian tidak ditemukan.");
       }
@@ -160,7 +162,7 @@ class EditKejadianController extends GetxController {
           "id_penghuni": idpenghuni,
           "kejadian": kejadian,
           "nominal": nominal,
-          "status": "belum dibayar",
+          "status": "Belum dibayar",
           "userId": user.uid,
         });
         Get.snackbar('Success', 'Data kejadian berhasil diperbarui');
@@ -204,7 +206,7 @@ class EditKejadianController extends GetxController {
           "id_penghuni": idpenghuni,
           "kejadian": kejadian,
           "nominal": nominal,
-          "status": "belum dibayar",
+          "status": "Belum dibayar",
           'userId': user.uid
         });
         Get.snackbar(
@@ -230,6 +232,7 @@ class EditKejadianController extends GetxController {
   void onClose() {
     kejadianController.dispose();
     nominalController.dispose();
+    statusController.dispose();
     super.onClose();
   }
 }

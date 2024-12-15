@@ -134,7 +134,7 @@ class AddRoomView extends GetView<AddRoomController> {
                     style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
                 IconButton(
                     onPressed: () {
-                      controller.addPriceField();
+                      _showAddPriceDialog(context);
                     },
                     icon: Icon(Icons.add_rounded))
               ],
@@ -240,6 +240,62 @@ class AddRoomView extends GetView<AddRoomController> {
             newFacility!.isNotEmpty &&
             !controller.Facilities.contains(newFacility)) {
           controller.addFacility(newFacility!);
+        }
+        Get.back();
+      },
+      textCancel: "Batal",
+    );
+  }
+
+  void _showAddPriceDialog(BuildContext contex) {
+    String? jmlOrang;
+    int? harga;
+
+    Get.defaultDialog(
+      title: 'Tambah Harga',
+      content: Row(
+        children: [
+          SizedBox(
+              width: 80,
+              child: TextField(
+                onChanged: (value) {
+                  jmlOrang = value;
+                },
+                decoration: InputDecoration(
+                  hintText: "Jml org",
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              )),
+          SizedBox(
+            width: 4,
+          ),
+          Expanded(
+              child: TextField(
+            onChanged: (value) {
+              harga = int.parse(value);
+            },
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              hintText: "Harga",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ))
+        ],
+      ),
+      textConfirm: "Tambah",
+      onConfirm: () {
+        if (jmlOrang != null &&
+                jmlOrang!.isNotEmpty &&
+                !controller.roomPriceControllers.contains(jmlOrang) ||
+            harga != null &&
+                harga != 0 &&
+                !controller.Facilities.contains(jmlOrang)) {
+          controller.addFacility(jmlOrang!);
         }
         Get.back();
       },

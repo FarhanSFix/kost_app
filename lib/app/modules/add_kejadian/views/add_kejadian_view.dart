@@ -14,8 +14,9 @@ class AddKejadianView extends GetView<AddKejadianController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('AddKejadianView'),
+          title: const Text('Tambah Kejadian'),
           centerTitle: true,
         ),
         body: Padding(
@@ -72,6 +73,7 @@ class AddKejadianView extends GetView<AddKejadianController> {
                   style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
               TextField(
                 controller: controller.nominalController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Masukkan nomial kejadian',
                   hintStyle: TextStyle(color: Color(0xFF888888)),

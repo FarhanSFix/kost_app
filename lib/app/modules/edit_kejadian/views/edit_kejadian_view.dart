@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kost_app/app/data/model.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/edit_kejadian_controller.dart';
@@ -15,7 +14,7 @@ class EditKejadianView extends GetView<EditKejadianController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('EditKejadianView'),
+          title: const Text('Edit Kejadian'),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -79,6 +78,21 @@ class EditKejadianView extends GetView<EditKejadianController> {
                     controller: controller.nominalController,
                     decoration: InputDecoration(
                       hintText: 'Masukkan nomial kejadian',
+                      hintStyle: TextStyle(color: Color(0xFF888888)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text("Status",
+                      style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
+                  TextField(
+                    controller: controller.statusController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: 'Status',
                       hintStyle: TextStyle(color: Color(0xFF888888)),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),

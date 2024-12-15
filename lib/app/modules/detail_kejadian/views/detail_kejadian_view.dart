@@ -11,7 +11,7 @@ class DetailKejadianView extends GetView<DetailKejadianController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('DetailKejadianView'),
+          title: const Text('Detail Kejadian'),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -28,6 +28,7 @@ class DetailKejadianView extends GetView<DetailKejadianController> {
                   _buildReadOnlyField("Kejadian", kejadianvalue.kejadian),
                   _buildReadOnlyField("Nominal",
                       "Rp ${controller.formatNominal(kejadianvalue.nominal)}"),
+                  _buildReadOnlyField("Status", "${kejadianvalue.status}"),
                   const Text(
                     "Bukti",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

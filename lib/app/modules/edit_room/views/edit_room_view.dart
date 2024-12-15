@@ -14,7 +14,7 @@ class EditRoomView extends GetView<EditRoomController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EditRoomView'),
+        title: const Text('Edit Kamar'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -68,7 +68,7 @@ class EditRoomView extends GetView<EditRoomController> {
                   Text("Nomor Kamar",
                       style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
                   TextField(
-                    controller: TextEditingController(text: room['nomor']),
+                    controller: controller.roomNumberController,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(color: Color(0xFF888888)),
                       border: OutlineInputBorder(
@@ -148,8 +148,7 @@ class EditRoomView extends GetView<EditRoomController> {
                   Text("Luas Kamar (m2)",
                       style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
                   TextField(
-                    controller:
-                        TextEditingController(text: room['luas'].toString()),
+                    controller: controller.wideController,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(color: Color(0xFF888888)),
                       border: OutlineInputBorder(

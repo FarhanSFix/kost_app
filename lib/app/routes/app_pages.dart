@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/add_finance/bindings/add_finance_binding.dart';
+import '../modules/add_finance/views/add_finance_view.dart';
 import '../modules/add_kejadian/bindings/add_kejadian_binding.dart';
 import '../modules/add_kejadian/views/add_kejadian_view.dart';
 import '../modules/add_penghuni/bindings/add_penghuni_binding.dart';
@@ -10,6 +12,10 @@ import '../modules/add_room/bindings/add_room_binding.dart';
 import '../modules/add_room/views/add_room_view.dart';
 import '../modules/detail_kejadian/bindings/detail_kejadian_binding.dart';
 import '../modules/detail_kejadian/views/detail_kejadian_view.dart';
+import '../modules/detail_pemasukan/bindings/detail_pemasukan_binding.dart';
+import '../modules/detail_pemasukan/views/detail_pemasukan_view.dart';
+import '../modules/detail_pengeluaran/bindings/detail_pengeluaran_binding.dart';
+import '../modules/detail_pengeluaran/views/detail_pengeluaran_view.dart';
 import '../modules/detail_penghuni/bindings/detail_penghuni_binding.dart';
 import '../modules/detail_penghuni/views/detail_penghuni_view.dart';
 import '../modules/detail_property/bindings/detail_property_binding.dart';
@@ -18,12 +24,18 @@ import '../modules/detail_room/bindings/detail_room_binding.dart';
 import '../modules/detail_room/views/detail_room_view.dart';
 import '../modules/edit_kejadian/bindings/edit_kejadian_binding.dart';
 import '../modules/edit_kejadian/views/edit_kejadian_view.dart';
+import '../modules/edit_pemasukan/bindings/edit_pemasukan_binding.dart';
+import '../modules/edit_pemasukan/views/edit_pemasukan_view.dart';
+import '../modules/edit_pengeluaran/bindings/edit_pengeluaran_binding.dart';
+import '../modules/edit_pengeluaran/views/edit_pengeluaran_view.dart';
 import '../modules/edit_penghuni/bindings/edit_penghuni_binding.dart';
 import '../modules/edit_penghuni/views/edit_penghuni_view.dart';
 import '../modules/edit_property/bindings/edit_property_binding.dart';
 import '../modules/edit_property/views/edit_property_view.dart';
 import '../modules/edit_room/bindings/edit_room_binding.dart';
 import '../modules/edit_room/views/edit_room_view.dart';
+import '../modules/finance/bindings/finance_binding.dart';
+import '../modules/finance/views/finance_view.dart';
 import '../modules/history/bindings/history_binding.dart';
 import '../modules/history/views/history_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -176,6 +188,36 @@ class AppPages {
       name: _Paths.EDIT_KEJADIAN,
       page: () => const EditKejadianView(),
       binding: EditKejadianBinding(),
+    ),
+    GetPage(
+      name: _Paths.FINANCE,
+      page: () => FinanceView(),
+      binding: FinanceBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_FINANCE,
+      page: () => AddFinanceView(),
+      binding: AddFinanceBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_PENGELUARAN,
+      page: () => const DetailPengeluaranView(),
+      binding: DetailPengeluaranBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PENGELUARAN,
+      page: () => const EditPengeluaranView(),
+      binding: EditPengeluaranBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_PEMASUKAN,
+      page: () => const DetailPemasukanView(),
+      binding: DetailPemasukanBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PEMASUKAN,
+      page: () => const EditPemasukanView(),
+      binding: EditPemasukanBinding(),
     ),
   ];
 }
