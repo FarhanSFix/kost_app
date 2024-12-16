@@ -10,6 +10,7 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
   Widget build(BuildContext context) {
     controller.fetchProperty(controller.propertyId);
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text('Detail Properti'),
           centerTitle: true,

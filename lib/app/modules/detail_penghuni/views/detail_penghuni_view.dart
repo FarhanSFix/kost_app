@@ -16,6 +16,7 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Detail Penghuni'),
         centerTitle: true,

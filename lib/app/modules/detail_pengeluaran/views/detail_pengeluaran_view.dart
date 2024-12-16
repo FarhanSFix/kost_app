@@ -14,6 +14,7 @@ class DetailPengeluaranView extends GetView<DetailPengeluaranController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text('Detail Pengeluaran'),
           centerTitle: true,
         ),

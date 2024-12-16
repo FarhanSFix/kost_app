@@ -12,6 +12,7 @@ class PropertyView extends GetView<PropertyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Properti'),
         centerTitle: true,

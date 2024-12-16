@@ -11,6 +11,7 @@ class AddPropertyView extends GetView<AddPropertyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           actions: [
             IconButton(

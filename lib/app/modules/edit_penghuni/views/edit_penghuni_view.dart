@@ -16,6 +16,7 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text('Edit Penghuni'),
           centerTitle: true,

@@ -13,6 +13,7 @@ class EditPropertyView extends GetView<EditPropertyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         actions: [
           IconButton(

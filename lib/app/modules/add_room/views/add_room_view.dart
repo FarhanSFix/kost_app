@@ -10,6 +10,7 @@ class AddRoomView extends GetView<AddRoomController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Tambah Kamar"),
         centerTitle: true,

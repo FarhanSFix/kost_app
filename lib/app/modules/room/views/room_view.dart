@@ -12,6 +12,7 @@ class RoomView extends GetView<RoomController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Daftar Kamar"),
         centerTitle: true,
@@ -54,7 +55,14 @@ class RoomView extends GetView<RoomController> {
                         return Center(child: Text("Error: ${snapshot.error}"));
                       }
                       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return Center(child: Text("Tidak ada data kamar."));
+                        return Center(
+                            child: Text(
+                          "Tidak ada data kamar.",
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                          ),
+                        ));
                       }
                       return ListView(
                         children: snapshot.data!.docs.map((doc) {

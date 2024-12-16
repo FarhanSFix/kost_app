@@ -9,6 +9,7 @@ class PenghuniController extends GetxController {
   var penghuniList = <Penghuni>[].obs;
   var pemasukanList = <Pemasukan>[].obs;
   var kamarMap = <String, Kamar>{}.obs;
+  var isLoading = true.obs;
 
   var selectedProperti = 'Semua'.obs;
   var searchNama = ''.obs;
@@ -37,22 +38,29 @@ class PenghuniController extends GetxController {
   }
 
   void fetchPenghuni() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final penghuniQuery = await FirebaseFirestore.instance
-          .collection('penghuni')
-          .where('id_properti',
-              isEqualTo: selectedProperti.value == 'Semua'
-                  ? null
-                  : selectedProperti.value)
-          .where('is_active', isEqualTo: true)
-          .where("userId", isEqualTo: user.uid)
-          .orderBy('created_at', descending: true)
-          .get();
+    isLoading.value = true;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final penghuniQuery = await FirebaseFirestore.instance
+            .collection('penghuni')
+            .where('id_properti',
+                isEqualTo: selectedProperti.value == 'Semua'
+                    ? null
+                    : selectedProperti.value)
+            .where('is_active', isEqualTo: true)
+            .where("userId", isEqualTo: user.uid)
+            .orderBy('created_at', descending: true)
+            .get();
 
-      penghuniList.value = penghuniQuery.docs
-          .map((doc) => Penghuni.fromFirestore(doc.data(), doc.id))
-          .toList();
+        penghuniList.value = penghuniQuery.docs
+            .map((doc) => Penghuni.fromFirestore(doc.data(), doc.id))
+            .toList();
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 

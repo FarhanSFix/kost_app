@@ -14,6 +14,7 @@ class EditPengeluaranView extends GetView<EditPengeluaranController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text('Edit Pengeluaran'),
           centerTitle: true,

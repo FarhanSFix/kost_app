@@ -14,6 +14,7 @@ class EditPemasukanView extends GetView<EditPemasukanController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text('Edit Pemasukan'),
           centerTitle: true,
@@ -681,7 +682,7 @@ class EditPemasukanView extends GetView<EditPemasukanController> {
                           final String catatan =
                               controller.catatanController.text.isEmpty
                                   ? controller.pemasukan.value.catatan
-                                  : '';
+                                  : '-';
                           await controller.updateData(
                               controller.pemasukan.value.id,
                               catatan,

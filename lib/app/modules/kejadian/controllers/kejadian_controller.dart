@@ -12,6 +12,7 @@ class KejadianController extends GetxController {
   var searchNama = ''.obs;
   var kejadianList = <Kejadian>[].obs;
   var penghuniList = <Penghuni>[].obs;
+  var isLoading = true.obs;
 
   Uint8List dataFromBase64String(String base64String) {
     return base64Decode(base64String);
@@ -23,32 +24,38 @@ class KejadianController extends GetxController {
   }
 
   void fetchPenghuni() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final penghuniQuery =
-          await FirebaseFirestore.instance.collection('penghuni').get();
+    isLoading.value = true;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final penghuniQuery =
+            await FirebaseFirestore.instance.collection('penghuni').get();
 
-      penghuniList.value = penghuniQuery.docs
-          .map((doc) => Penghuni.fromFirestore(doc.data(), doc.id))
-          .toList();
-
-      print("Penghuni: ${penghuniList.length}"); // Debug log
+        penghuniList.value = penghuniQuery.docs
+            .map((doc) => Penghuni.fromFirestore(doc.data(), doc.id))
+            .toList();
+      }
+    } finally {
+      isLoading.value = false;
     }
   }
 
   void fetchKejadian() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final kejadianQuery = await FirebaseFirestore.instance
-          .collection('kejadian')
-          .where("userId", isEqualTo: user.uid)
-          .get();
+    isLoading.value = true;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final kejadianQuery = await FirebaseFirestore.instance
+            .collection('kejadian')
+            .where("userId", isEqualTo: user.uid)
+            .get();
 
-      kejadianList.value = kejadianQuery.docs
-          .map((doc) => Kejadian.fromFireStore(doc.data(), doc.id))
-          .toList();
-
-      print("Kejadian: ${kejadianList.length}"); // Debug log
+        kejadianList.value = kejadianQuery.docs
+            .map((doc) => Kejadian.fromFireStore(doc.data(), doc.id))
+            .toList();
+      }
+    } finally {
+      isLoading.value = false;
     }
   }
 

@@ -15,6 +15,7 @@ class KejadianView extends GetView<KejadianController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
@@ -43,6 +44,10 @@ class KejadianView extends GetView<KejadianController> {
             ),
             Expanded(
               child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
                 // Filter kejadian list berdasarkan searchNama
                 final filteredKejadian =
                     controller.kejadianList.where((kejadian) {
@@ -56,7 +61,10 @@ class KejadianView extends GetView<KejadianController> {
                 }).toList();
 
                 if (filteredKejadian.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: Text("Tidak ada data",
+                        style: TextStyle(fontFamily: 'Roboto', fontSize: 16)),
+                  );
                 }
 
                 return ListView.builder(

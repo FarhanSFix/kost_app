@@ -18,6 +18,7 @@ class PenghuniView extends GetView<PenghuniController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
             onPressed: () => Get.offAllNamed(Routes.MAIN),
@@ -73,6 +74,20 @@ class PenghuniView extends GetView<PenghuniController> {
             ),
             Expanded(
               child: Obx(() {
+                if (controller.isLoading.value) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (controller.penghuniList.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'Tidak ada data penghuni.',
+                      style: TextStyle(fontFamily: 'Roboto', fontSize: 20),
+                    ),
+                  );
+                }
+
                 final filteredList = controller.penghuniList.where((penghuni) {
                   return penghuni.nama
                       .toLowerCase()
@@ -82,6 +97,13 @@ class PenghuniView extends GetView<PenghuniController> {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
+                }
+
+                if (filteredList.isEmpty) {
+                  return Center(
+                      child: Text('Tidak ada penghuni yang sesuai pencarian.',
+                          style:
+                              TextStyle(fontFamily: 'Roboto', fontSize: 16)));
                 }
 
                 return ListView.builder(
