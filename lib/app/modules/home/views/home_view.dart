@@ -434,7 +434,7 @@ class HomeView extends GetView<HomeController> {
                       'Penghuni',
                       'assets/images/img_penghuni.png',
                       onTap: () {
-                        // Get.toNamed(Routes.RESIDENT);
+                        Get.toNamed(Routes.PENGHUNI);
                       },
                     ),
                     DashboardMenu(
@@ -448,14 +448,14 @@ class HomeView extends GetView<HomeController> {
                       'Keuangan',
                       'assets/images/img_keuangan.png',
                       onTap: () {
-                        // Get.toNamed(Routes.ADDFINANCE);
+                        Get.toNamed(Routes.FINANCE);
                       },
                     ),
                     DashboardMenu(
                       'Kejadian',
                       'assets/images/img_kejadian.png',
                       onTap: () {
-                        // Get.toNamed(Routes.EVENT);
+                        Get.toNamed(Routes.KEJADIAN);
                       },
                     ),
                   ],

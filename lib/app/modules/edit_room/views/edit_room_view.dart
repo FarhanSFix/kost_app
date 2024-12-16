@@ -14,7 +14,7 @@ class EditRoomView extends GetView<EditRoomController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EditRoomView'),
+        title: const Text('Edit Kamar'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -35,8 +35,29 @@ class EditRoomView extends GetView<EditRoomController> {
                 List<String>.from(room['fasilitas'] ?? []);
 
             if (room['harga'] is Map) {
+              // Assign harga map
               controller.roomPrices
                   .assignAll(room['harga'] as Map<String, dynamic>);
+
+              // Urutkan key berdasarkan angka yang ada di dalamnya
+              final sortedKeys = controller.roomPrices.keys.toList()
+                ..sort((a, b) {
+                  // Ambil angka dari key dan bandingkan
+                  final numberA = int.tryParse(a.split(' ')[0]) ?? 0;
+                  final numberB = int.tryParse(b.split(' ')[0]) ?? 0;
+                  return numberA.compareTo(numberB);
+                });
+
+              // Urutkan roomPrices berdasarkan sortedKeys
+              final sortedRoomPrices = {
+                for (var key in sortedKeys) key: controller.roomPrices[key]
+              };
+
+              // Assign hasil yang telah diurutkan
+              controller.roomPrices.assignAll(sortedRoomPrices);
+
+              // Tambahkan controller berdasarkan urutan
+              controller.roomPriceControllers.clear();
               controller.roomPrices.forEach((key, value) {
                 controller.roomPriceControllers
                     .add(TextEditingController(text: value.toString()));
@@ -68,7 +89,7 @@ class EditRoomView extends GetView<EditRoomController> {
                   Text("Nomor Kamar",
                       style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
                   TextField(
-                    controller: TextEditingController(text: room['nomor']),
+                    controller: controller.roomNumberController,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(color: Color(0xFF888888)),
                       border: OutlineInputBorder(
@@ -148,8 +169,7 @@ class EditRoomView extends GetView<EditRoomController> {
                   Text("Luas Kamar (m2)",
                       style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
                   TextField(
-                    controller:
-                        TextEditingController(text: room['luas'].toString()),
+                    controller: controller.wideController,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(color: Color(0xFF888888)),
                       border: OutlineInputBorder(
@@ -167,7 +187,7 @@ class EditRoomView extends GetView<EditRoomController> {
                       Text("Harga/bulan",
                           style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
                       IconButton(
-                          onPressed: controller.addPriceField,
+                          onPressed: () => _showAddPriceDialog(context),
                           icon: Icon(Icons.add_rounded))
                     ],
                   ),
@@ -209,7 +229,7 @@ class EditRoomView extends GetView<EditRoomController> {
                                   ],
                                 ),
                               ),
-                              if (index > 0)
+                              if (index >= 0)
                                 IconButton(
                                   onPressed: () =>
                                       controller.removePriceField(index),
@@ -284,6 +304,59 @@ class EditRoomView extends GetView<EditRoomController> {
             newFacility!.isNotEmpty &&
             !controller.facilities.contains(newFacility)) {
           controller.addFacility(newFacility!);
+        }
+        Get.back();
+      },
+      textCancel: "Batal",
+    );
+  }
+
+  void _showAddPriceDialog(BuildContext context) {
+    String? jumlahOrang;
+    int? harga;
+
+    Get.defaultDialog(
+      title: 'Tambah Harga',
+      content: Column(
+        children: [
+          TextField(
+            onChanged: (value) {
+              jumlahOrang = value;
+            },
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              hintText: "Masukkan jumlah orang",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 10),
+          TextField(
+            onChanged: (value) {
+              harga = int.tryParse(value);
+            },
+            decoration: InputDecoration(
+              hintText: "Masukkan harga",
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+          ),
+        ],
+      ),
+      textConfirm: "Tambah",
+      onConfirm: () {
+        if (jumlahOrang != null &&
+            jumlahOrang!.isNotEmpty &&
+            harga != null &&
+            harga! > 0) {
+          controller.addPrice(jumlahOrang!, harga!);
+        } else {
+          Get.snackbar("Error", "Masukkan data yang valid!");
         }
         Get.back();
       },

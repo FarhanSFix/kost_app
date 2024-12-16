@@ -32,14 +32,20 @@ class AddRoomController extends GetxController {
 
   final selectedStatus = "Tersedia".obs;
 
-  void addPriceField() {
-    roomPriceControllers.add(TextEditingController());
+  final RxMap<String, int> hargaMap = <String, int>{}.obs;
+
+  void addPrice(String jumlahOrang, int harga) {
+    hargaMap["${jumlahOrang} orang"] = harga;
   }
 
-  void removePriceField(int index) {
-    if (roomPriceControllers.length > 1) {
-      roomPriceControllers.removeAt(index);
+  void updatePrice(String jumlahOrang, int harga) {
+    if (hargaMap.containsKey(jumlahOrang)) {
+      hargaMap["${jumlahOrang} orang"] = harga;
     }
+  }
+
+  void removePrice(String jumlahOrang) {
+    hargaMap.remove(jumlahOrang);
   }
 
   void addRoom({

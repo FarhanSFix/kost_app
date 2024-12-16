@@ -134,39 +134,51 @@ class AddRoomView extends GetView<AddRoomController> {
                     style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
                 IconButton(
                     onPressed: () {
-                      controller.addPriceField();
+                      _showAddPriceDialog(context);
                     },
                     icon: Icon(Icons.add_rounded))
               ],
             ),
             Obx(() {
               return Column(
-                children: List.generate(controller.roomPriceControllers.length,
-                    (index) {
+                children: controller.hargaMap.entries.map((entry) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: controller.roomPriceControllers[index],
-                            decoration: InputDecoration(
-                              hintText: "Masukkan harga ${index + 1} orang",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            keyboardType: TextInputType.number,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${entry.key}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
+                              TextField(
+                                controller: TextEditingController(
+                                    text: entry.value.toString()),
+                                onChanged: (value) {
+                                  controller.updatePrice(
+                                      entry.key, int.tryParse(value) ?? 0);
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ],
                           ),
                         ),
-                        if (index > 0)
-                          IconButton(
-                            icon: Icon(Icons.remove_circle, color: Colors.red),
-                            onPressed: () => controller.removePriceField(index),
-                          ),
+                        IconButton(
+                          icon: Icon(Icons.remove_circle, color: Colors.red),
+                          onPressed: () => controller.removePrice(entry.key),
+                        ),
                       ],
                     ),
                   );
-                }),
+                }).toList(),
               );
             }),
             SizedBox(
@@ -181,24 +193,13 @@ class AddRoomView extends GetView<AddRoomController> {
                       borderRadius: BorderRadius.circular(10))),
               onPressed: () {
                 try {
-                  Map<String, int> hargaMap = {};
-                  for (var i = 0;
-                      i < controller.roomPriceControllers.length;
-                      i++) {
-                    String textValue = controller.roomPriceControllers[i].text;
-                    if (textValue.isEmpty) {
-                      Get.snackbar('Error', 'Semua kolom harus diisi!');
-                      return;
-                    }
-                    hargaMap["${i + 1} orang"] = int.parse(textValue);
-                  }
-
+                  print(controller.hargaMap);
                   controller.addRoom(
                     nomorKamar: controller.roomNumberController.text,
                     status: controller.selectedStatus.value,
                     fasilitas: controller.Facilities,
                     luas: int.parse(controller.wideController.text),
-                    harga: hargaMap,
+                    harga: controller.hargaMap,
                     idproperti: controller.propertyId,
                   );
                 } catch (e) {
@@ -240,6 +241,59 @@ class AddRoomView extends GetView<AddRoomController> {
             newFacility!.isNotEmpty &&
             !controller.Facilities.contains(newFacility)) {
           controller.addFacility(newFacility!);
+        }
+        Get.back();
+      },
+      textCancel: "Batal",
+    );
+  }
+
+  void _showAddPriceDialog(BuildContext context) {
+    String? jumlahOrang;
+    int? harga;
+
+    Get.defaultDialog(
+      title: 'Tambah Harga',
+      content: Column(
+        children: [
+          TextField(
+            onChanged: (value) {
+              jumlahOrang = value;
+            },
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              hintText: "Masukkan jumlah orang",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 10),
+          TextField(
+            onChanged: (value) {
+              harga = int.tryParse(value);
+            },
+            decoration: InputDecoration(
+              hintText: "Masukkan harga",
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+          ),
+        ],
+      ),
+      textConfirm: "Tambah",
+      onConfirm: () {
+        if (jumlahOrang != null &&
+            jumlahOrang!.isNotEmpty &&
+            harga != null &&
+            harga! > 0) {
+          controller.addPrice(jumlahOrang!, harga!);
+        } else {
+          Get.snackbar("Error", "Masukkan data yang valid!");
         }
         Get.back();
       },
