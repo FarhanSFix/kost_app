@@ -120,8 +120,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.EDIT_ROOM,
-      page: () => EditRoomView(),
+      page: () => const EditRoomView(),
       binding: EditRoomBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROPERTY,
+      page: () => const PropertyView(),
+      binding: PropertyBinding(),
     ),
   ];
 }
