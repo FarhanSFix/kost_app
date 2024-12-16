@@ -50,7 +50,7 @@ class EditPemasukanController extends GetxController {
   var keyHarga = ''.obs;
 
   String formatTanggal(DateTime tanggal) {
-    final formatter = DateFormat('dd-MM-yyyy');
+    final formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(tanggal);
   }
 
@@ -275,18 +275,18 @@ class EditPemasukanController extends GetxController {
     DocumentReference updateData =
         FirebaseFirestore.instance.collection("pemasukan").doc(id);
     final user = FirebaseAuth.instance.currentUser;
-    if (catatan.isEmpty ||
-        denda.isNull ||
-        idKamar.isEmpty ||
-        idPenghuni.isEmpty ||
-        idProperti.isEmpty ||
-        jmlBulan.isEmpty ||
-        jmlPenghuni.isEmpty ||
+    if (catatan.trim().isEmpty ||
+        denda == null ||
+        idKamar.trim().isEmpty ||
+        idPenghuni.trim().isEmpty ||
+        idProperti.trim().isEmpty ||
+        jmlBulan.trim().isEmpty ||
+        jmlPenghuni.trim().isEmpty ||
         periode.isEmpty ||
-        sisa.isNull ||
-        status.isEmpty ||
-        totalBayar.isNull ||
-        uangMuka.isNull) {
+        sisa == null ||
+        status.trim().isEmpty ||
+        totalBayar == null ||
+        uangMuka == null) {
       Get.snackbar(
         'Error',
         'Semua kolom wajib diisi!',
