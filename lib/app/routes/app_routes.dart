@@ -12,7 +12,6 @@ abstract class Routes {
   static const HISTORY = _Paths.HISTORY;
   static const PROFILE = _Paths.PROFILE;
   static const RESIDENT_HISTORY = _Paths.RESIDENT_HISTORY;
-  static const PAYMENT_STATUS = _Paths.PAYMENT_STATUS;
   static const PROPERTY = _Paths.PROPERTY;
   static const ADD_PROPERTY = _Paths.ADD_PROPERTY;
   static const DETAIL_PROPERTY = _Paths.DETAIL_PROPERTY;
@@ -34,7 +33,6 @@ abstract class _Paths {
   static const HISTORY = '/history';
   static const PROFILE = '/profile';
   static const RESIDENT_HISTORY = '/resident-history';
-  static const PAYMENT_STATUS = '/payment-status';
   static const PROPERTY = '/property';
   static const ADD_PROPERTY = '/add-property';
   static const DETAIL_PROPERTY = '/detail-property';
