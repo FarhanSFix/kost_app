@@ -678,9 +678,13 @@ class EditPemasukanView extends GetView<EditPemasukanController> {
                                   : int.tryParse(controller.sisaController.text
                                           .replaceAll(".", "")) ??
                                       0;
+                          final String catatan =
+                              controller.catatanController.text.isEmpty
+                                  ? controller.pemasukan.value.catatan
+                                  : '';
                           await controller.updateData(
                               controller.pemasukan.value.id,
-                              controller.catatanController.text,
+                              catatan,
                               int.parse(controller.dendaController.text
                                   .replaceAll(".", "")),
                               controller.selectedKamar.value,

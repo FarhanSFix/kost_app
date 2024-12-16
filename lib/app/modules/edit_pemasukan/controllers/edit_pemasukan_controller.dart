@@ -135,6 +135,7 @@ class EditPemasukanController extends GetxController {
           .collection('kamar')
           .where('userId', isEqualTo: user.uid)
           .where('id_properti', isEqualTo: propertiId)
+          .orderBy('nomor')
           .get();
 
       kamarList.value = kamar.docs
@@ -151,7 +152,17 @@ class EditPemasukanController extends GetxController {
       if (kamarDoc.exists) {
         kamarvalue.value = Kamar.fromFireStore(kamarDoc.data()!, kamarDoc.id);
         print("kamar nomor: ${kamarvalue.value.nomor}");
-        jmlPenghuniList.value = kamarvalue.value.harga.keys.toList();
+
+        final sortedKeys = kamarvalue.value.harga.keys.toList()
+          ..sort((a, b) {
+            // Konversi ke int untuk pengurutan
+            int jmlA = int.tryParse(a.split(' ').first) ?? 0;
+            int jmlB = int.tryParse(b.split(' ').first) ?? 0;
+            return jmlA.compareTo(jmlB);
+          });
+
+        // Ubah format menjadi "x orang"
+        jmlPenghuniList.value = sortedKeys.map((key) => "$key").toList();
 
         totalMasukController.text =
             formatNominal(kamarvalue.value.harga[keyHarga]);

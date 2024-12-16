@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_cli/common/utils/json_serialize/helpers.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:kost_app/app/data/model.dart';
@@ -129,7 +130,17 @@ class AddFinanceController extends GetxController {
       if (kamarDoc.exists) {
         kamarvalue.value = Kamar.fromFireStore(kamarDoc.data()!, kamarDoc.id);
         print("kamar nomor: ${kamarvalue.value.nomor}");
-        jmlPenghuniList.value = kamarvalue.value.harga.keys.toList();
+
+        final sortedKeys = kamarvalue.value.harga.keys.toList()
+          ..sort((a, b) {
+            // Konversi ke int untuk pengurutan
+            int jmlA = int.tryParse(a.split(' ').first ?? "0") ?? 0;
+            int jmlB = int.tryParse(b.split(' ').first ?? "0") ?? 0;
+            return jmlA.compareTo(jmlB);
+          });
+
+        // Ubah format menjadi "x orang"
+        jmlPenghuniList.value = sortedKeys.map((key) => "$key").toList();
 
         totalMasukController.text =
             formatNominal(kamarvalue.value.harga[keyHarga]);

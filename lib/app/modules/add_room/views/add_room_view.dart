@@ -141,32 +141,44 @@ class AddRoomView extends GetView<AddRoomController> {
             ),
             Obx(() {
               return Column(
-                children: List.generate(controller.roomPriceControllers.length,
-                    (index) {
+                children: controller.hargaMap.entries.map((entry) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: controller.roomPriceControllers[index],
-                            decoration: InputDecoration(
-                              hintText: "Masukkan harga ${index + 1} orang",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            keyboardType: TextInputType.number,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${entry.key}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
+                              TextField(
+                                controller: TextEditingController(
+                                    text: entry.value.toString()),
+                                onChanged: (value) {
+                                  controller.updatePrice(
+                                      entry.key, int.tryParse(value) ?? 0);
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ],
                           ),
                         ),
-                        if (index > 0)
-                          IconButton(
-                            icon: Icon(Icons.remove_circle, color: Colors.red),
-                            onPressed: () => controller.removePriceField(index),
-                          ),
+                        IconButton(
+                          icon: Icon(Icons.remove_circle, color: Colors.red),
+                          onPressed: () => controller.removePrice(entry.key),
+                        ),
                       ],
                     ),
                   );
-                }),
+                }).toList(),
               );
             }),
             SizedBox(
@@ -181,24 +193,13 @@ class AddRoomView extends GetView<AddRoomController> {
                       borderRadius: BorderRadius.circular(10))),
               onPressed: () {
                 try {
-                  Map<String, int> hargaMap = {};
-                  for (var i = 0;
-                      i < controller.roomPriceControllers.length;
-                      i++) {
-                    String textValue = controller.roomPriceControllers[i].text;
-                    if (textValue.isEmpty) {
-                      Get.snackbar('Error', 'Semua kolom harus diisi!');
-                      return;
-                    }
-                    hargaMap["${i + 1} orang"] = int.parse(textValue);
-                  }
-
+                  print(controller.hargaMap);
                   controller.addRoom(
                     nomorKamar: controller.roomNumberController.text,
                     status: controller.selectedStatus.value,
                     fasilitas: controller.Facilities,
                     luas: int.parse(controller.wideController.text),
-                    harga: hargaMap,
+                    harga: controller.hargaMap,
                     idproperti: controller.propertyId,
                   );
                 } catch (e) {
@@ -247,55 +248,52 @@ class AddRoomView extends GetView<AddRoomController> {
     );
   }
 
-  void _showAddPriceDialog(BuildContext contex) {
-    String? jmlOrang;
+  void _showAddPriceDialog(BuildContext context) {
+    String? jumlahOrang;
     int? harga;
 
     Get.defaultDialog(
       title: 'Tambah Harga',
-      content: Row(
+      content: Column(
         children: [
-          SizedBox(
-              width: 80,
-              child: TextField(
-                onChanged: (value) {
-                  jmlOrang = value;
-                },
-                decoration: InputDecoration(
-                  hintText: "Jml org",
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              )),
-          SizedBox(
-            width: 4,
-          ),
-          Expanded(
-              child: TextField(
+          TextField(
             onChanged: (value) {
-              harga = int.parse(value);
+              jumlahOrang = value;
             },
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
-              hintText: "Harga",
+              hintText: "Masukkan jumlah orang",
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-          ))
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 10),
+          TextField(
+            onChanged: (value) {
+              harga = int.tryParse(value);
+            },
+            decoration: InputDecoration(
+              hintText: "Masukkan harga",
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+          ),
         ],
       ),
       textConfirm: "Tambah",
       onConfirm: () {
-        if (jmlOrang != null &&
-                jmlOrang!.isNotEmpty &&
-                !controller.roomPriceControllers.contains(jmlOrang) ||
+        if (jumlahOrang != null &&
+            jumlahOrang!.isNotEmpty &&
             harga != null &&
-                harga != 0 &&
-                !controller.Facilities.contains(jmlOrang)) {
-          controller.addFacility(jmlOrang!);
+            harga! > 0) {
+          controller.addPrice(jumlahOrang!, harga!);
+        } else {
+          Get.snackbar("Error", "Masukkan data yang valid!");
         }
         Get.back();
       },

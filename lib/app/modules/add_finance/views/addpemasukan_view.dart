@@ -622,6 +622,9 @@ class AddpemasukanView extends GetView {
                       : int.tryParse(addfinC.sisaController.text
                               .replaceAll(".", "")) ??
                           0;
+                  if (addfinC.catatanController.text == '') {
+                    addfinC.catatanController.text = '-';
+                  }
                   addfinC.tambahPemasukan(
                       addfinC.selectedPenghuni.value,
                       addfinC.selectedProperti.value,

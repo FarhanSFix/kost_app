@@ -131,8 +131,10 @@ class DetailRoomView extends GetView<DetailRoomController> {
                   SizedBox(
                     height: 8,
                   ),
-                  Text("Harga/bulan",
-                      style: TextStyle(fontFamily: 'Lato', fontSize: 16)),
+                  Text(
+                    "Harga/bulan",
+                    style: TextStyle(fontFamily: 'Lato', fontSize: 16),
+                  ),
                   Column(
                     children: List.generate(
                       dataRoom['harga']?.length ?? 0,
@@ -141,7 +143,15 @@ class DetailRoomView extends GetView<DetailRoomController> {
                         if (priceMap == null || priceMap.isEmpty) {
                           return Text("Harga tidak tersedia");
                         }
-                        final person = priceMap.keys.elementAt(index);
+
+                        final sortedKeys = priceMap.keys.toList()
+                          ..sort((a, b) {
+                            int jumlahA = int.tryParse(a.split(' ').first) ?? 0;
+                            int jumlahB = int.tryParse(b.split(' ').first) ?? 0;
+                            return jumlahA.compareTo(jumlahB);
+                          });
+
+                        final person = sortedKeys[index];
                         final price = priceMap[person];
 
                         return Column(
@@ -155,8 +165,9 @@ class DetailRoomView extends GetView<DetailRoomController> {
                             TextField(
                               readOnly: true,
                               controller: TextEditingController(
-                                  text:
-                                      "Rp ${controller.formatNominal(price).toString()}"),
+                                text:
+                                    "Rp ${controller.formatNominal(price).toString()}",
+                              ),
                               decoration: InputDecoration(
                                 hintStyle: TextStyle(color: Color(0xFF888888)),
                                 border: OutlineInputBorder(

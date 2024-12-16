@@ -30,12 +30,29 @@ class EditRoomController extends GetxController {
   final statusOptions = ["Tersedia", "Terisi", "Dipesan", "Diperbaiki"];
   final selectedStatus = ''.obs;
 
-  void addPriceField() {
-    // Tentukan key baru berdasarkan jumlah harga
-    final newKey = "Orang ${roomPrices.length + 1}";
-    roomPrices[newKey] = 0; // Tambahkan key baru dengan nilai default
-    roomPriceControllers
-        .add(TextEditingController(text: "0")); // Controller untuk harga baru
+  final RxMap<String, int> hargaMap = <String, int>{}.obs;
+
+  void addPrice(String jumlahOrang, int harga) {
+    final key = "${jumlahOrang} orang";
+    hargaMap[key] = harga;
+    roomPrices[key] = harga;
+    roomPriceControllers.add(TextEditingController(text: harga.toString()));
+  }
+
+  void updatePrice(String jumlahOrang, int harga) {
+    final key = "${jumlahOrang} orang";
+
+    if (hargaMap.containsKey(key)) {
+      // Update harga di maps
+      hargaMap[key] = harga;
+      roomPrices[key] = harga;
+
+      // Update controller sesuai key
+      final index = roomPrices.keys.toList().indexOf(key);
+      if (index >= 0 && index < roomPriceControllers.length) {
+        roomPriceControllers[index].text = harga.toString();
+      }
+    }
   }
 
   void removePriceField(int index) {

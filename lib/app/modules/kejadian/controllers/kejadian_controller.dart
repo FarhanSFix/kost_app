@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kost_app/app/data/model.dart';
@@ -9,6 +12,10 @@ class KejadianController extends GetxController {
   var searchNama = ''.obs;
   var kejadianList = <Kejadian>[].obs;
   var penghuniList = <Penghuni>[].obs;
+
+  Uint8List dataFromBase64String(String base64String) {
+    return base64Decode(base64String);
+  }
 
   void searchPenghuni(String keyword) {
     searchNama.value = keyword.toLowerCase();
