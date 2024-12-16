@@ -10,7 +10,7 @@ class SplashController extends GetxController {
   }
 
   void _navigateAfterDelay() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 1));
     _checkLoginStatus();
   }
 

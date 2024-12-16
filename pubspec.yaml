@@ -41,9 +41,12 @@ dependencies:
   google_fonts: ^6.2.1
   get_cli: ^1.8.1
   flutter_svg: ^2.0.15
-  intl: ^0.19.0
-  url_launcher: ^6.3.1
+  intl: ^0.18.0
   image_picker: ^1.1.2
+  permission_handler: ^11.3.1
+  awesome_dialog: ^3.2.1
+  percent_indicator: ^4.2.4
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -88,8 +91,8 @@ flutter:
     - family: Jaro
       fonts:
         - asset: fonts/Jaro-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+    #       - asset: fonts/Schyler-Italic.ttf
+    #         style: italic
     - family: Roboto
       fonts:
         - asset: fonts/Roboto-Regular.ttf

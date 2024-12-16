@@ -56,6 +56,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_password/bindings/reset_password_binding.dart';
 import '../modules/reset_password/views/reset_password_view.dart';
+import '../modules/resident_history/bindings/resident_history_binding.dart';
+import '../modules/resident_history/views/resident_history_view.dart';
 import '../modules/room/bindings/room_binding.dart';
 import '../modules/room/views/room_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -110,9 +112,9 @@ class AppPages {
       binding: ProfileBinding(),
     ),
     GetPage(
-      name: _Paths.PROPERTY,
-      page: () => const PropertyView(),
-      binding: PropertyBinding(),
+      name: _Paths.RESIDENT_HISTORY,
+      page: () => const ResidentHistoryView(),
+      binding: ResidentHistoryBinding(),
     ),
     GetPage(
       name: _Paths.ADD_PROPERTY,
@@ -146,7 +148,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.EDIT_ROOM,
-      page: () => EditRoomView(),
+      page: () => const EditRoomView(),
       binding: EditRoomBinding(),
     ),
     GetPage(
@@ -218,6 +220,11 @@ class AppPages {
       name: _Paths.EDIT_PEMASUKAN,
       page: () => const EditPemasukanView(),
       binding: EditPemasukanBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROPERTY,
+      page: () => const PropertyView(),
+      binding: PropertyBinding(),
     ),
   ];
 }

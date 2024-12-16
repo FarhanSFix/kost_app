@@ -11,7 +11,9 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () => Get.offNamed(Routes.LOGIN),
             icon: Icon(
@@ -21,7 +23,6 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(

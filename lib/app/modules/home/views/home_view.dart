@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -24,32 +25,381 @@ class HomeView extends GetView<HomeController> {
                     width: 74,
                   ),
                   const SizedBox(width: 10),
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Hallo,',
                         textHeightBehavior: TextHeightBehavior(
                           applyHeightToFirstAscent: false,
                           applyHeightToLastDescent: false,
                         ),
                       ),
-                      Text(
-                        'Guido Augusta',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textHeightBehavior: TextHeightBehavior(
-                          applyHeightToFirstAscent: false,
-                          applyHeightToLastDescent: false,
+                      Obx(
+                        () => Text(
+                          controller.userName.value,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textHeightBehavior: const TextHeightBehavior(
+                            applyHeightToFirstAscent: false,
+                            applyHeightToLastDescent: false,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.getJumlahStatusPembayaranBulanIni();
+                      AwesomeDialog(
+                        dialogBackgroundColor: Colors.white,
+                        context: context,
+                        dialogType: controller.isSemuaLunas.value
+                            ? DialogType.success
+                            : DialogType.warning,
+                        animType: AnimType.rightSlide,
+                        body: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Status Pembayaran Bulan Ini',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Card(
+                                color: Colors.redAccent[100],
+                                elevation: 3,
+                                child: Theme(
+                                  data: ThemeData(
+                                    splashColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    dividerColor: Colors.transparent,
+                                    expansionTileTheme:
+                                        const ExpansionTileThemeData(
+                                      backgroundColor: Colors.transparent,
+                                      collapsedBackgroundColor:
+                                          Colors.transparent,
+                                    ),
+                                  ),
+                                  child: ExpansionTile(
+                                    initiallyExpanded:
+                                        Get.arguments == 'Belum Bayar',
+                                    iconColor: Colors.black,
+                                    visualDensity: VisualDensity.compact,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    expandedAlignment: Alignment.centerLeft,
+                                    maintainState: true,
+                                    title: Obx(() => Text(
+                                        'Belum Bayar (${controller.totalBelumBayar} orang)')),
+                                    children: [
+                                      // Kontainer Berwarna Putih untuk Menutupi Area Bawah
+                                      Container(
+                                        width: double.infinity,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.vertical(
+                                            bottom: Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 16),
+                                          child: Obx(
+                                            () {
+                                              return ListView.separated(
+                                                padding: EdgeInsets.zero,
+                                                shrinkWrap:
+                                                    true, // Sesuaikan tinggi dengan konten
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(), // Nonaktifkan scroll tambahan
+                                                itemBuilder: (context, index) {
+                                                  return Text(
+                                                    '${index + 1}. ${controller.belumBayar[index]}',
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                    ),
+                                                  );
+                                                },
+                                                separatorBuilder: (context,
+                                                        index) =>
+                                                    const SizedBox(height: 8),
+                                                itemCount: controller
+                                                    .totalBelumBayar.value,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Card(
+                                color: Colors.yellow[400],
+                                elevation: 3,
+                                child: Theme(
+                                  data: ThemeData(
+                                    splashColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    dividerColor: Colors.transparent,
+                                    expansionTileTheme:
+                                        const ExpansionTileThemeData(
+                                      backgroundColor: Colors.transparent,
+                                      collapsedBackgroundColor:
+                                          Colors.transparent,
+                                    ),
+                                  ),
+                                  child: ExpansionTile(
+                                    initiallyExpanded:
+                                        Get.arguments == 'Belum Lunas',
+                                    iconColor: Colors.black,
+                                    visualDensity: VisualDensity.compact,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    expandedAlignment: Alignment.centerLeft,
+                                    maintainState: true,
+                                    title: Obx(() => Text(
+                                        'Belum Lunas (${controller.totalBelumLunas} orang)')),
+                                    children: [
+                                      // Kontainer Berwarna Putih untuk Menutupi Area Bawah
+                                      Container(
+                                        width: double.infinity,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.vertical(
+                                            bottom: Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 16),
+                                          child: Obx(
+                                            () {
+                                              return ListView.separated(
+                                                padding: EdgeInsets.zero,
+                                                shrinkWrap:
+                                                    true, // Sesuaikan tinggi dengan konten
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(), // Nonaktifkan scroll tambahan
+                                                itemBuilder: (context, index) {
+                                                  return Text(
+                                                    '${index + 1}. ${controller.belumLunas[index]}',
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                    ),
+                                                  );
+                                                },
+                                                separatorBuilder: (context,
+                                                        index) =>
+                                                    const SizedBox(height: 8),
+                                                itemCount: controller
+                                                    .totalBelumLunas.value,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Card(
+                                color: Colors.green[300],
+                                elevation: 3,
+                                child: Theme(
+                                  data: ThemeData(
+                                    splashColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    dividerColor: Colors.transparent,
+                                    expansionTileTheme:
+                                        const ExpansionTileThemeData(
+                                      backgroundColor: Colors.transparent,
+                                      collapsedBackgroundColor:
+                                          Colors.transparent,
+                                    ),
+                                  ),
+                                  child: ExpansionTile(
+                                    initiallyExpanded: Get.arguments == 'Lunas',
+                                    iconColor: Colors.black,
+                                    visualDensity: VisualDensity.compact,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    expandedAlignment: Alignment.centerLeft,
+                                    maintainState: true,
+                                    title: Obx(() => Text(
+                                        'Lunas (${controller.totalLunas} orang)')),
+                                    children: [
+                                      // Kontainer Berwarna Putih untuk Menutupi Area Bawah
+                                      Container(
+                                        width: double.infinity,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.vertical(
+                                            bottom: Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 16),
+                                          child: Obx(
+                                            () {
+                                              return ListView.separated(
+                                                padding: EdgeInsets.zero,
+                                                shrinkWrap:
+                                                    true, // Sesuaikan tinggi dengan konten
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(), // Nonaktifkan scroll tambahan
+                                                itemBuilder: (context, index) {
+                                                  return Text(
+                                                    '${index + 1}. ${controller.lunas[index]}',
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                    ),
+                                                  );
+                                                },
+                                                separatorBuilder: (context,
+                                                        index) =>
+                                                    const SizedBox(height: 8),
+                                                itemCount:
+                                                    controller.totalLunas.value,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                controller.isSemuaLunas.value
+                                    ? 'Yeay! Semua penghuni sudah membayar.'
+                                    : 'Ayo, segera ingatkan pembayaran!',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red[400],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Tutup',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {},
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            appColor.buttonTextColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Row(
+                                        children: [
+                                          Text(
+                                            'Lihat Keuangan',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            size: 18,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ).show();
+                    },
                     highlightColor: Colors.transparent,
                     icon:
                         const Icon(Icons.notifications_none_rounded, size: 25),
@@ -216,13 +566,17 @@ class HomeView extends GetView<HomeController> {
                       const SizedBox(height: 15),
                       const Text('Selisih'),
                       const SizedBox(height: 2),
-                      Text(
-                        controller.indexStatistik.value == 0
-                            ? 'Rp ${controller.formatNominal(controller.selisihBulanIni)}'
-                            : 'Rp ${controller.formatNominal(controller.selisihBulanLalu)}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      Obx(
+                        () => Text(
+                          controller.indexStatistik.value == 0
+                              ? controller
+                                  .formatNominal(controller.selisihBulanIni)
+                              : controller
+                                  .formatNominal(controller.selisihBulanLalu),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const Divider(
@@ -247,14 +601,18 @@ class HomeView extends GetView<HomeController> {
                                 ],
                               ),
                               const SizedBox(height: 2),
-                              Text(
-                                controller.indexStatistik.value == 0
-                                    ? 'Rp ${controller.formatNominal(controller.pemasukanBulanIni.value)}'
-                                    : 'Rp ${controller.formatNominal(controller.pemasukanBulanLalu.value)}',
-                                style: const TextStyle(
-                                  color: appColor.income,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                              Obx(
+                                () => Text(
+                                  controller.indexStatistik.value == 0
+                                      ? controller.formatNominal(
+                                          controller.pemasukanBulanIni.value)
+                                      : controller.formatNominal(
+                                          controller.pemasukanBulanLalu.value),
+                                  style: const TextStyle(
+                                    color: appColor.income,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
@@ -281,14 +639,18 @@ class HomeView extends GetView<HomeController> {
                                 ],
                               ),
                               const SizedBox(height: 2),
-                              Text(
-                                controller.indexStatistik.value == 0
-                                    ? 'Rp ${controller.formatNominal(controller.pengeluaranBulanIni.value)}'
-                                    : 'Rp ${controller.formatNominal(controller.pengeluaranBulanLalu.value)}',
-                                style: const TextStyle(
-                                  color: appColor.outcome,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                              Obx(
+                                () => Text(
+                                  controller.indexStatistik.value == 0
+                                      ? controller.formatNominal(
+                                          controller.pengeluaranBulanIni.value)
+                                      : controller.formatNominal(controller
+                                          .pengeluaranBulanLalu.value),
+                                  style: const TextStyle(
+                                    color: appColor.outcome,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
@@ -327,8 +689,24 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
               const SizedBox(height: 12),
-              Obx(
-                () => ListView.separated(
+              Obx(() {
+                if (controller.keuanganList.isEmpty) {
+                  return const Center(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20),
+                        Text(
+                          'Tidak ada data',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                  );
+                }
+                return ListView.separated(
                   itemCount: controller.keuanganList.length,
                   padding: EdgeInsets.zero,
                   separatorBuilder: (context, index) =>
@@ -352,284 +730,322 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ],
                       ),
-                      child: Row(
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    'Dibuat ${controller.formatTanggal(item['created_at'].toDate())}',
-                                    style: const TextStyle(fontSize: 10)),
-                                const SizedBox(height: 10),
-                                Row(
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: 62,
-                                      height: 62,
-                                      decoration: const BoxDecoration(
-                                        color: appColor.backgroundColor2,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.person,
-                                          color: appColor.logoColor,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 18),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item['judul'],
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
+                                    Text(
+                                        'Dibuat ${controller.formatTanggal(item['created_at'].toDate())}',
+                                        style: const TextStyle(fontSize: 10)),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 62,
+                                          height: 62,
+                                          decoration: const BoxDecoration(
+                                            color: appColor.backgroundColor2,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.person,
+                                              color: appColor.logoColor,
                                             ),
                                           ),
-                                          item['properti'] != '-'
-                                              ? Text(
-                                                  item['properti'],
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
-                                                  ),
-                                                )
-                                              : const SizedBox(),
-                                          item['kamar'] != null
-                                              ? Text(
-                                                  'Kamar ${item['kamar']}',
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
-                                                  ),
-                                                )
-                                              : const SizedBox(),
-                                          item['kategori'] != null
-                                              ? Text(
-                                                  item['kategori'],
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
-                                                  ),
-                                                )
-                                              : const SizedBox(),
-                                          item['catatan'] != null
-                                              ? Text(
-                                                  item['catatan'],
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
-                                                  ),
-                                                )
-                                              : const SizedBox(),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          item['jenis'] == 'pemasukan'
-                                              ? 'Rp ${controller.formatNominal(item['total_bayar'])}'
-                                              : '-Rp ${controller.formatNominal(item['total_bayar'])}',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: item['jenis'] == 'pemasukan'
-                                                ? appColor.income
-                                                : appColor.outcome,
+                                        ),
+                                        const SizedBox(width: 18),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                item['judul'],
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              item['properti'] != '-'
+                                                  ? Text(
+                                                      item['properti'],
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
+                                              item['kamar'] != null
+                                                  ? Text(
+                                                      'Kamar ${item['kamar']}',
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
+                                              item['kategori'] != null
+                                                  ? Text(
+                                                      item['kategori'],
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
+                                              item['status'] != null
+                                                  ? Text(
+                                                      item['status'],
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                      ),
+                                                    )
+                                                  : const SizedBox(),
+                                            ],
                                           ),
                                         ),
-                                        item['tanggal'] != null
-                                            ? Text(
-                                                controller.formatTanggal(
-                                                    item['tanggal'].toDate()),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontSize: 10,
-                                                ),
-                                              )
-                                            : const SizedBox(),
-                                        item['tgl_mulai'] != null
-                                            ? Text(
-                                                controller.formatTanggal(
-                                                    item['tgl_mulai'].toDate()),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontSize: 10,
-                                                ),
-                                              )
-                                            : const SizedBox(),
-                                        item['tgl_sampai'] != null
-                                            ? Text(
-                                                '- ${controller.formatTanggal(item['tgl_sampai'].toDate())}',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontSize: 10,
-                                                ),
-                                              )
-                                            : const SizedBox(),
+                                        const SizedBox(width: 10),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              item['jenis'] == 'pemasukan'
+                                                  ? controller.formatNominal(
+                                                      item['status'] == 'Lunas'
+                                                          ? item['total_bayar']
+                                                          : item['uang_muka'])
+                                                  : '-${controller.formatNominal(item['total_bayar'])}',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    item['jenis'] == 'pemasukan'
+                                                        ? appColor.income
+                                                        : appColor.outcome,
+                                              ),
+                                            ),
+                                            item['tanggal'] != null
+                                                ? Text(
+                                                    controller.formatTanggal(
+                                                        item['tanggal']
+                                                            .toDate()),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      fontSize: 10,
+                                                    ),
+                                                  )
+                                                : const SizedBox(),
+                                            item['periode']?['mulai'] != null
+                                                ? Text(
+                                                    controller.formatTanggal(
+                                                        item['periode']['mulai']
+                                                            .toDate()),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      fontSize: 10,
+                                                    ),
+                                                  )
+                                                : const SizedBox(),
+                                            item['periode']?['sampai'] != null
+                                                ? Text(
+                                                    '- ${controller.formatTanggal(item['periode']['sampai'].toDate())}',
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      fontSize: 10,
+                                                    ),
+                                                  )
+                                                : const SizedBox(),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ],
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Column(
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                padding: EdgeInsets.zero,
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                constraints: const BoxConstraints(),
-                                style: const ButtonStyle(
-                                  tapTargetSize: MaterialTapTargetSize
-                                      .shrinkWrap, // the '2023' part
-                                ),
-                                icon: const Icon(
-                                  Icons.edit_rounded,
-                                  color: appColor.buttonColorEdit,
-                                  size: 16,
                                 ),
                               ),
-                              const SizedBox(height: 45),
-                              IconButton(
-                                onPressed: () {
-                                  Get.defaultDialog(
-                                    title: 'Hapus Data',
-                                    titleStyle: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors
-                                          .red, // Ganti warna judul dialog
+                              const SizedBox(width: 10),
+                              Column(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    padding: EdgeInsets.zero,
+                                    highlightColor: Colors.transparent,
+                                    splashColor: Colors.transparent,
+                                    constraints: const BoxConstraints(),
+                                    style: const ButtonStyle(
+                                      tapTargetSize: MaterialTapTargetSize
+                                          .shrinkWrap, // the '2023' part
                                     ),
-                                    middleText:
-                                        'Apakah Anda yakin ingin menghapus data ini?',
-                                    middleTextStyle: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black54, // Warna teks
+                                    icon: const Icon(
+                                      Icons.edit_rounded,
+                                      color: appColor.buttonColorEdit,
+                                      size: 16,
                                     ),
-                                    backgroundColor: Colors
-                                        .white, // Warna latar belakang dialog
-                                    radius: 10, // Radius sudut dialog
-                                    barrierDismissible:
-                                        false, // Mencegah menutup dialog dengan menekan luar dialog
-                                    actions: [
-                                      // Tombol batal
-                                      TextButton(
-                                        onPressed: () {
-                                          Get.back(); // Menutup dialog
-                                        },
-                                        child: const Text(
-                                          'Batal',
-                                          style: TextStyle(
-                                              color: appColor.buttonTextColor),
+                                  ),
+                                  const SizedBox(height: 45),
+                                  IconButton(
+                                    onPressed: () {
+                                      Get.defaultDialog(
+                                        title: 'Hapus Data',
+                                        titleStyle: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors
+                                              .red, // Ganti warna judul dialog
                                         ),
-                                      ),
-                                      // Tombol hapus
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          // Aksi hapus data
-                                          Get.back(); // Menutup dialog setelah menghapus data
-                                          Get.snackbar(
-                                            'Sukses',
-                                            'Data berhasil dihapus',
-                                            snackPosition: SnackPosition.BOTTOM,
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    185, 76, 175, 79),
-                                            colorText: Colors.white,
-                                            margin: const EdgeInsets.all(10),
-                                            borderRadius: 10,
-                                            duration:
-                                                const Duration(seconds: 2),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              Colors.red, // Warna tombol hapus
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 12),
+                                        middleText:
+                                            'Apakah Anda yakin ingin menghapus data ini?',
+                                        middleTextStyle: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black54, // Warna teks
                                         ),
-                                        child: const Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              Icons.delete,
-                                              color: Colors.white,
-                                              size: 18,
-                                            ),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              'Hapus',
+                                        backgroundColor: Colors
+                                            .white, // Warna latar belakang dialog
+                                        radius: 10, // Radius sudut dialog
+                                        barrierDismissible:
+                                            false, // Mencegah menutup dialog dengan menekan luar dialog
+                                        actions: [
+                                          // Tombol batal
+                                          TextButton(
+                                            onPressed: () {
+                                              Get.back(); // Menutup dialog
+                                            },
+                                            child: const Text(
+                                              'Batal',
                                               style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14,
+                                                color: Colors.black54,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                    titlePadding: const EdgeInsets.all(
-                                        20), // Padding judul
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                        vertical: 10), // Padding konten
-                                  );
-                                },
-                                padding: EdgeInsets.zero,
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                constraints: const BoxConstraints(),
-                                style: const ButtonStyle(
-                                  tapTargetSize: MaterialTapTargetSize
-                                      .shrinkWrap, // the '2023' part
-                                ),
-                                icon: const Icon(
-                                  Icons.delete_rounded,
-                                  color: appColor.buttonColorDelete,
-                                  size: 16,
-                                ),
-                              ),
+                                          ),
+                                          // Tombol hapus
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              if (item['jenis'] ==
+                                                  'pemasukan') {
+                                                controller.deletePemasukan(
+                                                    item['id'],
+                                                    item['id_kamar']);
+                                              } else {
+                                                controller.deletePengeluaran(
+                                                    item['id']);
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors
+                                                  .red, // Warna tombol hapus
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 12),
+                                            ),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                  size: 18,
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  'Hapus',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                        titlePadding: const EdgeInsets.all(
+                                            20), // Padding judul
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20,
+                                                vertical: 10), // Padding konten
+                                      );
+                                    },
+                                    padding: EdgeInsets.zero,
+                                    highlightColor: Colors.transparent,
+                                    splashColor: Colors.transparent,
+                                    constraints: const BoxConstraints(),
+                                    style: const ButtonStyle(
+                                      tapTargetSize: MaterialTapTargetSize
+                                          .shrinkWrap, // the '2023' part
+                                    ),
+                                    icon: const Icon(
+                                      Icons.delete_rounded,
+                                      color: appColor.buttonColorDelete,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
-                          )
+                          ),
+                          const SizedBox(height: 10),
+                          item['status'] == 'Belum Lunas'
+                              ? ElevatedButton(
+                                  onPressed: () {
+                                    controller.lunasi(
+                                        item['id'], item['judul']);
+                                  },
+                                  child: Text(
+                                    'Tandai Lunas',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size.zero,
+                                    backgroundColor:
+                                        appColor.buttonColorPrimary,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 8),
+                                  ))
+                              : const SizedBox(),
                         ],
                       ),
                     );
                   },
-                ),
-              ),
+                );
+              }),
               const SizedBox(height: 20),
             ],
           ),

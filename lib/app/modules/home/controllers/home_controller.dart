@@ -1,14 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
-  var indexStatistik = 0.obs;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  var indexStatistik = 0.obs; // 1 dan 0
+
+  var belumBayar =
+      <String>[].obs; // Observable list untuk penghuni yang belum bayar
+  var belumLunas =
+      <String>[].obs; // Observable list untuk penghuni yang belum lunas
+  var lunas = <String>[].obs; // Observable list untuk penghuni yang sudah lunas
+
+  var isSemuaLunas = false.obs; // Status semua penghuni sudah lunas atau belum
+
+  var totalPenghuni = 0.obs;
+  var statusPembayaran = ''.obs; // Lunas, belum_bayar, belum_lunas, kosong
+  var totalBelumBayar = 0.obs;
+  var totalBelumLunas = 0.obs;
+  var totalLunas = 0.obs;
 
   final pemasukanBulanIni = 0.obs;
   final pengeluaranBulanIni = 0.obs;
   final pemasukanBulanLalu = 0.obs;
   final pengeluaranBulanLalu = 0.obs;
+  final userName = ''.obs;
 
   var keuanganList = <Map<String, dynamic>>[].obs;
 
@@ -23,10 +42,40 @@ class HomeController extends GetxController {
     super.onInit();
     hitungStatistik();
     fetchKeuangan();
+    listenToUserData();
+    getJumlahStatusPembayaranBulanIni();
+    print(totalLunas);
+  }
+
+  void listenToUserData() {
+    String? userId = auth.currentUser?.uid;
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
+    firestore.collection('users').doc(userId).snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        var data = snapshot.data();
+        var fullName = data?['username'] ?? 'Nama Tidak Ditemukan';
+
+        // Ambil hanya 2 kata pertama dari username
+        var words = fullName.split(' ');
+        userName.value =
+            words.take(2).join(' '); // Gabungkan kembali 2 kata pertama
+      }
+    }, onError: (e) {
+      Get.snackbar('Error', 'Gagal mengambil data user: $e');
+    });
   }
 
   String formatNominal(int nominal) {
-    final formatter = NumberFormat('#,###', 'id_ID');
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
     return formatter.format(nominal).replaceAll(',', '.');
   }
 
@@ -42,88 +91,115 @@ class HomeController extends GetxController {
     DateTime awalBulanLalu = DateTime(now.year, now.month - 1, 1);
     DateTime akhirBulanLalu = DateTime(now.year, now.month, 0);
 
+    String? userId = auth.currentUser?.uid; // Ambil userId dari pengguna login
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
     // Hitung pemasukan dan pengeluaran untuk bulan ini
-    pemasukanBulanIni.value = await _hitungTotal(
+    _hitungTotal(
       collection: 'pemasukan',
       awalBulan: awalBulanIni,
       akhirBulan: now,
+      userId: userId,
+      update: (total) => pemasukanBulanIni.value = total,
     );
 
-    pengeluaranBulanIni.value = await _hitungTotal(
+    _hitungTotal(
       collection: 'pengeluaran',
       awalBulan: awalBulanIni,
       akhirBulan: now,
+      userId: userId,
+      update: (total) => pengeluaranBulanIni.value = total,
     );
 
     // Hitung pemasukan dan pengeluaran untuk bulan lalu
-    pemasukanBulanLalu.value = await _hitungTotal(
+    _hitungTotal(
       collection: 'pemasukan',
       awalBulan: awalBulanLalu,
       akhirBulan: akhirBulanLalu,
+      userId: userId,
+      update: (total) => pemasukanBulanLalu.value = total,
     );
 
-    pengeluaranBulanLalu.value = await _hitungTotal(
+    _hitungTotal(
       collection: 'pengeluaran',
       awalBulan: awalBulanLalu,
       akhirBulan: akhirBulanLalu,
+      userId: userId,
+      update: (total) => pengeluaranBulanLalu.value = total,
     );
   }
 
-  Future<int> _hitungTotal({
+  void _hitungTotal({
     required String collection,
     required DateTime awalBulan,
     required DateTime akhirBulan,
-  }) async {
-    print("Mengambil data dari koleksi: $collection");
-    print(
-        "Rentang waktu: ${awalBulan.toIso8601String()} - ${akhirBulan.toIso8601String()}");
-
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
+    required String userId,
+    required Function(int) update,
+  }) {
+    FirebaseFirestore.instance
         .collection(collection)
+        .where('userId', isEqualTo: userId)
         .where('created_at', isGreaterThanOrEqualTo: awalBulan)
         .where('created_at', isLessThanOrEqualTo: akhirBulan)
-        .get();
-
-    // print("Jumlah dokumen ditemukan: ${snapshot.docs.length}");
-
-    int total = snapshot.docs.fold(0, (sum, doc) {
-      // print("Data dokumen: ${doc.data()}");
-      return sum + (doc['total_bayar'] as int);
+        .snapshots()
+        .listen((snapshot) {
+      int total = snapshot.docs.fold(0, (sum, doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        if (data['status'] == 'Lunas') {
+          return sum + (data['total_bayar'] as int);
+        } else if (data['status'] == 'Belum Lunas') {
+          return sum + (data['uang_muka'] as int);
+        } else if (data['status'] == null) {
+          return sum + (data['total_bayar'] as int);
+        }
+        return sum;
+      });
+      update(total); // Mengupdate nilai secara otomatis
     });
-
-    print("Total untuk koleksi $collection: $total");
-    return total;
   }
 
+  // List keuangan
   void fetchKeuangan() {
-    FirebaseFirestore.instance
+    String? userId = auth.currentUser?.uid; // Ambil userId dari pengguna login
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
+    firestore
         .collection('pemasukan')
+        .where('userId', isEqualTo: userId)
         .snapshots()
         .listen((pemasukanSnapshot) {
-      FirebaseFirestore.instance
+      firestore
           .collection('pengeluaran')
+          .where('userId', isEqualTo: userId)
           .snapshots()
           .listen((pengeluaranSnapshot) async {
         List<Map<String, dynamic>> pemasukan = [];
 
         for (var doc in pemasukanSnapshot.docs) {
-          var data = doc.data() as Map<String, dynamic>;
+          var data = doc.data();
+          data['id'] = doc.id; // Tambahkan id dokumen pemasukan
 
           // Query nama penghuni berdasarkan id_penghuni
-          var penghuniSnapshot = await FirebaseFirestore.instance
+          var penghuniSnapshot = await firestore
               .collection('penghuni')
               .doc(data['id_penghuni'])
               .get();
 
-          var propertiSnapshot = await FirebaseFirestore.instance
+          var propertiSnapshot = await firestore
               .collection('properti')
               .doc(data['id_properti'])
               .get();
 
-          var kamarSnapshot = await FirebaseFirestore.instance
-              .collection('kamar')
-              .doc(data['id_kamar'])
-              .get();
+          var kamarSnapshot =
+              await firestore.collection('kamar').doc(data['id_kamar']).get();
 
           data['jenis'] = 'pemasukan'; // Tandai sebagai pemasukan
           data['judul'] = penghuniSnapshot.exists
@@ -136,6 +212,7 @@ class HomeController extends GetxController {
               ? kamarSnapshot.data()!['nomor'] ?? 'tidak diketahui'
               : 'tidak diketahui'; // Nama kamar
           data['catatan'] = data['catatan'] ?? '-'; // Catatan
+          data['status'] = data['status']; // Status
           pemasukan.add(data);
         }
 
@@ -143,10 +220,11 @@ class HomeController extends GetxController {
         List<Map<String, dynamic>> pengeluaran = [];
 
         for (var doc in pengeluaranSnapshot.docs) {
-          var data = doc.data() as Map<String, dynamic>;
+          var data = doc.data();
+          data['id'] = doc.id; // Tambahkan id dokumen pengeluaran
 
           // Query nama kategori berdasarkan id_kategori
-          var propertiSnapshot = await FirebaseFirestore.instance
+          var propertiSnapshot = await firestore
               .collection('properti')
               .doc(data['id_properti'])
               .get();
@@ -156,6 +234,7 @@ class HomeController extends GetxController {
               ? propertiSnapshot.data()!['nama_properti'] ?? '-'
               : '-'; // Nama properti
           data['catatan'] = data['catatan'] ?? '-'; // Catatan
+          data['status'] = data['status']; // Status
           pengeluaran.add(data);
         }
 
@@ -168,5 +247,159 @@ class HomeController extends GetxController {
         });
       });
     });
+  }
+
+  DateTime getAwalBulanIni() {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, 1); // Hari pertama bulan ini
+  }
+
+  DateTime getAkhirBulanIni() {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month + 1, 1)
+        .subtract(const Duration(days: 1)); // Hari terakhir bulan ini
+  }
+
+  void getJumlahStatusPembayaranBulanIni() {
+    final firestore = FirebaseFirestore.instance;
+    final awalBulan = getAwalBulanIni();
+    final akhirBulan = getAkhirBulanIni();
+
+    String? userId = auth.currentUser?.uid;
+
+    if (userId == null) {
+      Get.snackbar('Error', 'User tidak ditemukan');
+      return;
+    }
+
+    firestore
+        .collection('penghuni')
+        .where('userId', isEqualTo: userId)
+        .where('is_active', isEqualTo: true)
+        .where('id_kamar', isNotEqualTo: "")
+        .where('id_kamar', isNotEqualTo: null)
+        .snapshots()
+        .listen((penghuniSnapshot) async {
+      totalPenghuni.value = penghuniSnapshot.docs.length;
+
+      // Reset variabel
+      totalBelumBayar.value = 0;
+      totalBelumLunas.value = 0;
+      totalLunas.value = 0;
+      belumBayar.clear();
+      belumLunas.clear();
+      lunas.clear();
+
+      // Kumpulkan id_penghuni
+      List<String> idPenghuniList =
+          penghuniSnapshot.docs.map((e) => e.id).toList();
+
+      // Query semua pemasukan
+      firestore
+          .collection('pemasukan')
+          .where('id_penghuni', whereIn: idPenghuniList)
+          .where('periode.mulai', isLessThanOrEqualTo: akhirBulan)
+          .where('periode.sampai', isGreaterThanOrEqualTo: awalBulan)
+          .snapshots()
+          .listen((pemasukanSnapshot) {
+        var penghuniStatus = Map<String, String>.fromIterable(
+          idPenghuniList,
+          key: (id) => id,
+          value: (_) => 'Belum Bayar',
+        );
+
+        // Update status berdasarkan pemasukan
+        for (var doc in pemasukanSnapshot.docs) {
+          String idPenghuni = doc['id_penghuni'];
+          String statusPembayaran = doc['status'];
+
+          if (statusPembayaran == 'Lunas') {
+            penghuniStatus[idPenghuni] = 'Lunas';
+          } else {
+            penghuniStatus[idPenghuni] = 'Belum Lunas';
+          }
+        }
+
+        // Hitung status
+        for (var penghuniDoc in penghuniSnapshot.docs) {
+          String idPenghuni = penghuniDoc.id;
+          String namaPenghuni = penghuniDoc['nama'];
+
+          if (penghuniStatus[idPenghuni] == 'Lunas') {
+            totalLunas.value++;
+            lunas.add(namaPenghuni);
+          } else if (penghuniStatus[idPenghuni] == 'Belum Lunas') {
+            totalBelumLunas.value++;
+            belumLunas.add(namaPenghuni);
+          } else {
+            totalBelumBayar.value++;
+            belumBayar.add(namaPenghuni);
+          }
+        }
+
+        // Update isSemuaLunas
+        cekSemuaLunas();
+      });
+    });
+  }
+
+// Fungsi untuk mengecek apakah semua lunas
+  void cekSemuaLunas() {
+    isSemuaLunas.value = (totalLunas.value == totalPenghuni.value);
+  }
+
+  void lunasi(String docId, String namaPenghuni) async {
+    try {
+      Get.defaultDialog(
+          title: "Konfirmasi Pelunasan",
+          middleText:
+              "Apakah penghuni $namaPenghuni telah melakukan pelunasan?",
+          onConfirm: () async {
+            await FirebaseFirestore.instance
+                .collection('pemasukan')
+                .doc(docId)
+                .update({'status': 'Lunas', 'uang_muka': 0, 'sisa': 0});
+            Get.back();
+            Get.snackbar('Berhasil', '$namaPenghuni sudah Lunas');
+          },
+          textConfirm: "Ya, saya yakin",
+          textCancel: "Tidak");
+    } catch (e) {
+      print(e);
+      Get.snackbar('Error', 'Tidak dapat melakukan pelunasan');
+    }
+  }
+
+  void deletePemasukan(String docId, String idKamar) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('pemasukan')
+          .doc(docId)
+          .delete();
+
+      await FirebaseFirestore.instance
+          .collection('kamar')
+          .doc(idKamar)
+          .update({'status': 'Tersedia'});
+      Get.back();
+      Get.snackbar('Berhasil', 'Data berhasil dihapus');
+    } catch (e) {
+      print(e);
+      Get.snackbar('Error', 'Tidak dapat menghapus pemasukan');
+    }
+  }
+
+  void deletePengeluaran(String docID) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('pengeluaran')
+          .doc(docID)
+          .delete();
+      Get.back();
+      Get.snackbar('Berhasil', 'Data berhasil dihapus');
+    } catch (e) {
+      print(e);
+      Get.snackbar('Error', 'Tidak dapat menghapus pengeluaran');
+    }
   }
 }
