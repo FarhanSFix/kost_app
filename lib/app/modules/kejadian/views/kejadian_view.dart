@@ -159,50 +159,51 @@ class KejadianView extends GetView<KejadianController> {
                                   ),
                                   const SizedBox(width: 8),
                                   ElevatedButton.icon(
-                                    onPressed: () {
-                                      final nomor = penghuni.telepon;
-                                      final bukti =
-                                          base64Decode(kejadian.foto_bukti);
-// Validasi nomor telepon
-                                      if (nomor == null || nomor.isEmpty) {
-                                        Get.snackbar(
-                                          "Error",
-                                          "Nomor telepon tidak tersedia untuk penghuni ini.",
-                                          backgroundColor: Colors.red,
-                                          colorText: Colors.white,
-                                        );
-                                        return;
-                                      }
+                                      onPressed: () {
+                                        final nomor = penghuni.telepon;
+                                        if (nomor == null || nomor.isEmpty) {
+                                          Get.snackbar(
+                                            "Error",
+                                            "Nomor telepon tidak tersedia untuk penghuni ini.",
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                          );
+                                          return;
+                                        }
 
-                                      String formattedNomor = nomor;
-                                      if (nomor.startsWith('0')) {
-                                        formattedNomor =
-                                            '+62${nomor.substring(1)}';
-                                      }
+                                        String formattedNomor = nomor;
+                                        if (nomor.startsWith('0')) {
+                                          formattedNomor =
+                                              '+62${nomor.substring(1)}';
+                                        }
 
-                                      final pesan = Uri.encodeComponent(
-                                          "Halo *${penghuni.nama}*, terkait kejadian *${kejadian.kejadian}*, mohon dapat dibayar pada saat pembayaran bulanan ya.");
-                                      final whatsappUrl =
-                                          "https://wa.me/$formattedNomor?text=$pesan";
+                                        final pesan = Uri.encodeComponent(
+                                            "Halo *${penghuni.nama}*, terkait kejadian *${kejadian.kejadian}*, mohon dapat dibayar pada saat pembayaran bulanan ya.");
+                                        final whatsappUrl =
+                                            "https://wa.me/$formattedNomor?text=$pesan";
 
 // Buka WhatsApp
-                                      launchUrl(Uri.parse(whatsappUrl));
+                                        launchUrl(Uri.parse(whatsappUrl));
 
-                                      print(whatsappUrl);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                        print(whatsappUrl);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Color.fromARGB(255, 84, 215, 89),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
                                       ),
-                                    ),
-                                    icon: SvgPicture.asset(
-                                      'assets/icons/whatsapp.svg',
-                                      color: Colors.white,
-                                      width: 20,
-                                    ),
-                                    label: const Text("Hubungi"),
-                                  ),
+                                      icon: SvgPicture.asset(
+                                        'assets/icons/whatsapp.svg',
+                                        color: Colors.white,
+                                        width: 20,
+                                      ),
+                                      label: const Text(
+                                        "Hubungi",
+                                        style: TextStyle(color: Colors.white),
+                                      )),
                                 ],
                               ),
                             ],

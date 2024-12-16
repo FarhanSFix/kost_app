@@ -194,8 +194,30 @@ class PenghuniView extends GetView<PenghuniController> {
                                     ),
                                     ElevatedButton.icon(
                                       onPressed: () {
-                                        launchUrl(Uri.parse(
-                                            'https://wa.me/${penghuni.telepon}'));
+                                        final nomor = penghuni.telepon;
+                                        if (nomor == null || nomor.isEmpty) {
+                                          Get.snackbar(
+                                            "Error",
+                                            "Nomor telepon tidak tersedia untuk penghuni ini.",
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                          );
+                                          return;
+                                        }
+
+                                        String formattedNomor = nomor;
+                                        if (nomor.startsWith('0')) {
+                                          formattedNomor =
+                                              '+62${nomor.substring(1)}';
+                                        }
+
+                                        final whatsappUrl =
+                                            "https://wa.me/$formattedNomor";
+
+// Buka WhatsApp
+                                        launchUrl(Uri.parse(whatsappUrl));
+
+                                        print(whatsappUrl);
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor:
