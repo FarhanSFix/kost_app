@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:kost_app/app/utils/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/resident_history_controller.dart';
 
@@ -79,14 +81,23 @@ class ResidentHistoryView extends GetView<ResidentHistoryController> {
                             Text(
                               item['nama'],
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              item['telepon'],
+                              'Tanggal Keluar',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              controller
+                                  .formatTanggal(item['tgl_checkout'].toDate()),
                               style: const TextStyle(
                                 color: Colors.grey,
                               ),
@@ -94,6 +105,42 @@ class ResidentHistoryView extends GetView<ResidentHistoryController> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
+                        ),
+                      ),
+                      Spacer(),
+                      InkWell(
+                        onTap: () {
+                          final nomor = item['telepon'];
+                          // Validasi nomor telepon
+                          if (nomor == null || nomor.isEmpty) {
+                            Get.snackbar(
+                              "Error",
+                              "Nomor telepon tidak tersedia untuk penghuni ini.",
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
+
+                          String formattedNomor = nomor;
+                          if (nomor.startsWith('0')) {
+                            formattedNomor = '+62${nomor.substring(1)}';
+                          }
+
+                          final whatsappUrl = "https://wa.me/$formattedNomor";
+
+                          // Buka WhatsApp
+                          launchUrl(Uri.parse(whatsappUrl));
+
+                          print(whatsappUrl);
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Color.fromARGB(255, 84, 215, 89),
+                          child: SvgPicture.asset(
+                            'assets/icons/whatsapp.svg',
+                            color: Colors.white,
+                            width: 20,
+                          ),
                         ),
                       ),
                     ],
