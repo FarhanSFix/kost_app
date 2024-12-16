@@ -2,9 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../controllers/home_controller.dart';
 
