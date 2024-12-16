@@ -20,7 +20,6 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
-import '../modules/payment_status/bindings/payment_status_binding.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/property/bindings/property_binding.dart';
@@ -121,8 +120,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.EDIT_ROOM,
-      page: () => EditRoomView(),
+      page: () => const EditRoomView(),
       binding: EditRoomBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROPERTY,
+      page: () => const PropertyView(),
+      binding: PropertyBinding(),
     ),
   ];
 }
