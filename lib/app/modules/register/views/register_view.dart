@@ -88,8 +88,8 @@ class RegisterView extends GetView<RegisterController> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           controller.isPasswordHidden.value
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
                           color: Colors.black.withOpacity(0.6),
                         ),
                         onPressed: () {
@@ -118,8 +118,8 @@ class RegisterView extends GetView<RegisterController> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           controller.isPasswordHidden.value
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
                           color: Colors.black.withOpacity(0.6),
                         ),
                         onPressed: () {

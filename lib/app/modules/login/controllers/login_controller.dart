@@ -38,22 +38,22 @@ class LoginController extends GetxController {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       if (userCredential.user!.emailVerified) {
-        Get.snackbar('Success', 'User logged in successfully');
+        Get.snackbar('Sukses', 'Pengguna berhasil masuk');
         Get.offAllNamed(Routes.MAIN);
       } else {
-        Get.snackbar('Error', 'Please verify your email');
+        Get.snackbar('Error', 'Tolong verifikasi email anda terlebih dahulu');
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Get.snackbar('Error', 'No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        Get.snackbar('Error', 'Wrong password provided for that user.');
+      print(e.code);
+      if (e.code == 'invalid-credential') {
+        Get.snackbar('Error', 'Email atau password salah');
       } else if (e.code == 'too-many-requests') {
-        Get.snackbar('Error', 'Too many requests. Try again later.');
+        Get.snackbar(
+            'Error', 'Terlalu banyak percobaan login. Coba lagi nanti');
       }
     } catch (e) {
       print(e);
-      Get.snackbar('Error', 'An unexpected error occurred. Please try again.');
+      Get.snackbar('Error', 'Terjadi kesalahan. Coba lagi nanti');
     }
   }
 
