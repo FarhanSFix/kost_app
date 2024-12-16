@@ -8,6 +8,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
+import '../modules/payment_status/bindings/payment_status_binding.dart';
+import '../modules/payment_status/views/payment_status_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
@@ -71,6 +73,11 @@ class AppPages {
       name: _Paths.RESIDENT_HISTORY,
       page: () => const ResidentHistoryView(),
       binding: ResidentHistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_STATUS,
+      page: () => const PaymentStatusView(),
+      binding: PaymentStatusBinding(),
     ),
   ];
 }
