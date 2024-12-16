@@ -44,7 +44,7 @@ class EditPemasukanView extends GetView<EditPemasukanController> {
                         height: 4,
                       ),
                       Obx(() {
-                        // Ensure `selectedPenghuni.value` is valid
+                        // Ensure selectedPenghuni.value is valid
                         final validPenghuniIds =
                             controller.penghuniList.map((p) => p.id).toList();
                         if (!validPenghuniIds
@@ -85,7 +85,7 @@ class EditPemasukanView extends GetView<EditPemasukanController> {
                         children: [
                           Expanded(
                             child: Obx(() {
-                              // Ensure `selectedPenghuni.value` is valid
+                              // Ensure selectedPenghuni.value is valid
                               final validPropertiIds = controller.propertiList
                                   .map((p) => p.id)
                                   .toList();
@@ -127,7 +127,7 @@ class EditPemasukanView extends GetView<EditPemasukanController> {
                           ),
                           Expanded(
                             child: Obx(() {
-                              // Ensure `selectedPenghuni.value` is valid
+                              // Ensure selectedPenghuni.value is valid
                               final validKamarIds = controller.kamarList
                                   .map((p) => p.id)
                                   .toList();

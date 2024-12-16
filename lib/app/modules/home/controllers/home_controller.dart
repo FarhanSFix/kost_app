@@ -7,6 +7,8 @@ class HomeController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  final isAtBottom = false.obs; // Status apakah sudah scroll sampai bawah
+
   var indexStatistik = 0.obs; // 1 dan 0
 
   var belumBayar =
@@ -239,12 +241,18 @@ class HomeController extends GetxController {
         }
 
         // Gabungkan dan urutkan data
-        keuanganList.value = [...pemasukan, ...pengeluaran];
-        keuanganList.sort((a, b) {
+        List<Map<String, dynamic>> combinedList = [
+          ...pemasukan,
+          ...pengeluaran
+        ];
+        combinedList.sort((a, b) {
           Timestamp t1 = a['created_at'] as Timestamp;
           Timestamp t2 = b['created_at'] as Timestamp;
           return t2.compareTo(t1); // Urutkan dari terbaru ke terlama
         });
+
+        // Batasi data menjadi 5 item saja
+        keuanganList.value = combinedList.take(5).toList();
       });
     });
   }
@@ -260,7 +268,7 @@ class HomeController extends GetxController {
         .subtract(const Duration(days: 1)); // Hari terakhir bulan ini
   }
 
-  void getJumlahStatusPembayaranBulanIni() {
+  void getJumlahStatusPembayaranBulanIni() async {
     final firestore = FirebaseFirestore.instance;
     final awalBulan = getAwalBulanIni();
     final akhirBulan = getAkhirBulanIni();
@@ -272,17 +280,17 @@ class HomeController extends GetxController {
       return;
     }
 
+    // Listen to penghuni updates
     firestore
         .collection('penghuni')
         .where('userId', isEqualTo: userId)
         .where('is_active', isEqualTo: true)
         .where('id_kamar', isNotEqualTo: "")
-        .where('id_kamar', isNotEqualTo: null)
         .snapshots()
         .listen((penghuniSnapshot) async {
       totalPenghuni.value = penghuniSnapshot.docs.length;
 
-      // Reset variabel
+      // Reset values
       totalBelumBayar.value = 0;
       totalBelumLunas.value = 0;
       totalLunas.value = 0;
@@ -290,11 +298,11 @@ class HomeController extends GetxController {
       belumLunas.clear();
       lunas.clear();
 
-      // Kumpulkan id_penghuni
+      // Collect all penghuni ids
       List<String> idPenghuniList =
           penghuniSnapshot.docs.map((e) => e.id).toList();
 
-      // Query semua pemasukan
+      // Listen to pemasukan updates for real-time changes
       firestore
           .collection('pemasukan')
           .where('id_penghuni', whereIn: idPenghuniList)
@@ -308,7 +316,7 @@ class HomeController extends GetxController {
           value: (_) => 'Belum Bayar',
         );
 
-        // Update status berdasarkan pemasukan
+        // Update the payment status based on pemasukan data
         for (var doc in pemasukanSnapshot.docs) {
           String idPenghuni = doc['id_penghuni'];
           String statusPembayaran = doc['status'];
@@ -320,7 +328,7 @@ class HomeController extends GetxController {
           }
         }
 
-        // Hitung status
+        // Calculate totals for each status
         for (var penghuniDoc in penghuniSnapshot.docs) {
           String idPenghuni = penghuniDoc.id;
           String namaPenghuni = penghuniDoc['nama'];
@@ -337,15 +345,11 @@ class HomeController extends GetxController {
           }
         }
 
-        // Update isSemuaLunas
-        cekSemuaLunas();
+        // Update isSemuaLunas automatically when totals change
+        isSemuaLunas.value =
+            totalPenghuni.value > 0 && totalLunas.value == totalPenghuni.value;
       });
     });
-  }
-
-// Fungsi untuk mengecek apakah semua lunas
-  void cekSemuaLunas() {
-    isSemuaLunas.value = (totalLunas.value == totalPenghuni.value);
   }
 
   void lunasi(String docId, String namaPenghuni) async {

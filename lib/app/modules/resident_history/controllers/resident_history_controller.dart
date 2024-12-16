@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ResidentHistoryController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -12,6 +13,11 @@ class ResidentHistoryController extends GetxController {
   void onInit() {
     super.onInit();
     readResident();
+  }
+
+  String formatTanggal(DateTime tanggal) {
+    final formatter = DateFormat('dd/MM/yyyy');
+    return formatter.format(tanggal);
   }
 
   readResident() {

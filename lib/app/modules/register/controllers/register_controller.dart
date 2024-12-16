@@ -31,7 +31,7 @@ class RegisterController extends GetxController {
       return;
     }
     if (password != confirmPassword) {
-      Get.snackbar("Error", "Password and confirmation password do not match.");
+      Get.snackbar("Error", "Password and konfirmasi password tidak sesuai.");
       return;
     }
 
@@ -42,7 +42,7 @@ class RegisterController extends GetxController {
           .get();
 
       if (usernameCheck.docs.isNotEmpty) {
-        Get.snackbar("Error", "Username is already taken.");
+        Get.snackbar("Error", "Username sudah digunakan.");
         return;
       }
 
@@ -56,11 +56,11 @@ class RegisterController extends GetxController {
         'email': email,
       });
       await userCredential.user!.sendEmailVerification();
-      Get.snackbar("Success", "User registered successfully.");
+      Get.snackbar("Sukses", "Pengguna berhasil didaftarkan.");
       Get.defaultDialog(
-        title: 'Verify your email',
+        title: 'Verifikasi email anda',
         middleText:
-            'Please verify your email to continue. We have sent you an email verification link.',
+            'Tolog verifikasi email anda dengan mengklik link yang kami kirimkan ke email anda.',
         textConfirm: 'OK',
         textCancel: 'Resend',
         confirmTextColor: Colors.white,
@@ -69,11 +69,11 @@ class RegisterController extends GetxController {
         },
         onCancel: () async {
           await userCredential.user!.sendEmailVerification();
-          Get.snackbar('Success', 'Email verification link sent');
+          Get.snackbar('Sukses', 'Email verifikasi berhasil dikirim.');
         },
       );
     } catch (e) {
-      Get.snackbar("Error", "Registration failed: ${e.toString()}");
+      Get.snackbar("Error", "Registrasi gagal: ${e.toString()}");
     }
   }
 
