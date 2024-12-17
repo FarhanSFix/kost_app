@@ -134,11 +134,12 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
                           );
                         }).toList(),
                       ],
-                      onChanged: (value) {
-                        controller.selectedProperti.value = value ?? '';
-                        controller.fetchKamarList(
-                            controller.selectedProperti.value, 'Tersedia');
-                      },
+                      onChanged: null,
+                      // (value) {
+                      //   controller.selectedProperti.value = value ?? '';
+                      //   controller.fetchKamarList(
+                      //       controller.selectedProperti.value, 'Tersedia');
+                      // },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(
@@ -166,9 +167,10 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
                           );
                         }).toList(),
                       ],
-                      onChanged: (value) {
-                        controller.selectedKamar.value = value ?? '';
-                      },
+                      onChanged: null,
+                      // (value) {
+                      //   controller.selectedKamar.value = value ?? '';
+                      // },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(

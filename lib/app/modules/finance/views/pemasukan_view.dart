@@ -115,12 +115,38 @@ class PemasukanView extends GetView {
             ),
             Expanded(
               child: Obx(() {
-                if (FinanceC.penghuniList.isEmpty) {
+                if (FinanceC.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
-                } else if (FinanceC.pemasukanList.isEmpty ||
+                } else if (FinanceC.penghuniList.isEmpty ||
+                    FinanceC.pemasukanList.isEmpty ||
                     FinanceC.propertiList.isEmpty ||
                     FinanceC.kamarList.isEmpty) {
-                  return Center(child: Text("Tidak ada data"));
+                  return Center(
+                    child: Align(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 1 / 5,
+                          ),
+                          Image.asset(
+                            "assets/images/no_data.jpg",
+                            width: 200.0,
+                            height: 200.0,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Belum Ada Data Pemasukan',
+                            style:
+                                TextStyle(fontFamily: 'Roboto', fontSize: 16),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
                 }
                 return ListView.builder(
                   itemCount: FinanceC.pemasukanList.length,

@@ -60,7 +60,7 @@ class DetailPropertyController extends GetxController {
 
           Get.back();
           Get.snackbar('Berhasil', 'Properti berhasil dihapus');
-          Get.toNamed(Routes.PROPERTY);
+          Get.toNamed(Routes.MAIN);
         },
         textConfirm: "Ya, saya yakin",
         textCancel: "Tidak",

@@ -302,6 +302,11 @@ class HomeController extends GetxController {
       List<String> idPenghuniList =
           penghuniSnapshot.docs.map((e) => e.id).toList();
 
+      // If idPenghuniList is empty, skip querying pemasukan
+      if (idPenghuniList.isEmpty) {
+        return;
+      }
+
       // Listen to pemasukan updates for real-time changes
       firestore
           .collection('pemasukan')

@@ -78,7 +78,7 @@ class RegisterView extends GetView<RegisterController> {
                 Obx(() {
                   return TextField(
                     controller: controller.passwordController,
-                    obscureText: controller.isconfirmPasswordHidden.value,
+                    obscureText: controller.isPasswordHidden.value,
                     decoration: InputDecoration(
                       hintText: 'Masukkan password',
                       hintStyle:
@@ -93,8 +93,8 @@ class RegisterView extends GetView<RegisterController> {
                           color: Colors.black.withOpacity(0.6),
                         ),
                         onPressed: () {
-                          controller.isconfirmPasswordHidden.value =
-                              !controller.isconfirmPasswordHidden.value;
+                          controller.isPasswordHidden.value =
+                              !controller.isPasswordHidden.value;
                         },
                       ),
                     ),
@@ -108,7 +108,7 @@ class RegisterView extends GetView<RegisterController> {
                 Obx(() {
                   return TextField(
                     controller: controller.confirmPasswordController,
-                    obscureText: controller.isPasswordHidden.value,
+                    obscureText: controller.isconfirmPasswordHidden.value,
                     decoration: InputDecoration(
                       hintText: 'Masukkan ulang password',
                       hintStyle:
@@ -117,14 +117,14 @@ class RegisterView extends GetView<RegisterController> {
                           borderRadius: BorderRadius.circular(10)),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          controller.isPasswordHidden.value
+                          controller.isconfirmPasswordHidden.value
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
                           color: Colors.black.withOpacity(0.6),
                         ),
                         onPressed: () {
-                          controller.isPasswordHidden.value =
-                              !controller.isPasswordHidden.value;
+                          controller.isconfirmPasswordHidden.value =
+                              !controller.isconfirmPasswordHidden.value;
                         },
                       ),
                     ),

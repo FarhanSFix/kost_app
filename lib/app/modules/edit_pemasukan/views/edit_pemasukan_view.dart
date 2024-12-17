@@ -691,7 +691,8 @@ class EditPemasukanView extends GetView<EditPemasukanController> {
                               controller.selectedKamar.value,
                               controller.selectedPenghuni.value,
                               controller.selectedProperti.value,
-                              controller.jmlBulanController.text,
+                              controller.jmlBulanController.text
+                                  .replaceAll("Bulan", ""),
                               controller.selectedJmlPenghuni.value,
                               periode,
                               sisa,

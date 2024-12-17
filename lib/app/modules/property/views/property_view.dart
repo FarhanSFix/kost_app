@@ -37,7 +37,31 @@ class PropertyView extends GetView<PropertyController> {
               }
 
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text('Tidak ada data properti.'));
+                return Center(
+                  child: Align(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 1 / 5,
+                        ),
+                        Image.asset(
+                          "assets/images/no_data.jpg",
+                          width: 200.0,
+                          height: 200.0,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'Belum Ada Data Properti',
+                          style: TextStyle(fontFamily: 'Roboto', fontSize: 16),
+                        )
+                      ],
+                    ),
+                  ),
+                );
               }
               final documents = snapshot.data!.docs;
 

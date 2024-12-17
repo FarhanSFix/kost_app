@@ -10,7 +10,10 @@ class FinanceController extends GetxController {
   var pemasukanList = <Pemasukan>[].obs;
   var pengeluaranList = <Pengeluaran>[].obs;
   final selectedBulan = "Semua".obs;
+  final selectedBulan2 = "Semua".obs;
   final selectedTahun = "Semua".obs;
+  final selectedTahun2 = "Semua".obs;
+  var isLoading = true.obs;
   final bulanList = [
     "Semua",
     "Januari",
@@ -139,26 +142,34 @@ class FinanceController extends GetxController {
           .collection('pemasukan')
           .where("userId", isEqualTo: user.uid)
           .get();
-      final pengeluaranQuery = await FirebaseFirestore.instance
-          .collection('pengeluaran')
-          .where("userId", isEqualTo: user.uid)
-          .get();
 
       // Ekstrak daftar tahun dari data
       final tahunSet = pemasukanQuery.docs
           .map((doc) => Pemasukan.fromFireStore(doc.data(), doc.id).dibuat.year)
           .toSet();
+
+      tahunList.addAll(tahunSet.map((tahun) => tahun.toString()).toList());
+    }
+  }
+
+  void fetchTahunPengeluaran() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final pengeluaranQuery = await FirebaseFirestore.instance
+          .collection('pengeluaran')
+          .where("userId", isEqualTo: user.uid)
+          .get();
+
       final tahunSet2 = pengeluaranQuery.docs
           .map((doc) =>
               Pengeluaran.fromFireStore(doc.data(), doc.id).dibuat.year)
           .toSet();
-
-      tahunList.addAll(tahunSet.map((tahun) => tahun.toString()).toList());
       tahunList2.addAll(tahunSet2.map((tahun) => tahun.toString()).toList());
     }
   }
 
   void fetchPenghuni() async {
+    isLoading.value = true; // Mulai loading
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final penghuniQuery = await FirebaseFirestore.instance
@@ -172,9 +183,11 @@ class FinanceController extends GetxController {
 
       print("Penghuni: ${penghuniList.length}"); // Debug log
     }
+    isLoading.value = false; // Loading selesai
   }
 
   void fetchProperti() async {
+    isLoading.value = true;
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final propertiQuery = await FirebaseFirestore.instance
@@ -188,6 +201,7 @@ class FinanceController extends GetxController {
 
       print("Penghuni: ${propertiList.length}"); // Debug log
     }
+    isLoading.value = false;
   }
 
   void fetchKamar() async {
@@ -214,6 +228,7 @@ class FinanceController extends GetxController {
     fetchPemasukan();
     fetchPengluaran();
     fetchTahunList();
+    fetchTahunPengeluaran();
     update();
     super.onInit();
   }

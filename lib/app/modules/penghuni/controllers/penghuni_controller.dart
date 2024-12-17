@@ -24,16 +24,23 @@ class PenghuniController extends GetxController {
   }
 
   void fetchProperti() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final propertiQuery = await FirebaseFirestore.instance
-          .collection('properti')
-          .where('userId', isEqualTo: user.uid)
-          .get();
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        isLoading.value = true;
+        final propertiQuery = await FirebaseFirestore.instance
+            .collection('properti')
+            .where('userId', isEqualTo: user.uid)
+            .get();
 
-      propertiList.value = propertiQuery.docs
-          .map((doc) => Properti.fromFireStore(doc.data(), doc.id))
-          .toList();
+        propertiList.value = propertiQuery.docs
+            .map((doc) => Properti.fromFireStore(doc.data(), doc.id))
+            .toList();
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoading.value = false;
     }
   }
 

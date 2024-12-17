@@ -81,9 +81,29 @@ class PenghuniView extends GetView<PenghuniController> {
                 }
                 if (controller.penghuniList.isEmpty) {
                   return Center(
-                    child: Text(
-                      'Tidak ada data penghuni.',
-                      style: TextStyle(fontFamily: 'Roboto', fontSize: 20),
+                    child: Align(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 1 / 5,
+                          ),
+                          Image.asset(
+                            "assets/images/no_data.jpg",
+                            width: 200.0,
+                            height: 200.0,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Belum Ada Data Penghuni',
+                            style:
+                                TextStyle(fontFamily: 'Roboto', fontSize: 16),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 }
@@ -101,9 +121,31 @@ class PenghuniView extends GetView<PenghuniController> {
 
                 if (filteredList.isEmpty) {
                   return Center(
-                      child: Text('Tidak ada penghuni yang sesuai pencarian.',
-                          style:
-                              TextStyle(fontFamily: 'Roboto', fontSize: 16)));
+                    child: Align(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 1 / 5,
+                          ),
+                          Image.asset(
+                            "assets/images/not_found.jpg",
+                            width: 200.0,
+                            height: 200.0,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Tidak ada penghuni yang sesuai pencarian',
+                            style:
+                                TextStyle(fontFamily: 'Roboto', fontSize: 16),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
                 }
 
                 return ListView.builder(

@@ -21,19 +21,19 @@ class PengeluaranView extends GetView {
               children: [
                 Expanded(
                   child: Obx(() {
-                    final bulan = FinanceC.selectedBulan.value;
-                    final tahun = FinanceC.selectedTahun.value;
+                    final bulan = FinanceC.selectedBulan2.value;
+                    final tahun = FinanceC.selectedTahun2.value;
 
                     // Validasi bulan dan tahun
                     if (!FinanceC.bulanList.contains(bulan)) {
-                      FinanceC.selectedBulan.value = "Semua";
+                      FinanceC.selectedBulan2.value = "Semua";
                     }
                     if (!FinanceC.tahunList2.contains(tahun)) {
-                      FinanceC.selectedTahun.value = "Semua";
+                      FinanceC.selectedTahun2.value = "Semua";
                       //ada bug
                     }
                     return DropdownButton<String>(
-                      value: FinanceC.selectedBulan.value,
+                      value: FinanceC.selectedBulan2.value,
                       items: FinanceC.bulanList
                           .map((bulan) => DropdownMenuItem<String>(
                                 value: bulan,
@@ -42,7 +42,7 @@ class PengeluaranView extends GetView {
                           .toList(),
                       onChanged: (value) {
                         if (value != null) {
-                          FinanceC.selectedBulan.value = value;
+                          FinanceC.selectedBulan2.value = value;
                           FinanceC.fetchPengluaran(); // Refresh data
                         }
                       },
@@ -53,7 +53,7 @@ class PengeluaranView extends GetView {
                 Expanded(
                   child: Obx(() {
                     return DropdownButton<String>(
-                      value: FinanceC.selectedTahun.value,
+                      value: FinanceC.selectedTahun2.value,
                       items: FinanceC.tahunList2
                           .map((tahun) => DropdownMenuItem<String>(
                                 value: tahun,
@@ -62,7 +62,7 @@ class PengeluaranView extends GetView {
                           .toList(),
                       onChanged: (value) {
                         if (value != null) {
-                          FinanceC.selectedTahun.value = value;
+                          FinanceC.selectedTahun2.value = value;
                           FinanceC.fetchPengluaran(); // Refresh data
                         }
                       },
@@ -72,8 +72,8 @@ class PengeluaranView extends GetView {
                 SizedBox(width: 10),
                 Expanded(
                   child: Obx(() {
-                    if (FinanceC.selectedBulan.value != 'Semua' ||
-                        FinanceC.selectedTahun.value != 'Semua') {
+                    if (FinanceC.selectedBulan2.value != 'Semua' ||
+                        FinanceC.selectedTahun2.value != 'Semua') {
                       final total = FinanceC.pengeluaranList.fold<int>(
                         0,
                         (sum, item) => sum + item.totalBayar,
@@ -106,8 +106,36 @@ class PengeluaranView extends GetView {
             ),
             Expanded(
               child: Obx(() {
-                if (FinanceC.pengeluaranList.isEmpty) {
-                  return Center(child: Text("Tidak ada data"));
+                if (FinanceC.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (FinanceC.pengeluaranList.isEmpty ||
+                    FinanceC.propertiList.isEmpty) {
+                  return Center(
+                    child: Align(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 1 / 5,
+                          ),
+                          Image.asset(
+                            "assets/images/no_data.jpg",
+                            width: 200.0,
+                            height: 200.0,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Belum Ada Data Pengeluaran',
+                            style:
+                                TextStyle(fontFamily: 'Roboto', fontSize: 16),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
                 }
                 return ListView.builder(
                   itemCount: FinanceC.pengeluaranList.length,
