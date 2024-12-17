@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/edit_penghuni_controller.dart';
@@ -18,8 +19,15 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text('Edit Penghuni'),
           centerTitle: true,
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+                onPressed: () => Get.toNamed(Routes.PENGHUNI),
+                icon: Icon(Icons.close_rounded))
+          ],
         ),
         body: SingleChildScrollView(
           controller: ScrollController(),

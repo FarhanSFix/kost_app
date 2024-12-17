@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/add_room_controller.dart';
@@ -12,8 +13,15 @@ class AddRoomView extends GetView<AddRoomController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         title: Text("Tambah Kamar"),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () => Get.toNamed(Routes.PROPERTY),
+              icon: Icon(Icons.close_rounded))
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),

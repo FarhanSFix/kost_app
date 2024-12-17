@@ -14,6 +14,11 @@ class DetailPemasukanView extends GetView<DetailPemasukanController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+              onPressed: () => Get.toNamed(Routes.FINANCE),
+              icon: Icon(Icons.arrow_back_rounded)),
           title: const Text('Detail Pemasukan'),
           centerTitle: true,
         ),

@@ -20,6 +20,7 @@ class PenghuniView extends GetView<PenghuniController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () => Get.offAllNamed(Routes.MAIN),
             icon: Icon(Icons.arrow_back_rounded)),
@@ -162,6 +163,7 @@ class PenghuniView extends GetView<PenghuniController> {
                             arguments: penghuni.id);
                       },
                       child: Card(
+                          color: appColor.backgroundColor2,
                           elevation: 2,
                           child: Padding(
                             padding: EdgeInsets.all(10),

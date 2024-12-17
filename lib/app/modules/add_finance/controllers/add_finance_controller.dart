@@ -361,10 +361,17 @@ class AddFinanceController extends GetxController {
             .doc(idPenghuni)
             .update({'id_kamar': idKamar, 'id_properti': idPropertiMasuk});
 
-        await FirebaseFirestore.instance
-            .collection('kamar')
-            .doc(idKamar)
-            .update({'status': 'Terisi'});
+        if (status == 'Belum Lunas') {
+          await FirebaseFirestore.instance
+              .collection('kamar')
+              .doc(idKamar)
+              .update({'status': 'Dipesan'});
+        } else {
+          await FirebaseFirestore.instance
+              .collection('kamar')
+              .doc(idKamar)
+              .update({'status': 'Terisi'});
+        }
 
         final kejadianQuery = await FirebaseFirestore.instance
             .collection('kejadian')

@@ -258,6 +258,13 @@ class AddpengeluaranView extends GetView {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10))),
                 onPressed: () async {
+                  if (addfinC.tanggalController.text.isEmpty) {
+                    Get.snackbar(
+                        'Input Error', 'Tanggal mulai dan sampai harus diisi!',
+                        colorText: Colors.white,
+                        backgroundColor: Colors.redAccent);
+                    return;
+                  }
                   DateTime tanggalParsed = DateFormat('dd/MM/yyyy')
                       .parse(addfinC.tanggalController.text);
                   addfinC.tambahPengeluaran(

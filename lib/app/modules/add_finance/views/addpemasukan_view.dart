@@ -69,6 +69,7 @@ class AddpemasukanView extends GetView {
                     child: Obx(() {
                       return DropdownButtonFormField<String>(
                         value: addfinC.selectedProperti.value,
+                        isExpanded: true,
                         items: [
                           DropdownMenuItem(
                             value: '',
@@ -109,6 +110,7 @@ class AddpemasukanView extends GetView {
                         value: addfinC.selectedKamar.value.isEmpty
                             ? null // Jika nilai kosong, atur sebagai null
                             : addfinC.selectedKamar.value,
+                        isExpanded: true,
                         items: [
                           DropdownMenuItem(
                             value: '', // Tambahkan nilai default
@@ -335,6 +337,7 @@ class AddpemasukanView extends GetView {
                               value: addfinC.selectedStatusBayar.value.isEmpty
                                   ? null
                                   : addfinC.selectedStatusBayar.value,
+                              isExpanded: true,
                               onChanged: (value) {
                                 if (value != null) {
                                   addfinC.selectedStatusBayar.value = value;
@@ -346,7 +349,11 @@ class AddpemasukanView extends GetView {
                                         child: Text(
                                           statusbayarlist,
                                           style: TextStyle(
-                                              fontFamily: 'Lato', fontSize: 14),
+                                              fontFamily: 'Lato',
+                                              fontSize:
+                                                  MediaQuery.sizeOf(context)
+                                                          .width *
+                                                      0.035),
                                         ),
                                       ))
                                   .toList(),
@@ -604,6 +611,14 @@ class AddpemasukanView extends GetView {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10))),
                 onPressed: () async {
+                  if (addfinC.tglMulaiController.text.isEmpty ||
+                      addfinC.tglSampaiController.text.isEmpty) {
+                    Get.snackbar(
+                        'Input Error', 'Tanggal mulai dan sampai harus diisi!',
+                        colorText: Colors.white,
+                        backgroundColor: Colors.redAccent);
+                    return;
+                  }
                   final periode = {
                     'mulai': Timestamp.fromDate(DateFormat('dd/MM/yyyy')
                         .parse(addfinC.tglMulaiController.text)),

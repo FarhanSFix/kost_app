@@ -12,6 +12,13 @@ class DetailKejadianView extends GetView<DetailKejadianController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+              onPressed: () => Get.toNamed(Routes.KEJADIAN),
+              icon: Icon(
+                Icons.arrow_back_rounded,
+              )),
           title: const Text('Detail Kejadian'),
           centerTitle: true,
         ),

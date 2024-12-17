@@ -34,6 +34,7 @@ class PengeluaranView extends GetView {
                     }
                     return DropdownButton<String>(
                       value: FinanceC.selectedBulan2.value,
+                      isExpanded: true,
                       items: FinanceC.bulanList
                           .map((bulan) => DropdownMenuItem<String>(
                                 value: bulan,
@@ -54,6 +55,7 @@ class PengeluaranView extends GetView {
                   child: Obx(() {
                     return DropdownButton<String>(
                       value: FinanceC.selectedTahun2.value,
+                      isExpanded: true,
                       items: FinanceC.tahunList2
                           .map((tahun) => DropdownMenuItem<String>(
                                 value: tahun,
@@ -82,7 +84,8 @@ class PengeluaranView extends GetView {
                         "- Rp  ${FinanceC.formatNominal(total)}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: appColor.outcome),
+                            color: appColor.outcome,
+                            fontSize: MediaQuery.sizeOf(context).width * 0.030),
                       );
                     }
                     return Row(
@@ -96,7 +99,9 @@ class PengeluaranView extends GetView {
                           'Total Keluar',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: appColor.outcome),
+                              color: appColor.outcome,
+                              fontSize:
+                                  MediaQuery.sizeOf(context).width * 0.030),
                         ),
                       ],
                     );

@@ -15,6 +15,8 @@ class EditRoomView extends GetView<EditRoomController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         title: const Text('Edit Kamar'),
         centerTitle: true,
         actions: [

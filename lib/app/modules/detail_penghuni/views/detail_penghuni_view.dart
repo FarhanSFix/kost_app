@@ -18,8 +18,15 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('Detail Penghuni'),
+        automaticallyImplyLeading: false,
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () => Get.toNamed(Routes.PENGHUNI),
+              icon: Icon(Icons.close_rounded))
+        ],
       ),
       body: SingleChildScrollView(
         controller: ScrollController(),

@@ -16,6 +16,8 @@ class DetailRoomView extends GetView<DetailRoomController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
           title: Text("Detail Kamar "),
           centerTitle: true,
           actions: [

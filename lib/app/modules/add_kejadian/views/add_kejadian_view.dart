@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kost_app/app/data/model.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/add_kejadian_controller.dart';
@@ -16,6 +17,11 @@ class AddKejadianView extends GetView<AddKejadianController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+              onPressed: () => Get.toNamed(Routes.KEJADIAN),
+              icon: Icon(Icons.arrow_back_rounded)),
           title: const Text('Tambah Kejadian'),
           centerTitle: true,
         ),

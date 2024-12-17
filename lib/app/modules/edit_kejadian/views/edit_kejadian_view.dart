@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/edit_kejadian_controller.dart';
@@ -15,8 +16,15 @@ class EditKejadianView extends GetView<EditKejadianController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
           title: const Text('Edit Kejadian'),
           centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () => Get.toNamed(Routes.KEJADIAN),
+                icon: Icon(Icons.close_rounded))
+          ],
         ),
         body: SingleChildScrollView(
           controller: ScrollController(),

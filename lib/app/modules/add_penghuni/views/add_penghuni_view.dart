@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/add_penghuni_controller.dart';
@@ -17,8 +18,15 @@ class AddPenghuniView extends GetView<AddPenghuniController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
           title: Text('Tambah Penghuni'),
           centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () => Get.toNamed(Routes.PENGHUNI),
+                icon: Icon(Icons.close_rounded))
+          ],
         ),
         body: Obx(() {
           return SingleChildScrollView(

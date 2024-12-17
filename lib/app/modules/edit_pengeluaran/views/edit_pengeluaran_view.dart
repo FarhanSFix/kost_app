@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:kost_app/app/routes/app_pages.dart';
 import 'package:kost_app/app/utils/colors.dart';
 
 import '../controllers/edit_pengeluaran_controller.dart';
@@ -16,6 +17,11 @@ class EditPengeluaranView extends GetView<EditPengeluaranController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+              onPressed: () => Get.toNamed(Routes.FINANCE),
+              icon: Icon(Icons.arrow_back_rounded)),
           title: const Text('Edit Pengeluaran'),
           centerTitle: true,
         ),

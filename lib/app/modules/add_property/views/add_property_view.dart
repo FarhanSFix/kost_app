@@ -13,6 +13,10 @@ class AddPropertyView extends GetView<AddPropertyController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          title: Text('Tambah Properi'),
+          centerTitle: true,
           actions: [
             IconButton(
               onPressed: () => Get.offAllNamed(Routes.PROPERTY),

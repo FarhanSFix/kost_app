@@ -12,6 +12,8 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
           title: const Text('Detail Properti'),
           centerTitle: true,
           actions: [
@@ -118,7 +120,7 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
                                     const Text(
                                       "Jumlah Unit/Kamar",
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Lato',
                                       ),
@@ -142,30 +144,27 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                    height: 35,
-                                    width: MediaQuery.sizeOf(context).width *
-                                        1 /
-                                        4,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.toNamed(Routes.ROOM,
-                                            arguments: controller.propertyId);
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.orange,
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                        ),
-                                        child: Text(
-                                          'Lihat Kamar',
-                                          style: TextStyle(color: Colors.white),
-                                          textAlign: TextAlign.center,
-                                        ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Get.toNamed(Routes.ROOM,
+                                          arguments: controller.propertyId);
+                                    },
+                                    child: Text(
+                                      'Lihat Kamar',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
                                       ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: Size.zero,
+                                      backgroundColor: Colors.orange,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 8),
                                     )),
                               ],
                             ),

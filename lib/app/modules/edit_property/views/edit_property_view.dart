@@ -15,6 +15,10 @@ class EditPropertyView extends GetView<EditPropertyController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text('Edit Properti'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () => Get.offAllNamed(Routes.PROPERTY),

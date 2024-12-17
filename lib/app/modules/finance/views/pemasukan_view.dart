@@ -34,6 +34,7 @@ class PemasukanView extends GetView {
                     }
                     return DropdownButton<String>(
                       value: FinanceC.selectedBulan.value,
+                      isExpanded: true,
                       items: FinanceC.bulanList
                           .map((bulan) => DropdownMenuItem<String>(
                                 value: bulan,
@@ -54,6 +55,7 @@ class PemasukanView extends GetView {
                   child: Obx(() {
                     return DropdownButton<String>(
                       value: FinanceC.selectedTahun.value,
+                      isExpanded: true,
                       items: FinanceC.tahunList
                           .map((tahun) => DropdownMenuItem<String>(
                                 value: tahun,
@@ -90,6 +92,7 @@ class PemasukanView extends GetView {
                         "Rp  ${FinanceC.formatNominal(total)}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.sizeOf(context).width * 0.030,
                           color: appColor.income,
                         ),
                       );
@@ -105,7 +108,9 @@ class PemasukanView extends GetView {
                           'Total Masuk',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: appColor.income),
+                              color: appColor.income,
+                              fontSize:
+                                  MediaQuery.sizeOf(context).width * 0.030),
                         ),
                       ],
                     );
@@ -469,38 +474,33 @@ class PemasukanView extends GetView {
                                 height: 8,
                               ),
                               Obx(() {
-                                if (statusValue == 'Belum Lunas') {
-                                  return Align(
-                                    alignment: Alignment.center,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        FinanceC.lunasi(pemasukan.id,
-                                            penghuni?.nama ?? '-');
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 4),
-                                        decoration: BoxDecoration(
-                                            color: appColor.buttonColorPrimary,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        height: 30,
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                1 /
-                                                3.5,
+                                return statusValue == 'Belum Lunas'
+                                    ? ElevatedButton(
+                                        onPressed: () {
+                                          FinanceC.lunasi(
+                                              pemasukan.id,
+                                              penghuni?.nama ?? '-',
+                                              pemasukan.idKamar);
+                                        },
                                         child: Text(
                                           'Tandai Lunas',
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Lato'),
-                                          textAlign: TextAlign.center,
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                return SizedBox();
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize: Size.zero,
+                                          backgroundColor:
+                                              appColor.buttonColorPrimary,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 8),
+                                        ))
+                                    : const SizedBox();
                               })
                             ],
                           ),

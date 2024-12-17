@@ -14,13 +14,13 @@ class PropertyView extends GetView<PropertyController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () => Get.offAllNamed(Routes.MAIN),
+            icon: Icon(Icons.arrow_back_rounded)),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         title: const Text('Properti'),
         centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () => Get.offAllNamed(Routes.MAIN),
-              icon: Icon(Icons.close_rounded))
-        ],
       ),
       body: Obx(() {
         final stream = controller.propertyStream.value;
@@ -72,6 +72,7 @@ class PropertyView extends GetView<PropertyController> {
                   final property = documents[index];
 
                   return Card(
+                    color: appColor.backgroundColor2,
                     elevation: 2,
                     margin: const EdgeInsets.only(bottom: 16),
                     shape: RoundedRectangleBorder(

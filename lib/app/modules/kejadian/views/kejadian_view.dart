@@ -17,10 +17,10 @@ class KejadianView extends GetView<KejadianController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         leading: IconButton(
-            onPressed: () {
-              Get.offAllNamed(Routes.MAIN);
-            },
+            onPressed: () => Get.toNamed(Routes.FINANCE),
             icon: Icon(Icons.arrow_back_rounded)),
         title: const Text('Daftar Kejadian'),
         centerTitle: true,
@@ -103,6 +103,7 @@ class KejadianView extends GetView<KejadianController> {
                             arguments: kejadian.id);
                       },
                       child: Card(
+                        color: appColor.backgroundColor2,
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         elevation: 4,
                         shape: RoundedRectangleBorder(

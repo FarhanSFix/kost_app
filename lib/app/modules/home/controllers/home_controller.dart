@@ -357,7 +357,7 @@ class HomeController extends GetxController {
     });
   }
 
-  void lunasi(String docId, String namaPenghuni) async {
+  void lunasi(String docId, String namaPenghuni, String idKamar) async {
     try {
       Get.defaultDialog(
           title: "Konfirmasi Pelunasan",
@@ -368,6 +368,11 @@ class HomeController extends GetxController {
                 .collection('pemasukan')
                 .doc(docId)
                 .update({'status': 'Lunas', 'uang_muka': 0, 'sisa': 0});
+
+            await FirebaseFirestore.instance
+                .collection('kamar')
+                .doc(idKamar)
+                .update({'status': 'Terisi'});
             Get.back();
             Get.snackbar('Berhasil', '$namaPenghuni sudah Lunas');
           },

@@ -15,6 +15,10 @@ class DetailPengeluaranView extends GetView<DetailPengeluaranController> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+              onPressed: () => Get.toNamed(Routes.FINANCE),
+              icon: Icon(Icons.arrow_back_rounded)),
           title: const Text('Detail Pengeluaran'),
           centerTitle: true,
         ),

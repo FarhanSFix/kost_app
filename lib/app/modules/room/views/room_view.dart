@@ -14,14 +14,14 @@ class RoomView extends GetView<RoomController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () => Get.offAllNamed(Routes.DETAIL_PROPERTY,
+                arguments: controller.propertyId),
+            icon: Icon(Icons.arrow_back_rounded)),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         title: Text("Daftar Kamar"),
         centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () => Get.offAllNamed(Routes.DETAIL_PROPERTY,
-                  arguments: controller.propertyId),
-              icon: Icon(Icons.close_rounded))
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -87,6 +87,7 @@ class RoomView extends GetView<RoomController> {
                         children: snapshot.data!.docs.map((doc) {
                           var data = doc.data() as Map<String, dynamic>;
                           return Card(
+                            color: appColor.backgroundColor2,
                             // margin: const EdgeInsets.symmetric(
                             //   horizontal: 8.0,
                             //   vertical: 4.0,

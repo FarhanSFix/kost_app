@@ -698,8 +698,8 @@ class HomeView extends GetView<HomeController> {
                             item['status'] == 'Belum Lunas'
                                 ? ElevatedButton(
                                     onPressed: () {
-                                      controller.lunasi(
-                                          item['id'], item['judul']);
+                                      controller.lunasi(item['id'],
+                                          item['judul'], item['id_kamar']);
                                     },
                                     child: Text(
                                       'Tandai Lunas',

@@ -245,13 +245,14 @@ class FinanceController extends GetxController {
           .doc(idKamar)
           .update({'status': 'Tersedia'});
       Get.toNamed(Routes.FINANCE);
+      fetchPemasukan();
     } catch (e) {
       print(e);
       Get.snackbar('Error', 'Tidak dapat menghapus pemasukan');
     }
   }
 
-  void lunasi(String docId, String namaPenghuni) async {
+  void lunasi(String docId, String namaPenghuni, String idKamar) async {
     try {
       Get.defaultDialog(
           title: "Konfirmasi Pelunasan",
@@ -262,6 +263,11 @@ class FinanceController extends GetxController {
                 .collection('pemasukan')
                 .doc(docId)
                 .update({'status': 'Lunas', 'uang_muka': 0, 'sisa': 0});
+
+            await FirebaseFirestore.instance
+                .collection('kamar')
+                .doc(idKamar)
+                .update({'status': 'Terisi'});
             Get.back();
             Get.snackbar('Berhasil', '${namaPenghuni} sudah Lunas');
             Get.offAllNamed(Routes.FINANCE);
@@ -281,6 +287,7 @@ class FinanceController extends GetxController {
           .doc(docID)
           .delete();
       Get.toNamed(Routes.FINANCE);
+      fetchPengluaran();
     } catch (e) {
       print(e);
       Get.snackbar('Error', 'Tidak dapat menghapus pengeluaran');
