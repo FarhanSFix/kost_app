@@ -327,31 +327,15 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  const Text(
-                    'Keuangan Terbaru',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Keuangan Terbaru',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Get.toNamed(Routes.FINANCE);
-                    },
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    child: const Text(
-                      'Lihat Semua',
-                      style: TextStyle(
-                        color: appColor.buttonTextColor,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
               const SizedBox(height: 12),
               Obx(() {
@@ -360,13 +344,20 @@ class HomeView extends GetView<HomeController> {
                     child: Column(
                       children: [
                         SizedBox(height: 20),
+                        CircleAvatar(
+                          radius: 80,
+                          backgroundImage:
+                              AssetImage('assets/images/no_data.jpg'),
+                        ),
+                        SizedBox(height: 10),
                         Text(
-                          'Tidak ada data',
+                          'Keuangan kamu masih kosong nih',
                           style: TextStyle(
                             fontSize: 14,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 10),
                       ],
                     ),
                   );
@@ -736,22 +727,41 @@ class HomeView extends GetView<HomeController> {
                   },
                 );
               }),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => Get.toNamed(Routes.FINANCE),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: appColor.buttonTextColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              const SizedBox(height: 10),
+              Obx(() {
+                if (controller.keuanganList.isEmpty) {
+                  return ElevatedButton(
+                    onPressed: () => Get.toNamed(Routes.ADD_FINANCE),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: appColor.buttonTextColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                    ),
+                    child: const Text('Tambah Keuangan',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        )),
+                  );
+                }
+                return ElevatedButton(
+                  onPressed: () => Get.toNamed(Routes.FINANCE),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: appColor.buttonTextColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                ),
-                child: Text('Lihat Selengkapnya',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    )),
-              ),
+                  child: Text('Lihat Selengkapnya',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      )),
+                );
+              }),
               const SizedBox(height: 20),
             ],
           ),
