@@ -24,8 +24,8 @@ class FinanceView extends GetView<FinanceController> {
           flexibleSpace: Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.sizeOf(context).height * 1 / 16.5,
-              width: MediaQuery.sizeOf(context).width * 2 / 3.7,
+              height: 46,
+              width: MediaQuery.of(context).size.width * 2 / 3.7,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(50)),
             ),
@@ -61,7 +61,7 @@ class FinanceView extends GetView<FinanceController> {
                         style: TextStyle(
                           fontFamily: 'Lato',
                           fontSize: MediaQuery.sizeOf(context).width *
-                              0.035, // Responsif
+                              0.030, // Responsif
                         ),
                         textAlign: TextAlign.center,
                       ),

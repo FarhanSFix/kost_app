@@ -87,7 +87,7 @@ class RoomView extends GetView<RoomController> {
                         children: snapshot.data!.docs.map((doc) {
                           var data = doc.data() as Map<String, dynamic>;
                           return Card(
-                            color: appColor.backgroundColor2,
+                            color: Colors.white,
                             // margin: const EdgeInsets.symmetric(
                             //   horizontal: 8.0,
                             //   vertical: 4.0,

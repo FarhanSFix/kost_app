@@ -163,7 +163,7 @@ class PenghuniView extends GetView<PenghuniController> {
                             arguments: penghuni.id);
                       },
                       child: Card(
-                          color: appColor.backgroundColor2,
+                          color: Colors.white,
                           elevation: 2,
                           child: Padding(
                             padding: EdgeInsets.all(10),

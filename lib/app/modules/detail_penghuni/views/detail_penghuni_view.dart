@@ -112,6 +112,7 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
                 // Riwayat Pemasukan
                 Card(
                   elevation: 2,
+                  color: appColor.backgroundColor2,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Row(
@@ -123,7 +124,7 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
                             Text(
                               "Riwayat Pemasukan",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -171,25 +172,25 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
                             ),
                           ],
                         ),
-                        SizedBox(
-                            height: 35,
-                            width: MediaQuery.sizeOf(context).width * 1 / 4.2,
-                            child: GestureDetector(
-                              onTap: () {
-                                Get.toNamed(Routes.ADD_FINANCE);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: appColor.buttonColorPrimary,
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                child: Text(
-                                  'Perpanjang',
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Get.toNamed(Routes.ADD_FINANCE);
+                            },
+                            child: Text(
+                              'Perpanjang',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size.zero,
+                              backgroundColor: appColor.buttonColorPrimary,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 8),
                             )),
                       ],
                     ),

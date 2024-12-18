@@ -85,7 +85,7 @@ class PengeluaranView extends GetView {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: appColor.outcome,
-                            fontSize: MediaQuery.sizeOf(context).width * 0.030),
+                            fontSize: MediaQuery.sizeOf(context).width * 0.035),
                       );
                     }
                     return Row(

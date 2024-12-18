@@ -92,7 +92,7 @@ class PemasukanView extends GetView {
                         "Rp  ${FinanceC.formatNominal(total)}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: MediaQuery.sizeOf(context).width * 0.030,
+                          fontSize: MediaQuery.sizeOf(context).width * 0.035,
                           color: appColor.income,
                         ),
                       );

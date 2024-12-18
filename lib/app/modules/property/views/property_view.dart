@@ -72,7 +72,7 @@ class PropertyView extends GetView<PropertyController> {
                   final property = documents[index];
 
                   return Card(
-                    color: appColor.backgroundColor2,
+                    color: Colors.white,
                     elevation: 2,
                     margin: const EdgeInsets.only(bottom: 16),
                     shape: RoundedRectangleBorder(

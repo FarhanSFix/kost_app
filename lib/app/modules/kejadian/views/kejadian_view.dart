@@ -103,7 +103,7 @@ class KejadianView extends GetView<KejadianController> {
                             arguments: kejadian.id);
                       },
                       child: Card(
-                        color: appColor.backgroundColor2,
+                        color: Colors.white,
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         elevation: 4,
                         shape: RoundedRectangleBorder(

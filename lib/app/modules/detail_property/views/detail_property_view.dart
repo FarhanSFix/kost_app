@@ -104,6 +104,7 @@ class DetailPropertyView extends GetView<DetailPropertyController> {
                         final roomCount = snapshot.data ?? 0;
 
                         return Card(
+                          color: appColor.backgroundColor2,
                           elevation: 2,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
