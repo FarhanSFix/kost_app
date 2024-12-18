@@ -1057,7 +1057,9 @@ class HomeView extends GetView<HomeController> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(Routes.FINANCE);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: appColor.buttonTextColor,
                       shape: RoundedRectangleBorder(
