@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -154,33 +155,94 @@ class DetailPenghuniController extends GetxController {
   void hapusPenghuni(String docID, String idKamar) {
     try {
       Get.defaultDialog(
-          title: "Hapus penghuni",
-          middleText: "Apakah anda yakin akan menghapus penghuni ini?",
-          onConfirm: () async {
+        title: "Hapus penghuni",
+        middleText: "Apakah anda yakin akan menghapus penghuni ini?",
+        onConfirm: () async {
+          try {
+            // Validasi idKamar
+            if (idKamar.isEmpty || idKamar == '-') {
+              Get.back();
+              Get.snackbar(
+                "Error",
+                "Penghuni ini belum masuk ke kamar.",
+                backgroundColor: Colors.redAccent,
+                colorText: Colors.white,
+              );
+              return;
+            }
+
+            // Cek status pembayaran penghuni
+            final pemasukanQuery = await FirebaseFirestore.instance
+                .collection('pemasukan')
+                .where('id_penghuni', isEqualTo: docID)
+                .get();
+
+            bool belumLunas = pemasukanQuery.docs.any((doc) {
+              final data = doc.data();
+              return data['status'] == 'Belum Lunas';
+            });
+
+            if (belumLunas) {
+              Get.back(); // Tutup dialog
+              Get.snackbar(
+                'Gagal',
+                'Penghuni tidak dapat dihapus karena masih memiliki tagihan yang belum lunas.',
+                backgroundColor: Colors.redAccent,
+                colorText: Colors.white,
+              );
+              return;
+            }
+
+            // Hapus dokumen penghuni
             await FirebaseFirestore.instance
                 .collection('penghuni')
                 .doc(docID)
                 .delete();
-            if (idKamar != '') {
-              await FirebaseFirestore.instance
-                  .collection('kamar')
-                  .doc(idKamar)
-                  .update({'status': 'Tersedia'});
-              Get.snackbar(
-                'Sukses',
-                'kamar nomor ${kamar.value.nomor} tersedia!',
-              );
+
+            // Hapus dokumen dari koleksi "pemasukan"
+            for (var doc in pemasukanQuery.docs) {
+              await doc.reference.delete();
             }
 
+            // Hapus dokumen dari koleksi "kejadian"
+            final kejadianQuery = await FirebaseFirestore.instance
+                .collection('kejadian')
+                .where('id_penghuni', isEqualTo: docID)
+                .get();
+            for (var doc in kejadianQuery.docs) {
+              await doc.reference.delete();
+            }
+
+            // Update status kamar
+            await FirebaseFirestore.instance
+                .collection('kamar')
+                .doc(idKamar)
+                .update({'status': 'Tersedia'});
+
             Get.back();
-            Get.snackbar('Berhasil', 'penghuni berhasil dihapus');
+            Get.snackbar('Berhasil', 'Penghuni berhasil dihapus.');
             Get.offAllNamed(Routes.PENGHUNI);
-          },
-          textConfirm: "Ya, saya yakin",
-          textCancel: "Tidak");
+          } catch (e) {
+            print(e);
+            Get.snackbar(
+              'Error',
+              'Gagal menghapus penghuni dan data terkait.',
+              backgroundColor: Colors.redAccent,
+              colorText: Colors.white,
+            );
+          }
+        },
+        textConfirm: "Ya, saya yakin",
+        textCancel: "Tidak",
+      );
     } catch (e) {
       print(e);
-      Get.snackbar('Error', 'Tidak dapat menghapus penghuni');
+      Get.snackbar(
+        'Error',
+        'Tidak dapat memproses permintaan Anda.',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 }

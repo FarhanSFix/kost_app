@@ -41,6 +41,7 @@ class EditPengeluaranController extends GetxController {
           tanggal: DateTime.timestamp(),
           totalBayar: 0)
       .obs;
+  var isLoading = false.obs;
 
   var properti = Properti(id: '', nama: '').obs;
   Uint8List dataFromBase64String(String base64String) {
@@ -183,44 +184,53 @@ class EditPengeluaranController extends GetxController {
     int totalKeluar,
     String files,
   ) async {
-    DocumentReference updateData =
-        FirebaseFirestore.instance.collection("pengeluaran").doc(id);
-    final user = FirebaseAuth.instance.currentUser;
-    if (tanggal.isNull ||
-        idProperti.isEmpty ||
-        judul.isEmpty ||
-        kategori.isEmpty ||
-        totalKeluar.isNull ||
-        files.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await updateData.update({
-          'tanggal': Timestamp.fromDate(tanggal),
-          'id_properti': idProperti,
-          'judul': judul,
-          'kategori': kategori,
-          'total_bayar': totalKeluar,
-          'files': files,
-          "userId": user.uid,
-        });
-        Get.snackbar('Success', 'Data pengeluaran berhasil diperbarui');
-        Get.offAllNamed(Routes.FINANCE);
-      } catch (e) {
-        Get.snackbar('Error', 'Gagal memperbarui data pengeluaran: $e');
+    if (isLoading.value) return; // Jika masih loading, abaikan aksi baru
+    isLoading.value = true;
+
+    try {
+      DocumentReference updateData =
+          FirebaseFirestore.instance.collection("pengeluaran").doc(id);
+      final user = FirebaseAuth.instance.currentUser;
+      if (tanggal.isNull ||
+          idProperti.isEmpty ||
+          judul.isEmpty ||
+          kategori.isEmpty ||
+          totalKeluar.isNull ||
+          files.isEmpty) {
+        Get.snackbar(
+          'Error',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+      if (user != null) {
+        try {
+          await updateData.update({
+            'tanggal': Timestamp.fromDate(tanggal),
+            'id_properti': idProperti,
+            'judul': judul,
+            'kategori': kategori,
+            'total_bayar': totalKeluar,
+            'files': files,
+            "userId": user.uid,
+          });
+          Get.snackbar('Success', 'Data pengeluaran berhasil diperbarui');
+          Get.offAllNamed(Routes.FINANCE);
+        } catch (e) {
+          Get.snackbar('Error', 'Gagal memperbarui data pengeluaran: $e');
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
+        );
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal memperbarui data pengeluaran: $e');
+    } finally {
+      isLoading.value = false; // Pastikan loading di-reset
     }
   }
 
@@ -233,51 +243,59 @@ class EditPengeluaranController extends GetxController {
     int totalKeluar,
     File files,
   ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (tanggal.isNull ||
-        idProperti.isEmpty ||
-        judul.isEmpty ||
-        kategori.isEmpty ||
-        totalKeluar.isNull ||
-        files.isNull) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance
-            .collection('pengeluaran')
-            .doc(id)
-            .update({
-          'tanggal': Timestamp.fromDate(tanggal),
-          'id_properti': idProperti,
-          'judul': judul,
-          'kategori': kategori,
-          'total_bayar': totalKeluar,
-          'file': base64String(await files.readAsBytes()),
-          "userId": user.uid,
-        });
-        Get.snackbar(
-          'Sukses',
-          'Data pengeluaran berhasil diperbarui!',
-        );
-        Get.offAllNamed(Routes.FINANCE);
-      } catch (e) {
+    if (isLoading.value) return; // Jika masih loading, abaikan aksi baru
+    isLoading.value = true;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (tanggal.isNull ||
+          idProperti.isEmpty ||
+          judul.isEmpty ||
+          kategori.isEmpty ||
+          totalKeluar.isNull ||
+          files.isNull) {
         Get.snackbar(
           'Error',
-          'Gagal memperbarui data pengeluaran: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance
+              .collection('pengeluaran')
+              .doc(id)
+              .update({
+            'tanggal': Timestamp.fromDate(tanggal),
+            'id_properti': idProperti,
+            'judul': judul,
+            'kategori': kategori,
+            'total_bayar': totalKeluar,
+            'file': base64String(await files.readAsBytes()),
+            "userId": user.uid,
+          });
+          Get.snackbar(
+            'Sukses',
+            'Data pengeluaran berhasil diperbarui!',
+          );
+          Get.offAllNamed(Routes.FINANCE);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal memperbarui data pengeluaran: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal menambahkan penghuni: $e');
+    } finally {
+      isLoading.value = false; // Pastikan loading di-reset
     }
   }
 }

@@ -98,7 +98,7 @@ class PenghuniController extends GetxController {
   }
 
   void checkOut(String docID, String? idKamar) async {
-    if (idKamar != "") {
+    if (idKamar != "" || idKamar != "-") {
       try {
         final belumLunasQuery = await FirebaseFirestore.instance
             .collection('pemasukan')

@@ -200,27 +200,31 @@ class AddRoomView extends GetView<AddRoomController> {
                   minimumSize: Size(double.infinity, 52),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
-              onPressed: () {
-                try {
-                  print(controller.hargaMap);
-                  controller.addRoom(
-                    nomorKamar: controller.roomNumberController.text,
-                    status: controller.selectedStatus.value,
-                    fasilitas: controller.Facilities,
-                    luas: int.parse(controller.wideController.text),
-                    harga: controller.hargaMap,
-                    idproperti: controller.propertyId,
-                  );
-                } catch (e) {
-                  Get.snackbar('Error', 'Terjadi kesalahan: $e');
-                }
-              },
-              child: Text("Simpan",
-                  style: TextStyle(
-                    fontFamily: 'Lato',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  )),
+              onPressed: controller.isLoading.value
+                  ? null // Disable tombol jika sedang loading
+                  : () async {
+                      try {
+                        print(controller.hargaMap);
+                        controller.addRoom(
+                          nomorKamar: controller.roomNumberController.text,
+                          status: controller.selectedStatus.value,
+                          fasilitas: controller.Facilities,
+                          luas: int.parse(controller.wideController.text),
+                          harga: controller.hargaMap,
+                          idproperti: controller.propertyId,
+                        );
+                      } catch (e) {
+                        Get.snackbar('Error', 'Terjadi kesalahan: $e');
+                      }
+                    },
+              child: controller.isLoading.value
+                  ? CircularProgressIndicator(color: Colors.white)
+                  : Text("Simpan",
+                      style: TextStyle(
+                        fontFamily: 'Lato',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      )),
             ),
           ],
         ),

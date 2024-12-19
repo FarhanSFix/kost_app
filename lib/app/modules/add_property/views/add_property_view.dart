@@ -151,24 +151,31 @@ class AddPropertyView extends GetView<AddPropertyController> {
                       minimumSize: Size(double.infinity, 52),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  onPressed: () {
-                    controller.addProperty(
-                        namaProperti: controller.namePropertyController.text,
-                        namaPengelola: controller.nameManagerController.text,
-                        detailAlamat:
-                            controller.detailAddressPropertyController.text,
-                        kabupaten: controller.cityController.text,
-                        kecamatan: controller.districtPropertyController.text,
-                        provinsi: controller.provinceController.text,
-                        teleponPengelola:
-                            controller.telpManagerController.text);
-                  },
-                  child: Text("Simpan",
-                      style: TextStyle(
-                        fontFamily: 'Lato',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      )),
+                  onPressed: controller.isLoading.value
+                      ? null // Disable tombol jika sedang loading
+                      : () async {
+                          controller.addProperty(
+                              namaProperti:
+                                  controller.namePropertyController.text,
+                              namaPengelola:
+                                  controller.nameManagerController.text,
+                              detailAlamat: controller
+                                  .detailAddressPropertyController.text,
+                              kabupaten: controller.cityController.text,
+                              kecamatan:
+                                  controller.districtPropertyController.text,
+                              provinsi: controller.provinceController.text,
+                              teleponPengelola:
+                                  controller.telpManagerController.text);
+                        },
+                  child: controller.isLoading.value
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Text("Simpan",
+                          style: TextStyle(
+                            fontFamily: 'Lato',
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
                 ),
               ],
             ),

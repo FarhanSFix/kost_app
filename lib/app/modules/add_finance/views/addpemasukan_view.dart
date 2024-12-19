@@ -610,59 +610,64 @@ class AddpemasukanView extends GetView {
                     minimumSize: Size(double.infinity, 42),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10))),
-                onPressed: () async {
-                  if (addfinC.tglMulaiController.text.isEmpty ||
-                      addfinC.tglSampaiController.text.isEmpty) {
-                    Get.snackbar(
-                        'Input Error', 'Tanggal mulai dan sampai harus diisi!',
-                        colorText: Colors.white,
-                        backgroundColor: Colors.redAccent);
-                    return;
-                  }
-                  final periode = {
-                    'mulai': Timestamp.fromDate(DateFormat('dd/MM/yyyy')
-                        .parse(addfinC.tglMulaiController.text)),
-                    'sampai': Timestamp.fromDate(DateFormat('dd/MM/yyyy')
-                        .parse(addfinC.tglSampaiController.text)),
-                  };
-                  final int uangMuka =
-                      addfinC.selectedStatusBayar.value == 'Lunas'
-                          ? 0
-                          : int.tryParse(addfinC.uangMukaController.text
-                                  .replaceAll(".", "")) ??
-                              0;
+                onPressed: addfinC.isLoading.value
+                    ? null // Disable tombol jika sedang loading
+                    : () async {
+                        if (addfinC.tglMulaiController.text.isEmpty ||
+                            addfinC.tglSampaiController.text.isEmpty) {
+                          Get.snackbar('Input Error',
+                              'Tanggal mulai dan sampai harus diisi!',
+                              colorText: Colors.white,
+                              backgroundColor: Colors.redAccent);
+                          return;
+                        }
+                        final periode = {
+                          'mulai': Timestamp.fromDate(DateFormat('dd/MM/yyyy')
+                              .parse(addfinC.tglMulaiController.text)),
+                          'sampai': Timestamp.fromDate(DateFormat('dd/MM/yyyy')
+                              .parse(addfinC.tglSampaiController.text)),
+                        };
+                        final int uangMuka =
+                            addfinC.selectedStatusBayar.value == 'Lunas'
+                                ? 0
+                                : int.tryParse(addfinC.uangMukaController.text
+                                        .replaceAll(".", "")) ??
+                                    0;
 
-                  final int sisa = addfinC.selectedStatusBayar.value == 'Lunas'
-                      ? 0
-                      : int.tryParse(addfinC.sisaController.text
-                              .replaceAll(".", "")) ??
-                          0;
-                  if (addfinC.catatanController.text == '') {
-                    addfinC.catatanController.text = '-';
-                  }
-                  addfinC.tambahPemasukan(
-                      addfinC.selectedPenghuni.value,
-                      addfinC.selectedProperti.value,
-                      addfinC.selectedKamar.value,
-                      addfinC.selectedJmlPenghuni.value,
-                      addfinC.jmlbulanController.text,
-                      periode,
-                      int.parse(addfinC.totalMasukController.text
-                          .replaceAll(".", "")),
-                      addfinC.selectedStatusBayar.value,
-                      int.tryParse(addfinC.dendaController.text
-                              .replaceAll(".", "")) ??
-                          0,
-                      uangMuka,
-                      sisa,
-                      addfinC.catatanController.text);
-                },
-                child: Text("Bayar",
-                    style: TextStyle(
-                      fontFamily: 'Lato',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    )),
+                        final int sisa =
+                            addfinC.selectedStatusBayar.value == 'Lunas'
+                                ? 0
+                                : int.tryParse(addfinC.sisaController.text
+                                        .replaceAll(".", "")) ??
+                                    0;
+                        if (addfinC.catatanController.text == '') {
+                          addfinC.catatanController.text = '-';
+                        }
+                        addfinC.tambahPemasukan(
+                            addfinC.selectedPenghuni.value,
+                            addfinC.selectedProperti.value,
+                            addfinC.selectedKamar.value,
+                            addfinC.selectedJmlPenghuni.value,
+                            addfinC.jmlbulanController.text,
+                            periode,
+                            int.parse(addfinC.totalMasukController.text
+                                .replaceAll(".", "")),
+                            addfinC.selectedStatusBayar.value,
+                            int.tryParse(addfinC.dendaController.text
+                                    .replaceAll(".", "")) ??
+                                0,
+                            uangMuka,
+                            sisa,
+                            addfinC.catatanController.text);
+                      },
+                child: addfinC.isLoading.value
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text("Bayar",
+                        style: TextStyle(
+                          fontFamily: 'Lato',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )),
               ),
             ],
           ),

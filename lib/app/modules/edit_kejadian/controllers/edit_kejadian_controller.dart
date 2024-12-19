@@ -16,6 +16,7 @@ class EditKejadianController extends GetxController {
   var penghuniList = <Penghuni>[].obs;
   var selectedPenghuni = ''.obs;
   final image = XFile("").obs;
+  var isLoading = false.obs;
 
   var kejadianvalue = Kejadian(
           id: '',
@@ -140,41 +141,50 @@ class EditKejadianController extends GetxController {
     int nominal,
     String images,
   ) async {
-    DocumentReference updateData =
-        FirebaseFirestore.instance.collection("kejadian").doc(id);
-    final user = FirebaseAuth.instance.currentUser;
-    if (idpenghuni.isEmpty ||
-        kejadian.isEmpty ||
-        nominal.isNaN ||
-        images.isNull) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await updateData.update({
-          "foto_bukti": images,
-          "id_penghuni": idpenghuni,
-          "kejadian": kejadian,
-          "nominal": nominal,
-          "status": "Belum dibayar",
-          "userId": user.uid,
-        });
-        Get.snackbar('Success', 'Data kejadian berhasil diperbarui');
-        Get.offAllNamed(Routes.KEJADIAN);
-      } catch (e) {
-        Get.snackbar('Error', 'Gagal memperbarui data kejadian: $e');
+    if (isLoading.value) return; // Jika masih loading, abaikan aksi baru
+    isLoading.value = true;
+
+    try {
+      DocumentReference updateData =
+          FirebaseFirestore.instance.collection("kejadian").doc(id);
+      final user = FirebaseAuth.instance.currentUser;
+      if (idpenghuni.isEmpty ||
+          kejadian.isEmpty ||
+          nominal.isNaN ||
+          images.isNull) {
+        Get.snackbar(
+          'Error',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+      if (user != null) {
+        try {
+          await updateData.update({
+            "foto_bukti": images,
+            "id_penghuni": idpenghuni,
+            "kejadian": kejadian,
+            "nominal": nominal,
+            "status": "Belum dibayar",
+            "userId": user.uid,
+          });
+          Get.snackbar('Success', 'Data kejadian berhasil diperbarui');
+          Get.offAllNamed(Routes.KEJADIAN);
+        } catch (e) {
+          Get.snackbar('Error', 'Gagal memperbarui data kejadian: $e');
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
+        );
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal memperbarui kejadian: $e');
+    } finally {
+      isLoading.value = false; // Pastikan loading di-reset
     }
   }
 
@@ -185,46 +195,58 @@ class EditKejadianController extends GetxController {
     int nominal,
     File images,
   ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (idpenghuni.isEmpty ||
-        kejadian.isEmpty ||
-        nominal.isNull ||
-        images.isNull) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance.collection('penghuni').doc(id).update({
-          'created_at': DateTime.now(),
-          'foto_KTP': base64String(await images.readAsBytes()),
-          "id_penghuni": idpenghuni,
-          "kejadian": kejadian,
-          "nominal": nominal,
-          "status": "Belum dibayar",
-          'userId': user.uid
-        });
-        Get.snackbar(
-          'Sukses',
-          'Data penghuni berhasil diperbarui!',
-        );
-        Get.offAllNamed(Routes.PENGHUNI);
-      } catch (e) {
+    if (isLoading.value) return; // Jika masih loading, abaikan aksi baru
+    isLoading.value = true;
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (idpenghuni.isEmpty ||
+          kejadian.isEmpty ||
+          nominal.isNull ||
+          images.isNull) {
         Get.snackbar(
           'Error',
-          'Gagal memperbarui data penghuni: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance
+              .collection('penghuni')
+              .doc(id)
+              .update({
+            'created_at': DateTime.now(),
+            'foto_KTP': base64String(await images.readAsBytes()),
+            "id_penghuni": idpenghuni,
+            "kejadian": kejadian,
+            "nominal": nominal,
+            "status": "Belum dibayar",
+            'userId': user.uid
+          });
+          Get.snackbar(
+            'Sukses',
+            'Data penghuni berhasil diperbarui!',
+          );
+          Get.offAllNamed(Routes.PENGHUNI);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal memperbarui data penghuni: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal memperbarui kejadian: $e');
+    } finally {
+      isLoading.value = false; // Pastikan loading di-reset
     }
   }
 

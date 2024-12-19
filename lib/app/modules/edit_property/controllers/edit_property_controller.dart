@@ -7,6 +7,7 @@ import 'package:kost_app/app/routes/app_pages.dart';
 class EditPropertyController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final property = Get.arguments;
+  var isLoading = false.obs;
 
   Future<DocumentSnapshot<Object?>> getProperty(String docId) async {
     DocumentReference docref = firestore.collection('properti').doc(docId);
@@ -36,57 +37,65 @@ class EditPropertyController extends GetxController {
     required String provinsi,
     required String teleponPengelola,
   }) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (namaProperti.isEmpty ||
-        namaPengelola.isEmpty ||
-        teleponPengelola.isEmpty ||
-        provinsi.isEmpty ||
-        kabupaten.isEmpty ||
-        kecamatan.isEmpty ||
-        detailAlamat.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance
-            .collection('properti')
-            .doc(docId)
-            .update({
-          'created_at': DateTime.now(),
-          'nama_properti': namaProperti,
-          'nama_pengelola': namaPengelola,
-          'detail_alamat': detailAlamat,
-          'kabupaten': kabupaten,
-          'kecamatan': kecamatan,
-          'provinsi': provinsi,
-          'telepon_pengelola': teleponPengelola,
-          'userId': user.uid,
-        });
-
-        Get.snackbar(
-          'Sukses',
-          'Properti berhasil diperbarui!',
-        );
-        Get.offAllNamed(Routes.DETAIL_PROPERTY, arguments: property);
-      } catch (e) {
+    if (isLoading.value) return; // Jika masih loading, abaikan aksi baru
+    isLoading.value = true;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (namaProperti.isEmpty ||
+          namaPengelola.isEmpty ||
+          teleponPengelola.isEmpty ||
+          provinsi.isEmpty ||
+          kabupaten.isEmpty ||
+          kecamatan.isEmpty ||
+          detailAlamat.isEmpty) {
         Get.snackbar(
           'Error',
-          'Gagal memperbarui properti: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance
+              .collection('properti')
+              .doc(docId)
+              .update({
+            'created_at': DateTime.now(),
+            'nama_properti': namaProperti,
+            'nama_pengelola': namaPengelola,
+            'detail_alamat': detailAlamat,
+            'kabupaten': kabupaten,
+            'kecamatan': kecamatan,
+            'provinsi': provinsi,
+            'telepon_pengelola': teleponPengelola,
+            'userId': user.uid,
+          });
+
+          Get.snackbar(
+            'Sukses',
+            'Properti berhasil diperbarui!',
+          );
+          Get.offAllNamed(Routes.DETAIL_PROPERTY, arguments: property);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal memperbarui properti: $e',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
           snackPosition: SnackPosition.BOTTOM,
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal memperbarui data properti: $e');
+    } finally {
+      isLoading.value = false; // Pastikan loading di-reset
     }
   }
 

@@ -8,6 +8,7 @@ class AddRoomController extends GetxController {
   final String propertyId = Get.arguments ?? "defaultPropertyId";
   final roomNumberController = TextEditingController();
   final wideController = TextEditingController();
+  var isLoading = false.obs;
   final roomPriceControllers =
       <TextEditingController>[TextEditingController()].obs;
   final RxList<String> Facilities = [
@@ -56,49 +57,58 @@ class AddRoomController extends GetxController {
     required Map<String, int> harga,
     required String idproperti,
   }) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (nomorKamar.isEmpty ||
-        status.isEmpty ||
-        fasilitas.isEmpty ||
-        luas <= 0 ||
-        harga.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance.collection('kamar').add({
-          'created_at': DateTime.now(),
-          'nomor': nomorKamar,
-          'status': status,
-          'fasilitas': fasilitas,
-          'luas': luas.toInt(),
-          'harga': harga,
-          'userId': user.uid,
-          'id_properti': idproperti
-        });
+    if (isLoading.value) return; // Jika masih loading, abaikan aksi baru
+    isLoading.value = true;
 
-        Get.snackbar(
-          'Sukses',
-          'Kamar berhasil ditambahkan!',
-        );
-        Get.offAllNamed(Routes.ROOM, arguments: propertyId);
-      } catch (e) {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (nomorKamar.isEmpty ||
+          status.isEmpty ||
+          fasilitas.isEmpty ||
+          luas <= 0 ||
+          harga.isEmpty) {
         Get.snackbar(
           'Error',
-          'Gagal menambahkan kamar: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance.collection('kamar').add({
+            'created_at': DateTime.now(),
+            'nomor': nomorKamar,
+            'status': status,
+            'fasilitas': fasilitas,
+            'luas': luas.toInt(),
+            'harga': harga,
+            'userId': user.uid,
+            'id_properti': idproperti
+          });
+
+          Get.snackbar(
+            'Sukses',
+            'Kamar berhasil ditambahkan!',
+          );
+          Get.offAllNamed(Routes.ROOM, arguments: propertyId);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal menambahkan kamar: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar("Error", "Gagal menambahkan Kamar ${e}");
+    } finally {
+      isLoading.value = false;
     }
   }
 

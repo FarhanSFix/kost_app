@@ -225,24 +225,28 @@ class AddPenghuniView extends GetView<AddPenghuniController> {
                         minimumSize: Size(double.infinity, 52),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () async {
-                      await controller.saveData(
-                          controller.nameController.text,
-                          controller.telpController.text,
-                          // controller.selectedProperti.value,
-                          // controller.selectedKamar.value,
-                          '',
-                          '',
-                          File(controller.image.value.path),
-                          File(controller.imageprofile.value.path));
-                    },
-                    child: Text("Simpan",
-                        style: TextStyle(
-                          fontFamily: 'Lato',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
+                    onPressed: controller.isLoading.value
+                        ? null // Disable tombol jika sedang loading
+                        : () async {
+                            await controller.saveData(
+                                controller.nameController.text,
+                                controller.telpController.text,
+                                // controller.selectedProperti.value,
+                                // controller.selectedKamar.value,
+                                '',
+                                '',
+                                File(controller.image.value.path),
+                                File(controller.imageprofile.value.path));
+                          },
+                    child: controller.isLoading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text("Simpan",
+                            style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                  )
                 ],
               ),
             ),

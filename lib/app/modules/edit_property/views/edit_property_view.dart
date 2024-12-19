@@ -170,28 +170,32 @@ class EditPropertyView extends GetView<EditPropertyController> {
                           minimumSize: Size(double.infinity, 52),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
-                      onPressed: () {
-                        controller.updateProperty(
-                            docId: controller.property,
-                            namaProperti:
-                                controller.namePropertyController.text,
-                            namaPengelola:
-                                controller.nameManagerController.text,
-                            detailAlamat:
-                                controller.detailAddressPropertyController.text,
-                            kabupaten: controller.cityController.text,
-                            kecamatan:
-                                controller.districtPropertyController.text,
-                            provinsi: controller.provinceController.text,
-                            teleponPengelola:
-                                controller.telpManagerController.text);
-                      },
-                      child: Text("Perbarui",
-                          style: TextStyle(
-                            fontFamily: 'Lato',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          )),
+                      onPressed: controller.isLoading.value
+                          ? null // Disable tombol jika sedang loading
+                          : () async {
+                              controller.updateProperty(
+                                  docId: controller.property,
+                                  namaProperti:
+                                      controller.namePropertyController.text,
+                                  namaPengelola:
+                                      controller.nameManagerController.text,
+                                  detailAlamat: controller
+                                      .detailAddressPropertyController.text,
+                                  kabupaten: controller.cityController.text,
+                                  kecamatan: controller
+                                      .districtPropertyController.text,
+                                  provinsi: controller.provinceController.text,
+                                  teleponPengelola:
+                                      controller.telpManagerController.text);
+                            },
+                      child: controller.isLoading.value
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text("Perbarui",
+                              style: TextStyle(
+                                fontFamily: 'Lato',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )),
                     ),
                   ],
                 ),

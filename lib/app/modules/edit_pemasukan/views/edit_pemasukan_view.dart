@@ -663,56 +663,69 @@ class EditPemasukanView extends GetView<EditPemasukanController> {
                             minimumSize: Size(double.infinity, 42),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10))),
-                        onPressed: () async {
-                          final periode = {
-                            'mulai': Timestamp.fromDate(DateFormat('dd/MM/yyyy')
-                                .parse(controller.tglMulaiController.text)),
-                            'sampai': Timestamp.fromDate(
-                                DateFormat('dd/MM/yyyy').parse(
-                                    controller.tglSampaiController.text)),
-                          };
-                          final int uangMuka =
-                              controller.selectedStatusBayar.value == 'Lunas'
-                                  ? 0
-                                  : int.tryParse(controller
-                                          .uangMukaController.text
-                                          .replaceAll(".", "")) ??
-                                      0;
+                        onPressed: controller.isLoading.value
+                            ? null // Disable tombol jika sedang loading
+                            : () async {
+                                final periode = {
+                                  'mulai': Timestamp.fromDate(
+                                      DateFormat('dd/MM/yyyy').parse(
+                                          controller.tglMulaiController.text)),
+                                  'sampai': Timestamp.fromDate(
+                                      DateFormat('dd/MM/yyyy').parse(
+                                          controller.tglSampaiController.text)),
+                                };
+                                final int uangMuka =
+                                    controller.selectedStatusBayar.value ==
+                                            'Lunas'
+                                        ? 0
+                                        : int.tryParse(controller
+                                                .uangMukaController.text
+                                                .replaceAll(".", "")) ??
+                                            0;
 
-                          final int sisa =
-                              controller.selectedStatusBayar.value == 'Lunas'
-                                  ? 0
-                                  : int.tryParse(controller.sisaController.text
-                                          .replaceAll(".", "")) ??
-                                      0;
-                          final String catatan =
-                              controller.catatanController.text.isEmpty
-                                  ? controller.pemasukan.value.catatan
-                                  : '-';
-                          await controller.updateData(
-                              controller.pemasukan.value.id,
-                              catatan,
-                              int.parse(controller.dendaController.text
-                                  .replaceAll(".", "")),
-                              controller.selectedKamar.value,
-                              controller.selectedPenghuni.value,
-                              controller.selectedProperti.value,
-                              controller.jmlBulanController.text
-                                  .replaceAll("Bulan", ""),
-                              controller.selectedJmlPenghuni.value,
-                              periode,
-                              sisa,
-                              controller.selectedStatusBayar.value,
-                              int.parse(controller.totalMasukController.text
-                                  .replaceAll(".", "")),
-                              uangMuka);
-                        },
-                        child: Text("Perbarui",
-                            style: TextStyle(
-                              fontFamily: 'Lato',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            )),
+                                final int sisa =
+                                    controller.selectedStatusBayar.value ==
+                                            'Lunas'
+                                        ? 0
+                                        : int.tryParse(controller
+                                                .sisaController.text
+                                                .replaceAll(".", "")) ??
+                                            0;
+                                final String catatan =
+                                    controller.catatanController.text.isNotEmpty
+                                        ? controller.catatanController.text
+                                        : controller.pemasukan.value.catatan;
+                                if (controller.catatanController.text == '' ||
+                                    controller.catatanController.text == '-') {
+                                  controller.catatanController.text = '-';
+                                }
+                                await controller.updateData(
+                                    controller.pemasukan.value.id,
+                                    catatan,
+                                    int.parse(controller.dendaController.text
+                                        .replaceAll(".", "")),
+                                    controller.selectedKamar.value,
+                                    controller.selectedPenghuni.value,
+                                    controller.selectedProperti.value,
+                                    controller.jmlBulanController.text
+                                        .replaceAll("Bulan", ""),
+                                    controller.selectedJmlPenghuni.value,
+                                    periode,
+                                    sisa,
+                                    controller.selectedStatusBayar.value,
+                                    int.parse(controller
+                                        .totalMasukController.text
+                                        .replaceAll(".", "")),
+                                    uangMuka);
+                              },
+                        child: controller.isLoading.value
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : Text("Perbarui",
+                                style: TextStyle(
+                                  fontFamily: 'Lato',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                )),
                       ),
                     ],
                   ),

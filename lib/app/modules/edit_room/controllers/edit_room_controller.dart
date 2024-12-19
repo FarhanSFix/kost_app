@@ -7,6 +7,7 @@ import 'package:kost_app/app/routes/app_pages.dart';
 class EditRoomController extends GetxController {
   final String idRoom = Get.arguments;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  var isLoading = false.obs;
 
   Future<DocumentSnapshot<Object?>> getRoom(String docID) async {
     DocumentReference docRef = firestore.collection('kamar').doc(docID);
@@ -76,49 +77,61 @@ class EditRoomController extends GetxController {
     required Map<String, int> harga,
     required String idproperti,
   }) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (nomorKamar.isEmpty ||
-        status.isEmpty ||
-        fasilitas.isEmpty ||
-        luas.isNull ||
-        harga.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance.collection('kamar').doc(docId).update({
-          'created_at': DateTime.now(),
-          'nomor': nomorKamar,
-          'status': status,
-          'fasilitas': fasilitas,
-          'luas': luas,
-          'harga': harga,
-          'userId': user.uid,
-          'id_properti': idproperti
-        });
+    if (isLoading.value) return; // Jika masih loading, abaikan aksi baru
+    isLoading.value = true;
 
-        Get.snackbar(
-          'Sukses',
-          'Kamar berhasil diperbarui!',
-        );
-        Get.offAllNamed(Routes.DETAIL_ROOM, arguments: idRoom);
-      } catch (e) {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (nomorKamar.isEmpty ||
+          status.isEmpty ||
+          fasilitas.isEmpty ||
+          luas.isNull ||
+          harga.isEmpty) {
         Get.snackbar(
           'Error',
-          'Gagal memperbarui kamar: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance
+              .collection('kamar')
+              .doc(docId)
+              .update({
+            'created_at': DateTime.now(),
+            'nomor': nomorKamar,
+            'status': status,
+            'fasilitas': fasilitas,
+            'luas': luas,
+            'harga': harga,
+            'userId': user.uid,
+            'id_properti': idproperti
+          });
+
+          Get.snackbar(
+            'Sukses',
+            'Kamar berhasil diperbarui!',
+          );
+          Get.offAllNamed(Routes.DETAIL_ROOM, arguments: idRoom);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal memperbarui kamar: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal memperbarui data kamar: $e');
+    } finally {
+      isLoading.value = false; // Pastikan loading di-reset
     }
   }
 

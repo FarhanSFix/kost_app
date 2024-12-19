@@ -274,49 +274,61 @@ class EditPenghuniView extends GetView<EditPenghuniController> {
                         minimumSize: Size(double.infinity, 52),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () async {
-                      final selectedpropertiId =
-                          controller.selectedProperti.value.isNotEmpty
-                              ? controller.selectedProperti.value
-                              : propertivalue.id;
-                      final selectedKamarId =
-                          controller.selectedKamar.value.isNotEmpty
-                              ? controller.selectedKamar.value
-                              : kamarvalue.id;
-                      final imagesProfile =
-                          controller.imageprofile.value.path.isNotEmpty
-                              ? File(controller.imageprofile.value.path)
-                              : penghuni.foto_penghuni;
-                      final imagesKTP = controller.image.value.path.isNotEmpty
-                          ? File(controller.image.value.path)
-                          : penghuni.foto_KTP;
-                      if (controller.image.value.path.isNotEmpty ||
-                          controller.imageprofile.value.path.isNotEmpty) {
-                        await controller.updateWithImage(
-                            penghuni.id,
-                            controller.nameController.text,
-                            controller.telpController.text,
-                            selectedpropertiId,
-                            selectedKamarId,
-                            imagesKTP,
-                            imagesProfile);
-                      } else {
-                        controller.updateData(
-                            penghuni.id,
-                            controller.nameController.text,
-                            controller.telpController.text,
-                            selectedpropertiId,
-                            selectedKamarId,
-                            penghuni.foto_KTP,
-                            penghuni.foto_penghuni);
-                      }
-                    },
-                    child: Text("Perbarui",
-                        style: TextStyle(
-                          fontFamily: 'Lato',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
+                    onPressed: controller.isLoading.value
+                        ? null // Disable tombol jika sedang loading
+                        : () async {
+                            var selectedpropertiId =
+                                controller.selectedProperti.value.isNotEmpty
+                                    ? controller.selectedProperti.value
+                                    : propertivalue.id;
+                            var selectedKamarId =
+                                controller.selectedKamar.value.isNotEmpty
+                                    ? controller.selectedKamar.value
+                                    : kamarvalue.id;
+                            final imagesProfile =
+                                controller.imageprofile.value.path.isNotEmpty
+                                    ? File(controller.imageprofile.value.path)
+                                    : penghuni.foto_penghuni;
+                            final imagesKTP =
+                                controller.image.value.path.isNotEmpty
+                                    ? File(controller.image.value.path)
+                                    : penghuni.foto_KTP;
+
+                            if (selectedpropertiId == '' ||
+                                selectedKamarId == '') {
+                              selectedpropertiId = '-';
+                              selectedKamarId = '-';
+                            }
+
+                            if (controller.image.value.path.isNotEmpty ||
+                                controller.imageprofile.value.path.isNotEmpty) {
+                              await controller.updateWithImage(
+                                  penghuni.id,
+                                  controller.nameController.text,
+                                  controller.telpController.text,
+                                  selectedpropertiId,
+                                  selectedKamarId,
+                                  imagesKTP,
+                                  imagesProfile);
+                            } else {
+                              controller.updateData(
+                                  penghuni.id,
+                                  controller.nameController.text,
+                                  controller.telpController.text,
+                                  selectedpropertiId,
+                                  selectedKamarId,
+                                  penghuni.foto_KTP,
+                                  penghuni.foto_penghuni);
+                            }
+                          },
+                    child: controller.isLoading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text("Perbarui",
+                            style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
                   ),
                 ],
               );

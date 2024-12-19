@@ -257,30 +257,34 @@ class AddpengeluaranView extends GetView {
                     minimumSize: Size(double.infinity, 42),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10))),
-                onPressed: () async {
-                  if (addfinC.tanggalController.text.isEmpty) {
-                    Get.snackbar(
-                        'Input Error', 'Tanggal mulai dan sampai harus diisi!',
-                        colorText: Colors.white,
-                        backgroundColor: Colors.redAccent);
-                    return;
-                  }
-                  DateTime tanggalParsed = DateFormat('dd/MM/yyyy')
-                      .parse(addfinC.tanggalController.text);
-                  addfinC.tambahPengeluaran(
-                      addfinC.selectedProperti2.value,
-                      File(addfinC.files.value.path),
-                      addfinC.judulController.text,
-                      addfinC.selectedKategori.value,
-                      tanggalParsed,
-                      int.parse(addfinC.totalKeluarController.text));
-                },
-                child: Text("Simpan",
-                    style: TextStyle(
-                      fontFamily: 'Lato',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    )),
+                onPressed: addfinC.isLoading.value
+                    ? null // Disable tombol jika sedang loading
+                    : () async {
+                        if (addfinC.tanggalController.text.isEmpty) {
+                          Get.snackbar('Input Error',
+                              'Tanggal mulai dan sampai harus diisi!',
+                              colorText: Colors.white,
+                              backgroundColor: Colors.redAccent);
+                          return;
+                        }
+                        DateTime tanggalParsed = DateFormat('dd/MM/yyyy')
+                            .parse(addfinC.tanggalController.text);
+                        addfinC.tambahPengeluaran(
+                            addfinC.selectedProperti2.value,
+                            File(addfinC.files.value.path),
+                            addfinC.judulController.text,
+                            addfinC.selectedKategori.value,
+                            tanggalParsed,
+                            int.parse(addfinC.totalKeluarController.text));
+                      },
+                child: addfinC.isLoading.value
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text("Simpan",
+                        style: TextStyle(
+                          fontFamily: 'Lato',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )),
               ),
             ],
           )),

@@ -253,27 +253,33 @@ class EditRoomView extends GetView<EditRoomController> {
                         minimumSize: Size(double.infinity, 52),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () {
-                      controller.updateRoom(
-                          docId: controller.idRoom,
-                          nomorKamar: controller.roomNumberController.text,
-                          status: controller.selectedStatus.value,
-                          fasilitas: controller.facilities,
-                          luas: int.parse(controller.wideController.text),
-                          harga: controller.roomPrices.map((key, value) =>
-                              MapEntry(
-                                  key,
-                                  value is int
-                                      ? value
-                                      : int.tryParse(value.toString()) ?? 0)),
-                          idproperti: room['id_properti']);
-                    },
-                    child: Text("Perbarui",
-                        style: TextStyle(
-                          fontFamily: 'Lato',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
+                    onPressed: controller.isLoading.value
+                        ? null // Disable tombol jika sedang loading
+                        : () async {
+                            controller.updateRoom(
+                                docId: controller.idRoom,
+                                nomorKamar:
+                                    controller.roomNumberController.text,
+                                status: controller.selectedStatus.value,
+                                fasilitas: controller.facilities,
+                                luas: int.parse(controller.wideController.text),
+                                harga: controller.roomPrices.map((key, value) =>
+                                    MapEntry(
+                                        key,
+                                        value is int
+                                            ? value
+                                            : int.tryParse(value.toString()) ??
+                                                0)),
+                                idproperti: room['id_properti']);
+                          },
+                    child: controller.isLoading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text("Perbarui",
+                            style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
                   ),
                 ],
               ),

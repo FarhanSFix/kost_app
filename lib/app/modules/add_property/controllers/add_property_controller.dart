@@ -12,6 +12,7 @@ class AddPropertyController extends GetxController {
   final cityController = TextEditingController();
   final districtPropertyController = TextEditingController();
   final detailAddressPropertyController = TextEditingController();
+  var isLoading = false.obs;
 
   void addProperty({
     required String namaProperti,
@@ -22,54 +23,63 @@ class AddPropertyController extends GetxController {
     required String provinsi,
     required String teleponPengelola,
   }) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (namaProperti.isEmpty ||
-        namaPengelola.isEmpty ||
-        teleponPengelola.isEmpty ||
-        provinsi.isEmpty ||
-        kabupaten.isEmpty ||
-        kecamatan.isEmpty ||
-        detailAlamat.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance.collection('properti').add({
-          'created_at': DateTime.now(),
-          'nama_properti': namaProperti,
-          'nama_pengelola': namaPengelola,
-          'detail_alamat': detailAlamat,
-          'kabupaten': kabupaten,
-          'kecamatan': kecamatan,
-          'provinsi': provinsi,
-          'telepon_pengelola': teleponPengelola,
-          'userId': user.uid,
-        });
+    if (isLoading.value) return;
+    isLoading.value = true;
 
-        Get.snackbar(
-          'Sukses',
-          'Properti berhasil ditambahkan!',
-        );
-        Get.offAllNamed(Routes.PROPERTY);
-      } catch (e) {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (namaProperti.isEmpty ||
+          namaPengelola.isEmpty ||
+          teleponPengelola.isEmpty ||
+          provinsi.isEmpty ||
+          kabupaten.isEmpty ||
+          kecamatan.isEmpty ||
+          detailAlamat.isEmpty) {
         Get.snackbar(
           'Error',
-          'Gagal menambahkan properti: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance.collection('properti').add({
+            'created_at': DateTime.now(),
+            'nama_properti': namaProperti,
+            'nama_pengelola': namaPengelola,
+            'detail_alamat': detailAlamat,
+            'kabupaten': kabupaten,
+            'kecamatan': kecamatan,
+            'provinsi': provinsi,
+            'telepon_pengelola': teleponPengelola,
+            'userId': user.uid,
+          });
+
+          Get.snackbar(
+            'Sukses',
+            'Properti berhasil ditambahkan!',
+          );
+          Get.offAllNamed(Routes.PROPERTY);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal menambahkan properti: $e',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
           snackPosition: SnackPosition.BOTTOM,
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+    } catch (e) {
+      Get.snackbar("Error", "Gagal menyimpan properti${e}");
+    } finally {
+      isLoading.value = false;
     }
   }
 

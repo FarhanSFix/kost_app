@@ -14,6 +14,7 @@ class AddPenghuniController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   TextEditingController nameController = TextEditingController();
   TextEditingController telpController = TextEditingController();
+  var isLoading = false.obs;
   final image = XFile("").obs;
   final imageprofile = XFile("").obs;
 
@@ -119,54 +120,63 @@ class AddPenghuniController extends GetxController {
     File images,
     File imageProfiles,
   ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (namaPenghuni.isEmpty ||
-        noTelp.isEmpty ||
-        // idProperti.isEmpty ||
-        // idKamar.isEmpty ||
-        images.isNull ||
-        imageProfiles.isNull) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await firestore.collection('penghuni').add({
-          'created_at': DateTime.now(),
-          'foto_KTP': base64String(await images.readAsBytes()),
-          'foto_penghuni': base64String(await imageProfiles.readAsBytes()),
-          'id_kamar': '',
-          'id_properti': '',
-          'is_active': true,
-          'nama': namaPenghuni,
-          'telepon': noTelp,
-          'userId': user.uid
-        });
-        // await firestore
-        //     .collection('kamar')
-        //     .doc(idKamar)
-        //     .update({'status': 'Dipesan'});
-        Get.snackbar(
-          'Sukses',
-          'Penghuni berhasil ditambahkan!',
-        );
-        Get.offAllNamed(Routes.PENGHUNI);
-      } catch (e) {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (namaPenghuni.isEmpty ||
+          noTelp.isEmpty ||
+          // idProperti.isEmpty ||
+          // idKamar.isEmpty ||
+          images.isNull ||
+          imageProfiles.isNull) {
         Get.snackbar(
           'Error',
-          'Gagal menambahkan penghuni: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await firestore.collection('penghuni').add({
+            'created_at': DateTime.now(),
+            'foto_KTP': base64String(await images.readAsBytes()),
+            'foto_penghuni': base64String(await imageProfiles.readAsBytes()),
+            'id_kamar': '',
+            'id_properti': '',
+            'is_active': true,
+            'nama': namaPenghuni,
+            'telepon': noTelp,
+            'userId': user.uid
+          });
+          // await firestore
+          //     .collection('kamar')
+          //     .doc(idKamar)
+          //     .update({'status': 'Dipesan'});
+          Get.snackbar(
+            'Sukses',
+            'Penghuni berhasil ditambahkan!',
+          );
+          Get.offAllNamed(Routes.PENGHUNI);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal menambahkan penghuni: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar("Error", "Gagal menyimpan penghuni${e}");
+    } finally {
+      isLoading.value = false;
     }
   }
 

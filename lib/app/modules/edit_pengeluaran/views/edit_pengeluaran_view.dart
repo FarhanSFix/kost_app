@@ -311,41 +311,47 @@ class EditPengeluaranView extends GetView<EditPengeluaranController> {
                             minimumSize: Size(double.infinity, 42),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10))),
-                        onPressed: () async {
-                          final selectedPropertiId =
-                              controller.selectedProperti.value.isNotEmpty
-                                  ? controller.selectedProperti.value
-                                  : controller.pengeluaran.value.idproperti;
-                          if (controller.files.value.path.isNotEmpty) {
-                            await controller.updateWithImage(
-                                controller.pengeluaran.value.id,
-                                DateFormat('dd-MM-yyyy')
-                                    .parse(controller.tanggalController.text),
-                                selectedPropertiId,
-                                controller.judulController.text,
-                                controller.selectedKategori.value,
-                                int.parse(controller.totalKeluarController.text
-                                    .replaceAll(".", "")),
-                                File(controller.files.value.path));
-                          } else {
-                            await controller.updateData(
-                                controller.pengeluaran.value.id,
-                                DateFormat('dd-MM-yyyy')
-                                    .parse(controller.tanggalController.text),
-                                selectedPropertiId,
-                                controller.judulController.text,
-                                controller.selectedKategori.value,
-                                int.parse(controller.totalKeluarController.text
-                                    .replaceAll(".", "")),
-                                controller.pengeluaran.value.file);
-                          }
-                        },
-                        child: Text("Perbarui",
-                            style: TextStyle(
-                              fontFamily: 'Lato',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            )),
+                        onPressed: controller.isLoading.value
+                            ? null // Disable tombol jika sedang loading
+                            : () async {
+                                final selectedPropertiId = controller
+                                        .selectedProperti.value.isNotEmpty
+                                    ? controller.selectedProperti.value
+                                    : controller.pengeluaran.value.idproperti;
+                                if (controller.files.value.path.isNotEmpty) {
+                                  await controller.updateWithImage(
+                                      controller.pengeluaran.value.id,
+                                      DateFormat('dd-MM-yyyy').parse(
+                                          controller.tanggalController.text),
+                                      selectedPropertiId,
+                                      controller.judulController.text,
+                                      controller.selectedKategori.value,
+                                      int.parse(controller
+                                          .totalKeluarController.text
+                                          .replaceAll(".", "")),
+                                      File(controller.files.value.path));
+                                } else {
+                                  await controller.updateData(
+                                      controller.pengeluaran.value.id,
+                                      DateFormat('dd-MM-yyyy').parse(
+                                          controller.tanggalController.text),
+                                      selectedPropertiId,
+                                      controller.judulController.text,
+                                      controller.selectedKategori.value,
+                                      int.parse(controller
+                                          .totalKeluarController.text
+                                          .replaceAll(".", "")),
+                                      controller.pengeluaran.value.file);
+                                }
+                              },
+                        child: controller.isLoading.value
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : Text("Perbarui",
+                                style: TextStyle(
+                                  fontFamily: 'Lato',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                )),
                       ),
                     ],
                   ),

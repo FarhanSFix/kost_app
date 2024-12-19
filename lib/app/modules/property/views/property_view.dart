@@ -23,82 +23,106 @@ class PropertyView extends GetView<PropertyController> {
         centerTitle: true,
       ),
       body: Obx(() {
+        // Mengambil stream dari controller
         final stream = controller.propertyStream.value;
-        if (stream == Stream.empty()) {
+
+        // Jika stream null, tampilkan indikator loading
+        if (stream == null) {
           return Center(
             child: CircularProgressIndicator(),
           );
         }
-        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: stream,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
 
-              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(
-                  child: Align(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 1 / 5,
-                        ),
-                        Image.asset(
-                          "assets/images/no_data.jpg",
-                          width: 200.0,
-                          height: 200.0,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          'Belum Ada Data Properti',
-                          style: TextStyle(fontFamily: 'Roboto', fontSize: 16),
-                        )
-                      ],
+        // StreamBuilder untuk membaca data dari Firestore
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: stream,
+          builder: (context, snapshot) {
+            // Jika ada error, tampilkan pesan error
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'Terjadi kesalahan: ${snapshot.error}',
+                  style: TextStyle(color: Colors.red),
+                ),
+              );
+            }
+
+            // Jika sedang memuat data
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            // Jika data kosong
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Align(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/images/no_data.jpg",
+                        width: 200.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Belum Ada Data Properti',
+                        style: TextStyle(fontFamily: 'Roboto', fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            // Jika data ada
+            final documents = snapshot.data!.docs;
+            return ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: documents.length,
+              itemBuilder: (context, index) {
+                final property = documents[index];
+
+                return Card(
+                  color: Colors.white,
+                  elevation: 2,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: appColor.backgroundColor1,
+                      child: Icon(
+                        Icons.home,
+                        color: appColor.logoColor,
+                      ),
                     ),
+                    title: Text(
+                      "${property['nama_properti']}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    subtitle: Text(
+                      "${property['kabupaten']}, ${property['provinsi']}",
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      // Navigasi ke halaman detail properti dengan membawa ID properti
+                      Get.toNamed(Routes.DETAIL_PROPERTY,
+                          arguments: property.id);
+                    },
                   ),
                 );
-              }
-              final documents = snapshot.data!.docs;
-
-              return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: documents.length,
-                itemBuilder: (context, index) {
-                  final property = documents[index];
-
-                  return Card(
-                    color: Colors.white,
-                    elevation: 2,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: appColor.backgroundColor1,
-                        child: Icon(
-                          Icons.home,
-                          color: appColor.logoColor,
-                        ),
-                      ),
-                      title: Text("${property['nama_properti']}"),
-                      subtitle: Text(
-                          "${property['kabupaten']}, ${property['provinsi']}"),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () {
-                        Get.toNamed(Routes.DETAIL_PROPERTY,
-                            arguments: property.id);
-                      },
-                    ),
-                  );
-                },
-              );
-            });
+              },
+            );
+          },
+        );
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

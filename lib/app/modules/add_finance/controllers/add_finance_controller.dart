@@ -42,6 +42,7 @@ class AddFinanceController extends GetxController {
   TextEditingController dendaController = TextEditingController();
   TextEditingController uangMukaController = TextEditingController();
   TextEditingController sisaController = TextEditingController();
+  var isLoading = false.obs;
 
   //pengeluaran
   TextEditingController tanggalController = TextEditingController();
@@ -316,93 +317,102 @@ class AddFinanceController extends GetxController {
     int sisa,
     String catatan,
   ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (idPenghuni.isEmpty ||
-        idPropertiMasuk.isEmpty ||
-        idKamar.isEmpty ||
-        jmlPenghuni.isEmpty ||
-        jmlBulan.isEmpty ||
-        periode.entries.isEmpty ||
-        status.isEmpty ||
-        denda.isNull ||
-        uangMuka.isNull ||
-        sisa.isNull ||
-        catatan.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
+    if (isLoading.value) return;
+    isLoading.value = true;
 
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance.collection('pemasukan').add({
-          'created_at': DateTime.now(),
-          'catatan': catatan,
-          'denda': denda,
-          'id_kamar': idKamar,
-          'id_penghuni': idPenghuni,
-          'id_properti': idPropertiMasuk,
-          'jml_bulan': jmlBulan,
-          'jml_penghuni': jmlPenghuni,
-          'periode': periode,
-          'sisa': sisa,
-          'status': status,
-          'total_bayar': totalMasuk,
-          'uang_muka': uangMuka,
-          'userId': user.uid
-        });
-
-        await FirebaseFirestore.instance
-            .collection('penghuni')
-            .doc(idPenghuni)
-            .update({'id_kamar': idKamar, 'id_properti': idPropertiMasuk});
-
-        if (status == 'Belum Lunas') {
-          await FirebaseFirestore.instance
-              .collection('kamar')
-              .doc(idKamar)
-              .update({'status': 'Dipesan'});
-        } else {
-          await FirebaseFirestore.instance
-              .collection('kamar')
-              .doc(idKamar)
-              .update({'status': 'Terisi'});
-        }
-
-        final kejadianQuery = await FirebaseFirestore.instance
-            .collection('kejadian')
-            .where('id_penghuni', isEqualTo: idPenghuni)
-            .where('status',
-                isNotEqualTo:
-                    'Sudah dibayar') // Pastikan status belum "sudah dibayar"
-            .get();
-
-        for (var doc in kejadianQuery.docs) {
-          await FirebaseFirestore.instance
-              .collection('kejadian')
-              .doc(doc.id)
-              .update({'status': 'Sudah dibayar'});
-        }
-        Get.snackbar(
-          'Sukses',
-          'Pemasukan berhasil ditambahkan!',
-        );
-        Get.offAllNamed(Routes.FINANCE);
-      } catch (e) {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (idPenghuni.isEmpty ||
+          idPropertiMasuk.isEmpty ||
+          idKamar.isEmpty ||
+          jmlPenghuni.isEmpty ||
+          jmlBulan.isEmpty ||
+          periode.entries.isEmpty ||
+          status.isEmpty ||
+          denda.isNull ||
+          uangMuka.isNull ||
+          sisa.isNull ||
+          catatan.isEmpty) {
         Get.snackbar(
           'Error',
-          'Gagal menambahkan pemasukan: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance.collection('pemasukan').add({
+            'created_at': DateTime.now(),
+            'catatan': catatan,
+            'denda': denda,
+            'id_kamar': idKamar,
+            'id_penghuni': idPenghuni,
+            'id_properti': idPropertiMasuk,
+            'jml_bulan': jmlBulan,
+            'jml_penghuni': jmlPenghuni,
+            'periode': periode,
+            'sisa': sisa,
+            'status': status,
+            'total_bayar': totalMasuk,
+            'uang_muka': uangMuka,
+            'userId': user.uid
+          });
+
+          await FirebaseFirestore.instance
+              .collection('penghuni')
+              .doc(idPenghuni)
+              .update({'id_kamar': idKamar, 'id_properti': idPropertiMasuk});
+
+          if (status == 'Belum Lunas') {
+            await FirebaseFirestore.instance
+                .collection('kamar')
+                .doc(idKamar)
+                .update({'status': 'Dipesan'});
+          } else {
+            await FirebaseFirestore.instance
+                .collection('kamar')
+                .doc(idKamar)
+                .update({'status': 'Terisi'});
+          }
+
+          final kejadianQuery = await FirebaseFirestore.instance
+              .collection('kejadian')
+              .where('id_penghuni', isEqualTo: idPenghuni)
+              .where('status',
+                  isNotEqualTo:
+                      'Sudah dibayar') // Pastikan status belum "sudah dibayar"
+              .get();
+
+          for (var doc in kejadianQuery.docs) {
+            await FirebaseFirestore.instance
+                .collection('kejadian')
+                .doc(doc.id)
+                .update({'status': 'Sudah dibayar'});
+          }
+          Get.snackbar(
+            'Sukses',
+            'Pemasukan berhasil ditambahkan!',
+          );
+          Get.offAllNamed(Routes.FINANCE);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal menambahkan pemasukan: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar("Error", "Tidak dapat menambahkan pemasukan ${e}");
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -414,49 +424,58 @@ class AddFinanceController extends GetxController {
     DateTime tanggal,
     int totalKeluar,
   ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (images.isNull ||
-        judul.isEmpty ||
-        idPropertiKeluar.isEmpty ||
-        kategori.isEmpty ||
-        tanggal.isNull ||
-        totalKeluar.isNull) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance.collection('pengeluaran').add({
-          'created_at': DateTime.now(),
-          'id_properti': idPropertiKeluar,
-          'file': base64String(await images.readAsBytes()),
-          'judul': judul,
-          'kategori': kategori,
-          'tanggal': Timestamp.fromDate(tanggal),
-          'total_bayar': totalKeluar,
-          'userId': user.uid
-        });
-        Get.snackbar(
-          'Sukses',
-          'Pengeluaran berhasil ditambahkan!',
-        );
-        Get.offAllNamed(Routes.FINANCE);
-      } catch (e) {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (images.isNull ||
+          judul.isEmpty ||
+          idPropertiKeluar.isEmpty ||
+          kategori.isEmpty ||
+          tanggal.isNull ||
+          totalKeluar.isNull) {
         Get.snackbar(
           'Error',
-          'Gagal menambahkan pengeluaran: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance.collection('pengeluaran').add({
+            'created_at': DateTime.now(),
+            'id_properti': idPropertiKeluar,
+            'file': base64String(await images.readAsBytes()),
+            'judul': judul,
+            'kategori': kategori,
+            'tanggal': Timestamp.fromDate(tanggal),
+            'total_bayar': totalKeluar,
+            'userId': user.uid
+          });
+          Get.snackbar(
+            'Sukses',
+            'Pengeluaran berhasil ditambahkan!',
+          );
+          Get.offAllNamed(Routes.FINANCE);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal menambahkan pengeluaran: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar("Error", "Tidak dapat menambahkan pengeluaran ${e}");
+    } finally {
+      isLoading.value = false;
     }
   }
 

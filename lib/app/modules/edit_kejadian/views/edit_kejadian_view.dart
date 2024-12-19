@@ -198,36 +198,40 @@ class EditKejadianView extends GetView<EditKejadianController> {
                         minimumSize: Size(double.infinity, 52),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () async {
-                      final selectedPenghuniId =
-                          controller.selectedPenghuni.value.isNotEmpty
-                              ? controller.selectedPenghuni.value
-                              : penghunivalue.id;
-                      if (controller.image.value.path.isNotEmpty) {
-                        await controller.updateWithImage(
-                          kejadianvalue.id,
-                          selectedPenghuniId,
-                          controller.kejadianController.text,
-                          int.parse(controller.nominalController.text
-                              .replaceAll('.', '')),
-                          File(controller.image.value.path),
-                        );
-                      } else {
-                        await controller.updateData(
-                            kejadianvalue.id,
-                            selectedPenghuniId,
-                            controller.kejadianController.text,
-                            int.parse(controller.nominalController.text
-                                .replaceAll('.', '')),
-                            kejadianvalue.foto_bukti);
-                      }
-                    },
-                    child: Text("Perbarui",
-                        style: TextStyle(
-                          fontFamily: 'Lato',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
+                    onPressed: controller.isLoading.value
+                        ? null // Disable tombol jika sedang loading
+                        : () async {
+                            final selectedPenghuniId =
+                                controller.selectedPenghuni.value.isNotEmpty
+                                    ? controller.selectedPenghuni.value
+                                    : penghunivalue.id;
+                            if (controller.image.value.path.isNotEmpty) {
+                              await controller.updateWithImage(
+                                kejadianvalue.id,
+                                selectedPenghuniId,
+                                controller.kejadianController.text,
+                                int.parse(controller.nominalController.text
+                                    .replaceAll('.', '')),
+                                File(controller.image.value.path),
+                              );
+                            } else {
+                              await controller.updateData(
+                                  kejadianvalue.id,
+                                  selectedPenghuniId,
+                                  controller.kejadianController.text,
+                                  int.parse(controller.nominalController.text
+                                      .replaceAll('.', '')),
+                                  kejadianvalue.foto_bukti);
+                            }
+                          },
+                    child: controller.isLoading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text("Perbarui",
+                            style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
                   ),
                 ],
               );

@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PropertyController extends GetxController {
-  final propertyStream =
-      Stream<QuerySnapshot<Map<String, dynamic>>>.empty().obs;
+  final propertyStream = Rx<Stream<QuerySnapshot<Map<String, dynamic>>>?>(null);
 
   @override
   void onInit() {
@@ -19,6 +18,8 @@ class PropertyController extends GetxController {
           .collection('properti')
           .where('userId', isEqualTo: user.uid)
           .snapshots();
+    } else {
+      propertyStream.value = null;
     }
   }
 }

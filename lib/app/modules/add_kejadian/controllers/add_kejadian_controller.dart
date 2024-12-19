@@ -14,6 +14,7 @@ class AddKejadianController extends GetxController {
   var penghuniList = <Penghuni>[].obs;
   var selectedPenghuni = ''.obs;
   final image = XFile("").obs;
+  var isLoading = false.obs;
 
   TextEditingController kejadianController = TextEditingController();
   TextEditingController nominalController = TextEditingController();
@@ -74,43 +75,52 @@ class AddKejadianController extends GetxController {
     int nominal,
     File images,
   ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (kejadian.isEmpty || nominal.isNull || images.isNull) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance.collection('kejadian').add({
-          'created_at': DateTime.now(),
-          'id_penghuni': idpenghuni,
-          'foto_bukti': base64String(await images.readAsBytes()),
-          'kejadian': kejadian,
-          'nominal': nominal,
-          'status': 'Belum dibayar',
-          'userId': user.uid
-        });
-        Get.snackbar(
-          'Sukses',
-          'Kejadian berhasil ditambahkan!',
-        );
-        Get.offAllNamed(Routes.KEJADIAN);
-      } catch (e) {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (kejadian.isEmpty || nominal.isNull || images.isNull) {
         Get.snackbar(
           'Error',
-          'Gagal menambahkan kejadian: $e',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance.collection('kejadian').add({
+            'created_at': DateTime.now(),
+            'id_penghuni': idpenghuni,
+            'foto_bukti': base64String(await images.readAsBytes()),
+            'kejadian': kejadian,
+            'nominal': nominal,
+            'status': 'Belum dibayar',
+            'userId': user.uid
+          });
+          Get.snackbar(
+            'Sukses',
+            'Kejadian berhasil ditambahkan!',
+          );
+          Get.offAllNamed(Routes.KEJADIAN);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal menambahkan kejadian: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal menambahkan kejadian: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 

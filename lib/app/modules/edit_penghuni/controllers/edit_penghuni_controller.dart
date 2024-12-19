@@ -14,6 +14,7 @@ class EditPenghuniController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController telpController = TextEditingController();
   final String idpenghuni = Get.arguments;
+  var isLoading = false.obs;
   var propertiList = <Properti>[].obs;
   var selectedProperti = ''.obs;
   var kamarList = <Kamar>[].obs;
@@ -187,75 +188,12 @@ class EditPenghuniController extends GetxController {
     String images,
     String imageProfiles,
   ) async {
-    DocumentReference updateData =
-        FirebaseFirestore.instance.collection("penghuni").doc(id);
-    final user = FirebaseAuth.instance.currentUser;
-    if (namaPenghuni.isEmpty ||
-        noTelp.isEmpty ||
-        idProperti.isEmpty ||
-        idKamar.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await updateData.update({
-          "foto_KTP": images,
-          "foto_penghuni": imageProfiles,
-          "id_kamar": idKamar,
-          "id_properti": idProperti,
-          "is_active": true,
-          "nama": namaPenghuni,
-          "telepon": noTelp,
-          "userId": user.uid,
-        });
-        Get.snackbar('Success', 'Data penghuni berhasil diperbarui');
-        Get.offAllNamed(Routes.PENGHUNI);
-      } catch (e) {
-        Get.snackbar('Error', 'Gagal memperbarui data penghuni: $e');
-      }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
-    }
-  }
-
-  Future<void> updateWithImage(
-    String id,
-    String namaPenghuni,
-    String noTelp,
-    String idProperti,
-    String idKamar,
-    dynamic images,
-    dynamic imageProfiles,
-  ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (namaPenghuni.isEmpty ||
-        noTelp.isEmpty ||
-        idProperti.isEmpty ||
-        idKamar.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    String imageKTPBase64 = images is File
-        ? base64Encode(await images.readAsBytes())
-        : images; // Jika String, gunakan langsung
-    String imageProfileBase64 = imageProfiles is File
-        ? base64Encode(await imageProfiles.readAsBytes())
-        : imageProfiles; // Jika String, gunakan langsung
-    if (user != null) {
+    if (isLoading.value) return;
+    isLoading.value = true;
+    try {
+      DocumentReference updateData =
+          FirebaseFirestore.instance.collection("penghuni").doc(id);
+      final user = FirebaseAuth.instance.currentUser;
       if (namaPenghuni.isEmpty ||
           noTelp.isEmpty ||
           idProperti.isEmpty ||
@@ -268,34 +206,118 @@ class EditPenghuniController extends GetxController {
         );
         return;
       }
-      try {
-        await FirebaseFirestore.instance.collection('penghuni').doc(id).update({
-          'created_at': DateTime.now(),
-          'foto_KTP': imageKTPBase64,
-          'foto_penghuni': imageProfileBase64,
-          'id_kamar': idKamar,
-          'id_properti': idProperti,
-          'is_active': true,
-          'nama': namaPenghuni,
-          'telepon': noTelp,
-          'userId': user.uid
-        });
-        Get.snackbar(
-          'Sukses',
-          'Data penghuni berhasil diperbarui!',
-        );
-        Get.offAllNamed(Routes.PENGHUNI);
-      } catch (e) {
+
+      if (user != null) {
+        try {
+          await updateData.update({
+            "foto_KTP": images,
+            "foto_penghuni": imageProfiles,
+            "id_kamar": idKamar,
+            "id_properti": idProperti,
+            "is_active": true,
+            "nama": namaPenghuni,
+            "telepon": noTelp,
+            "userId": user.uid,
+          });
+          Get.snackbar('Success', 'Data penghuni berhasil diperbarui');
+          Get.offAllNamed(Routes.PENGHUNI);
+        } catch (e) {
+          Get.snackbar('Error', 'Gagal memperbarui data penghuni: $e');
+        }
+      } else {
         Get.snackbar(
           'Error',
-          'Gagal memperbarui data penghuni: $e',
+          'Pengguna tidak terautentikasi!',
         );
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+    } catch (e) {
+      Get.snackbar("Error", " Gagal Memeperbarui data Penghuni ${e}");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> updateWithImage(
+    String id,
+    String namaPenghuni,
+    String noTelp,
+    String idProperti,
+    String idKamar,
+    dynamic images,
+    dynamic imageProfiles,
+  ) async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (namaPenghuni.isEmpty ||
+          noTelp.isEmpty ||
+          idProperti.isEmpty ||
+          idKamar.isEmpty) {
+        Get.snackbar(
+          'Error',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      String imageKTPBase64 = images is File
+          ? base64Encode(await images.readAsBytes())
+          : images; // Jika String, gunakan langsung
+      String imageProfileBase64 = imageProfiles is File
+          ? base64Encode(await imageProfiles.readAsBytes())
+          : imageProfiles; // Jika String, gunakan langsung
+      if (user != null) {
+        if (namaPenghuni.isEmpty ||
+            noTelp.isEmpty ||
+            idProperti.isEmpty ||
+            idKamar.isEmpty) {
+          Get.snackbar(
+            'Error',
+            'Semua kolom wajib diisi!',
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+          );
+          return;
+        }
+        try {
+          await FirebaseFirestore.instance
+              .collection('penghuni')
+              .doc(id)
+              .update({
+            'created_at': DateTime.now(),
+            'foto_KTP': imageKTPBase64,
+            'foto_penghuni': imageProfileBase64,
+            'id_kamar': idKamar,
+            'id_properti': idProperti,
+            'is_active': true,
+            'nama': namaPenghuni,
+            'telepon': noTelp,
+            'userId': user.uid
+          });
+          Get.snackbar(
+            'Sukses',
+            'Data penghuni berhasil diperbarui!',
+          );
+          Get.offAllNamed(Routes.PENGHUNI);
+        } catch (e) {
+          Get.snackbar(
+            'Error',
+            'Gagal memperbarui data penghuni: $e',
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
+        );
+      }
+    } catch (e) {
+      Get.snackbar("Error", " Gagal Memeperbarui data Penghuni ${e}");
+    } finally {
+      isLoading.value = false;
     }
   }
 

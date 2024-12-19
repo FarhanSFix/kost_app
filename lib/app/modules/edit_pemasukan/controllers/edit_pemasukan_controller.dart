@@ -19,6 +19,8 @@ class EditPemasukanController extends GetxController {
   TextEditingController sisaController = TextEditingController();
   TextEditingController catatanController = TextEditingController();
 
+  var isLoading = false.obs;
+
   final pemasukan = Pemasukan(
     catatan: '',
     denda: 0,
@@ -272,56 +274,65 @@ class EditPemasukanController extends GetxController {
     int totalBayar,
     int uangMuka,
   ) async {
-    DocumentReference updateData =
-        FirebaseFirestore.instance.collection("pemasukan").doc(id);
-    final user = FirebaseAuth.instance.currentUser;
-    if (catatan.trim().isEmpty ||
-        denda == null ||
-        idKamar.trim().isEmpty ||
-        idPenghuni.trim().isEmpty ||
-        idProperti.trim().isEmpty ||
-        jmlBulan.trim().isEmpty ||
-        jmlPenghuni.trim().isEmpty ||
-        periode.isEmpty ||
-        sisa == null ||
-        status.trim().isEmpty ||
-        totalBayar == null ||
-        uangMuka == null) {
-      Get.snackbar(
-        'Error',
-        'Semua kolom wajib diisi!',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-      return;
-    }
-    if (user != null) {
-      try {
-        await updateData.update({
-          'catatan': catatan,
-          'denda': denda,
-          'id_kamar': idKamar,
-          'id_penghuni': idPenghuni,
-          'id_properti': idProperti,
-          'jml_bulan': jmlBulan,
-          'jml_penghuni': jmlPenghuni,
-          'periode': periode,
-          'sisa': sisa,
-          'status': status,
-          'total_bayar': totalBayar,
-          'uang_muka': uangMuka,
-          'userId': user.uid
-        });
-        Get.snackbar('Success', 'Data pemasukan berhasil diperbarui');
-        Get.offAllNamed(Routes.FINANCE);
-      } catch (e) {
-        Get.snackbar('Error', 'Gagal memperbarui data pemasukan: $e');
+    if (isLoading.value) return; // Jika masih loading, abaikan aksi baru
+    isLoading.value = true;
+
+    try {
+      DocumentReference updateData =
+          FirebaseFirestore.instance.collection("pemasukan").doc(id);
+      final user = FirebaseAuth.instance.currentUser;
+      if (catatan.trim().isEmpty ||
+          denda == null ||
+          idKamar.trim().isEmpty ||
+          idPenghuni.trim().isEmpty ||
+          idProperti.trim().isEmpty ||
+          jmlBulan.trim().isEmpty ||
+          jmlPenghuni.trim().isEmpty ||
+          periode.isEmpty ||
+          sisa == null ||
+          status.trim().isEmpty ||
+          totalBayar == null ||
+          uangMuka == null) {
+        Get.snackbar(
+          'Error',
+          'Semua kolom wajib diisi!',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
       }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Pengguna tidak terautentikasi!',
-      );
+      if (user != null) {
+        try {
+          await updateData.update({
+            'catatan': catatan,
+            'denda': denda,
+            'id_kamar': idKamar,
+            'id_penghuni': idPenghuni,
+            'id_properti': idProperti,
+            'jml_bulan': jmlBulan,
+            'jml_penghuni': jmlPenghuni,
+            'periode': periode,
+            'sisa': sisa,
+            'status': status,
+            'total_bayar': totalBayar,
+            'uang_muka': uangMuka,
+            'userId': user.uid
+          });
+          Get.snackbar('Success', 'Data pemasukan berhasil diperbarui');
+          Get.offAllNamed(Routes.FINANCE);
+        } catch (e) {
+          Get.snackbar('Error', 'Gagal memperbarui data pemasukan: $e');
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          'Pengguna tidak terautentikasi!',
+        );
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal meemperbarui pemasukan: $e');
+    } finally {
+      isLoading.value = false; // Pastikan loading di-reset
     }
   }
 
