@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kost_app/app/data/model.dart';
 import 'package:kost_app/app/routes/app_pages.dart';
@@ -98,50 +99,55 @@ class PenghuniController extends GetxController {
   }
 
   void checkOut(String docID, String? idKamar) async {
-    if (idKamar != "" || idKamar != "-") {
-      try {
-        final belumLunasQuery = await FirebaseFirestore.instance
-            .collection('pemasukan')
-            .where('id_penghuni', isEqualTo: docID)
-            .where('status', isEqualTo: 'Belum Lunas')
-            .get();
+    if (idKamar == '' || idKamar == '-') {
+      Get.snackbar(
+        'Error',
+        'Penghuni ini belum Masuk',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    try {
+      final belumLunasQuery = await FirebaseFirestore.instance
+          .collection('pemasukan')
+          .where('id_penghuni', isEqualTo: docID)
+          .where('status', isEqualTo: 'Belum Lunas')
+          .get();
 
-        if (belumLunasQuery.docs.isNotEmpty) {
-          Get.snackbar(
-            'Gagal Checkout',
-            'Penghuni ini masih memiliki pembayaran yang belum lunas.',
-          );
-          return;
-        }
-
-        Get.defaultDialog(
-          title: "Checkout",
-          middleText:
-              "Apakah anda yakin akan melakukan checkout pada penghuni ini?",
-          onConfirm: () async {
-            await FirebaseFirestore.instance
-                .collection('penghuni')
-                .doc(docID)
-                .update({'is_active': false, 'tgl_checkout': DateTime.now()});
-
-            await FirebaseFirestore.instance
-                .collection('kamar')
-                .doc(idKamar)
-                .update({'status': 'Tersedia'});
-
-            Get.back();
-            Get.snackbar('Berhasil', 'Penghuni telah keluar dari kost');
-            Get.offAllNamed(Routes.PENGHUNI);
-          },
-          textConfirm: "Ya, saya yakin",
-          textCancel: "Tidak",
+      if (belumLunasQuery.docs.isNotEmpty) {
+        Get.snackbar(
+          'Gagal Checkout',
+          'Penghuni ini masih memiliki pembayaran yang belum lunas.',
         );
-      } catch (e) {
-        print(e);
-        Get.snackbar('Error', 'Tidak dapat melakukan checkout');
+        return;
       }
-    } else {
-      Get.snackbar("Error", "Penghuni ini belum masuk");
+
+      Get.defaultDialog(
+        title: "Checkout",
+        middleText:
+            "Apakah anda yakin akan melakukan checkout pada penghuni ini?",
+        onConfirm: () async {
+          await FirebaseFirestore.instance
+              .collection('penghuni')
+              .doc(docID)
+              .update({'is_active': false, 'tgl_checkout': DateTime.now()});
+
+          await FirebaseFirestore.instance
+              .collection('kamar')
+              .doc(idKamar)
+              .update({'status': 'Tersedia'});
+
+          Get.back();
+          Get.snackbar('Berhasil', 'Penghuni telah keluar dari kost');
+          Get.offAllNamed(Routes.PENGHUNI);
+        },
+        textConfirm: "Ya, saya yakin",
+        textCancel: "Tidak",
+      );
+    } catch (e) {
+      print(e);
+      Get.snackbar('Error', 'Tidak dapat melakukan checkout');
     }
   }
 }

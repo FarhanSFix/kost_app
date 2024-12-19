@@ -364,7 +364,11 @@ class AddFinanceController extends GetxController {
           await FirebaseFirestore.instance
               .collection('penghuni')
               .doc(idPenghuni)
-              .update({'id_kamar': idKamar, 'id_properti': idPropertiMasuk});
+              .update({
+            'id_kamar': idKamar,
+            'id_properti': idPropertiMasuk,
+            'is_active': true
+          });
 
           if (status == 'Belum Lunas') {
             await FirebaseFirestore.instance
