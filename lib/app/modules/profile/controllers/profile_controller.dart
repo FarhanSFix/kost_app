@@ -90,6 +90,7 @@ class ProfileController extends GetxController {
     firestore
         .collection('penghuni')
         .where('userId', isEqualTo: userId)
+        .where('is_active', isEqualTo: true)
         .snapshots()
         .listen((snapshot) {
       totalPenghuni.value = snapshot.docs.length;
