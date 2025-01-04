@@ -174,7 +174,14 @@ class DetailPenghuniView extends GetView<DetailPenghuniController> {
                         ),
                         ElevatedButton(
                             onPressed: () {
-                              Get.toNamed(Routes.ADD_FINANCE);
+                              Get.toNamed(Routes.EDIT_PEMASUKAN,
+                                  arguments: pemasukan.id);
+                              Get.snackbar(
+                                "Informasi",
+                                "Silahkan Ganti tanggal mulai & tanggal sampai",
+                                backgroundColor: Colors.yellowAccent[100],
+                                colorText: Colors.black,
+                              );
                             },
                             child: Text(
                               'Perpanjang',

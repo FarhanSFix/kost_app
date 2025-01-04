@@ -15,7 +15,7 @@ class AddPropertyView extends GetView<AddPropertyController> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
-          title: Text('Tambah Properi'),
+          title: Text('Tambah Properti'),
           centerTitle: true,
           actions: [
             IconButton(
