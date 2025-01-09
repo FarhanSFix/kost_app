@@ -20,7 +20,7 @@ class KejadianView extends GetView<KejadianController> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         leading: IconButton(
-            onPressed: () => Get.toNamed(Routes.FINANCE),
+            onPressed: () => Get.toNamed(Routes.MAIN),
             icon: Icon(Icons.arrow_back_rounded)),
         title: const Text('Daftar Kejadian'),
         centerTitle: true,
